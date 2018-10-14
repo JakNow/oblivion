@@ -1,4 +1,4 @@
-package pl.oblivion.app;
+package pl.oblivion.engine;
 
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -16,7 +16,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Application {
 
-  private long window;
+  //todo uzyj tutaj klasy window
+  private long window; //dodaj w window
 
   public void run() {
     System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -40,7 +41,8 @@ public class Application {
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-    window = glfwCreateWindow(300, 300, "Hello World!", NULL, NULL);
+    window = glfwCreateWindow(300, 300, "Hello World!", NULL, NULL); //dodaj w window width, height, title i uzyj
+    // tutaj
     if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
 
     glfwSetKeyCallback(
