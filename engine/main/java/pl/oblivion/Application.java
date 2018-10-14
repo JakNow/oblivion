@@ -1,4 +1,4 @@
-package pl.oblivion;
+package src.oblivion;
 
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
@@ -115,27 +115,7 @@ public class Application {
 		}
 	}
 	
-	public boolean isUpdating(){
-		double nextTime=getTime();
-		double passedTime = nextTime - time;
-		processedTime += passedTime;
-		time = nextTime;
-		while(processedTime > fps_cap){
-			processedTime -= fps_cap;
-			return true;
-		}	
-		return false;
-	}
 	
-	public double getTime(){
-		return (double)System.nanoTime()/(double)1000000000;
-	}
-
-	
-	
-	/*public static void main(String[] args) {
-		new Application().run();
-	}*/
 
 }
 
