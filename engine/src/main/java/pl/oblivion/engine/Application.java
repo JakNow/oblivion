@@ -1,51 +1,55 @@
 package pl.oblivion.engine;
 
-
 import org.lwjgl.Version;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryStack;
-
-import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Application {
 
-    private long window;
+  private final Window window;
+  private int width = 300;
+  private int height = width * 9 / 16;
+  private String title = "Default Title";
 
+  public Application() {
 
+    if (System.getProperty("window.width") != null) {
+      width = Integer.parseInt(System.getProperty("window.width"));
+    }
+    if (System.getProperty("window.height") != null) {
+      height = Integer.parseInt(System.getProperty("window.height"));
+    }
+    if (System.getProperty("window.title") != null) {
+      title = System.getProperty("window.title");
+    }
 
-public void run() {
+    this.window = new Window(width, height, title);
+  }
+
+  public void run() {
     System.out.println("Hello LWJGL " + Version.getVersion() + "!");
 
-    new Window().init();
+    this.window.init();
     loop();
 
-    glfwFreeCallbacks(window);
-    glfwDestroyWindow(window);
+    glfwFreeCallbacks(this.window.getWindow());
+    glfwDestroyWindow(this.window.getWindow());
 
     glfwTerminate();
     glfwSetErrorCallback(null).free();
   }
 
-
-
   private void loop() {
     GL.createCapabilities();
-
     glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(this.window.getWindow())) {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      glfwSwapBuffers(window);
+      glfwSwapBuffers(this.window.getWindow());
       glfwPollEvents();
     }
   }
-  
 }

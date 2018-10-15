@@ -1,47 +1,28 @@
 package pl.oblivion.engine;
 
-import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
-import java.awt.*;
 import java.nio.IntBuffer;
 
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class Window{
+public class Window {
 
-  int width = 360;
-  if(System.getProperty("window.width") != null){
-    width =Integer.parseInt(System.getProperty("window.width"));
-  }
-  int heigh = 500;
-  if(System.getProperty("window.heigh") != null){
-    heigh =Integer.parseInt(System.getProperty("window.heigh"));
-  }
-  String title = "Oblivion";
-  if(System.getProperty("window.title") != null){
-    title = System.getProperty("window.title");
-  }
-	
-	public Window(int width,int heigh,String title){
-		this.width=width;
-		this.heigh=heigh;
-		this.title=title;
-	}
-        
-        public Window(){
-            
-        }
-
+  private int width;
+  private int height;
+  private String title;
   private long window;
-	
+
+  Window(int width, int height, String title) {
+    this.width = width;
+    this.height = height;
+    this.title = title;
+  }
+
   public void init() {
     GLFWErrorCallback.createPrint(System.err).set();
 
@@ -51,7 +32,7 @@ public class Window{
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-    window = glfwCreateWindow(300, 300, "Hello World!", NULL, NULL);
+    this.window = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
     if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
 
     glfwSetKeyCallback(
@@ -79,5 +60,7 @@ public class Window{
     glfwShowWindow(window);
   }
 
-  
-}	
+  public long getWindow() {
+    return window;
+  }
+}

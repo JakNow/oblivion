@@ -1,12 +1,14 @@
 package pl.oblivion;
 
-import 3d-engine.core.src.main.java.pl.oblivion.AppConfig;
-import pl.oblivion.app.Application;
+import pl.oblivion.core.AppConfig;
+import pl.oblivion.core.AppConfigRunner;
+import pl.oblivion.engine.Application;
 
-@AppConfig
+@AppConfig("app.properties")
 public class Main {
 
   public static void main(String[] args) {
+  	new AppConfigRunner();
     new Application().run();
   }
 }
