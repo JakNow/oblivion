@@ -1,4 +1,4 @@
-package pl.oblivion;
+package pl.oblivion.core;
 
 import org.reflections.Reflections;
 
@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
-class AppConfigRunner {
+public class AppConfigRunner {
 
-  AppConfigRunner() {
+  public AppConfigRunner() {
     importProperties();
   }
 

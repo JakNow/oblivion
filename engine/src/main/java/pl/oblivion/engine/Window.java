@@ -1,37 +1,29 @@
-package pl.oblivion.app;
+package pl.oblivion.engine;
 
-import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
 
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class Application {
+public class Window {
 
+  private int width;
+  private int height;
+  private String title;
   private long window;
 
-  public void run() {
-    System.out.println("Hello LWJGL " + Version.getVersion() + "!");
-
-    init();
-    loop();
-
-    glfwFreeCallbacks(window);
-    glfwDestroyWindow(window);
-
-    glfwTerminate();
-    glfwSetErrorCallback(null).free();
+  Window(int width, int height, String title) {
+    this.width = width;
+    this.height = height;
+    this.title = title;
   }
 
-  private void init() {
+  public void init() {
     GLFWErrorCallback.createPrint(System.err).set();
 
     if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
@@ -40,7 +32,7 @@ public class Application {
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-    window = glfwCreateWindow(300, 300, "Hello World!", NULL, NULL);
+    this.window = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
     if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
 
     glfwSetKeyCallback(
@@ -68,15 +60,7 @@ public class Application {
     glfwShowWindow(window);
   }
 
-  private void loop() {
-    GL.createCapabilities();
-
-    glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
-
-    while (!glfwWindowShouldClose(window)) {
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      glfwSwapBuffers(window);
-      glfwPollEvents();
-    }
+  public long getWindow() {
+    return window;
   }
 }

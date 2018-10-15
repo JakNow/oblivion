@@ -2,6 +2,8 @@ package pl.oblivion;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import pl.oblivion.core.AppConfig;
+import pl.oblivion.core.AppConfigRunner;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
