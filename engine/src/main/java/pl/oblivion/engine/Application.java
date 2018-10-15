@@ -1,21 +1,17 @@
 package pl.oblivion.engine;
 
-import org.lwjgl.Version;
-import org.lwjgl.opengl.GL;
-
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-
 public class Application {
 
-  private final Window window;
+  private static Window window;
+  private static Timer timer;
+
   private int width = 300;
   private int height = width * 9 / 16;
   private String title = "Default Title";
+  private int ups = 60;
+  private int fps = 60;
 
   public Application() {
-
     if (System.getProperty("window.width") != null) {
       width = Integer.parseInt(System.getProperty("window.width"));
     }
@@ -25,31 +21,60 @@ public class Application {
     if (System.getProperty("window.title") != null) {
       title = System.getProperty("window.title");
     }
+    if (System.getProperty("engine.ups") != null) {
+      ups = Integer.parseInt(System.getProperty("engine.ups"));
+    }
+    if (System.getProperty("engine.fps") != null) {
+      fps = Integer.parseInt(System.getProperty("engine.fps"));
+    }
 
-    this.window = new Window(width, height, title);
+    window = new Window(width, height, title);
+    timer = new Timer();
   }
 
   public void run() {
-    System.out.println("Hello LWJGL " + Version.getVersion() + "!");
+    float elapsedTimed;
+    float accumulator = 0f;
+    float interval = 1f / ups;
 
-    this.window.init();
-    loop();
+    while (!this.window.windowShouldClose()) {
+      elapsedTimed = timer.getElapsedTime();
+      accumulator += elapsedTimed;
 
-    glfwFreeCallbacks(this.window.getWindow());
-    glfwDestroyWindow(this.window.getWindow());
+      while (accumulator >= interval) {
+        fixedUpdated(interval);
+        accumulator -= interval;
+      }
 
-    glfwTerminate();
-    glfwSetErrorCallback(null).free();
+      update();
+      if (!window.isvSync()) {
+        sync();
+      }
+
+      window.updateAfterRendering();
+    }
+
+    window.destroy();
+    cleanApplicationForClosure();
   }
 
-  private void loop() {
-    GL.createCapabilities();
-    glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+  public void fixedUpdated(float delta) {
+    // logic update for 60ups
+  }
 
-    while (!glfwWindowShouldClose(this.window.getWindow())) {
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      glfwSwapBuffers(this.window.getWindow());
-      glfwPollEvents();
+  public void update() {}
+
+  public void cleanApplicationForClosure() {}
+
+  private void sync() {
+    float loopSlot = 1f / fps;
+    double endTime = timer.getLastLoopTime() + loopSlot;
+    while (timer.getTime() < endTime) {
+      try {
+        Thread.sleep(1);
+      } catch (InterruptedException ie) {
+        // todo logger info
+      }
     }
   }
 }

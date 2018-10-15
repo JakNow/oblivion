@@ -2,11 +2,14 @@ package pl.oblivion.engine;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
 
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -16,14 +19,18 @@ public class Window {
   private int height;
   private String title;
   private long window;
+  private boolean vSync;
 
   Window(int width, int height, String title) {
     this.width = width;
     this.height = height;
     this.title = title;
+    this.vSync = true;
+
+    this.init();
   }
 
-  public void init() {
+  private void init() {
     GLFWErrorCallback.createPrint(System.err).set();
 
     if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
@@ -55,12 +62,41 @@ public class Window {
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
+    if (isvSync()) {
+      // Enable v-sync
+      glfwSwapInterval(1);
+    }
 
     glfwShowWindow(window);
+    GL.createCapabilities();
+
+    glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
   }
 
   public long getWindow() {
     return window;
+  }
+
+  public boolean windowShouldClose() {
+    return glfwWindowShouldClose(window);
+  }
+
+  public void updateAfterRendering() {
+    glfwSwapBuffers(window); // swap the color buffers
+    glfwPollEvents();
+  }
+
+  public void destroy() {
+    // Free the window callbacks and destroy the window
+    glfwFreeCallbacks(window);
+    glfwDestroyWindow(window);
+
+    // Terminate GLFW and free the error callback
+    glfwTerminate();
+    glfwSetErrorCallback(null).free();
+  }
+
+  public boolean isvSync() {
+    return vSync;
   }
 }
