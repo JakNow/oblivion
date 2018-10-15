@@ -1,4 +1,5 @@
-package pl.oblivion.app;
+package pl.oblivion.engine;
+
 
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -15,6 +16,8 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Application {
+
+    private long window;
 
 
 

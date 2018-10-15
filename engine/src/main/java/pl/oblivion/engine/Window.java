@@ -1,4 +1,4 @@
-package pl.oblivion.app;
+package pl.oblivion.engine;
 
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -8,8 +8,6 @@ import org.lwjgl.system.MemoryStack;
 
 import java.awt.*;
 import java.nio.IntBuffer;
-
-import java.util.Properties;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -37,10 +35,14 @@ public class Window{
 		this.heigh=heigh;
 		this.title=title;
 	}
+        
+        public Window(){
+            
+        }
 
   private long window;
 	
-  private void init() {
+  public void init() {
     GLFWErrorCallback.createPrint(System.err).set();
 
     if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
