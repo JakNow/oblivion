@@ -18,16 +18,16 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Window{
 
   int width = 360;
-  If(System.getProperty("window.width") != null){
-    width =Integer.parseInt(System. getProperty("window.width"));
+  if(System.getProperty("window.width") != null){
+    width =Integer.parseInt(System.getProperty("window.width"));
   }
   int heigh = 500;
-  If(System.getProperty("window.heigh") != null){
-    heigh =Integer.parseInt(System. getProperty("window.heigh"));
+  if(System.getProperty("window.heigh") != null){
+    heigh =Integer.parseInt(System.getProperty("window.heigh"));
   }
   String title = "Oblivion";
-  If(System.getProperty("window.title") != null){
-    title = System. getProperty("window.heigh");
+  if(System.getProperty("window.title") != null){
+    title = System.getProperty("window.title");
   }
 	
 	public Window(int width,int heigh,String title){
