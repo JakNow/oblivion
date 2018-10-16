@@ -1,15 +1,19 @@
 package pl.oblivion.engine;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+
 public class Application {
 
   private static Window window;
   private static Timer timer;
 
-  private int width = 300;
-  private int height = width * 9 / 16;
-  private String title = "Default Title";
-  private int ups = 60;
-  private int fps = 60;
+  @Getter @Setter private int width = 300;
+  @Getter @Setter private int height = width * 9 / 16;
+  @Setter(AccessLevel.PROTECTED) private String title = "Default Title";
+  @Getter @Setter private int ups = 60;
+  @Getter @Setter private int fps = 60;
 
   public Application() {
     if (System.getProperty("window.width") != null) {
