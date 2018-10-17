@@ -1,70 +1,62 @@
 package pl.oblivion.engine;
 
-public class Application {
+import pl.oblivion.core.AppConfigRunner;
 
-  private static Window window;
-  private static Timer timer;
+public abstract class Application implements Runnable {
 
-  private int width = 300;
-  private int height = width * 9 / 16;
-  private String title = "Default Title";
-  private int ups = 60;
-  private int fps = 60;
+  private final Window window;
+  private final Timer timer;
+  private final Thread gameLoopThread;
+  private int fps;
+  private int ups;
 
   public Application() {
-    if (System.getProperty("window.width") != null) {
-      width = Integer.parseInt(System.getProperty("window.width"));
-    }
-    if (System.getProperty("window.height") != null) {
-      height = Integer.parseInt(System.getProperty("window.height"));
-    }
-    if (System.getProperty("window.title") != null) {
-      title = System.getProperty("window.title");
-    }
-    if (System.getProperty("engine.ups") != null) {
-      ups = Integer.parseInt(System.getProperty("engine.ups"));
-    }
-    if (System.getProperty("engine.fps") != null) {
-      fps = Integer.parseInt(System.getProperty("engine.fps"));
-    }
-
-    window = new Window(width, height, title);
-    timer = new Timer();
+    this.gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
+    new AppConfigRunner();
+    this.window = new Window();
+    this.timer = new Timer();
+    this.ups = Integer.getInteger("engine.ups") != null ? Integer.getInteger("engine.ups") : 30;
+    this.fps = Integer.getInteger("engine.fps") != null ? Integer.getInteger("engine.fps") : 60;
   }
 
+  public void start() {
+    gameLoopThread.start();
+  }
+
+  @Override
   public void run() {
-    float elapsedTimed;
+    init();
+    gameloop();
+  }
+
+  private void init() {
+    this.window.init();
+    this.timer.getTime();
+  }
+
+  private void gameloop() {
+    float elapsedTime;
     float accumulator = 0f;
     float interval = 1f / ups;
 
-    while (!this.window.windowShouldClose()) {
-      elapsedTimed = timer.getElapsedTime();
-      accumulator += elapsedTimed;
+    while (!window.windowShouldClose()) {
+      elapsedTime = timer.getElapsedTime();
+      accumulator += elapsedTime;
 
       while (accumulator >= interval) {
-        fixedUpdated(interval);
+        update(interval);
         accumulator -= interval;
       }
 
-      update();
+      render();
+
+      window.updateAfterRendering();
       if (!window.isvSync()) {
         sync();
       }
-
-      window.updateAfterRendering();
     }
-
     window.destroy();
-    cleanApplicationForClosure();
   }
-
-  public void fixedUpdated(float delta) {
-    // logic update for 60ups
-  }
-
-  public void update() {}
-
-  public void cleanApplicationForClosure() {}
 
   private void sync() {
     float loopSlot = 1f / fps;
@@ -73,8 +65,12 @@ public class Application {
       try {
         Thread.sleep(1);
       } catch (InterruptedException ie) {
-        // todo logger info
+        ie.printStackTrace();
       }
     }
   }
+
+  protected abstract void update(float delta);
+
+  protected abstract void render();
 }

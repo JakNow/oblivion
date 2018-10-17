@@ -21,16 +21,21 @@ public class Window {
   private long window;
   private boolean vSync;
 
-  Window(int width, int height, String title) {
-    this.width = width;
-    this.height = height;
-    this.title = title;
+  Window() {
+    this.width =
+        Integer.getInteger("window.width") != null ? Integer.getInteger("window.width") : 600;
+    this.height =
+        Integer.getInteger("window.height") != null
+            ? Integer.getInteger("window.height")
+            : 600 * 9 / 16;
+    this.title =
+        System.getProperty("window.title") != null
+            ? System.getProperty("window.title")
+            : "Default title";
     this.vSync = true;
-
-    this.init();
   }
 
-  private void init() {
+  protected void init() {
     GLFWErrorCallback.createPrint(System.err).set();
 
     if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
@@ -63,7 +68,6 @@ public class Window {
 
     glfwMakeContextCurrent(window);
     if (isvSync()) {
-      // Enable v-sync
       glfwSwapInterval(1);
     }
 
@@ -81,12 +85,12 @@ public class Window {
     return glfwWindowShouldClose(window);
   }
 
-  public void updateAfterRendering() {
+  protected void updateAfterRendering() {
     glfwSwapBuffers(window); // swap the color buffers
     glfwPollEvents();
   }
 
-  public void destroy() {
+  protected void destroy() {
     // Free the window callbacks and destroy the window
     glfwFreeCallbacks(window);
     glfwDestroyWindow(window);
