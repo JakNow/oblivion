@@ -1,6 +1,5 @@
 package pl.oblivion.engine;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.lwjgl.Version;
@@ -15,8 +14,11 @@ public class Application {
   private final Window window;
   @Getter @Setter private int width = 300;
   @Getter @Setter private int height = width * 9 / 16;
-  @Setter(AccessLevel.PROTECTED) private String title = "Default Title";
+  @Setter private String title = "Default Title";
+  @Getter @Setter private int ups = 60;
+  @Getter @Setter private int fps = 60;
 
+  
   public Application() {
 
     if (System.getProperty("window.width") != null) {
