@@ -1,4 +1,4 @@
-package pl.oblivion;
+    package pl.oblivion;
 
 import pl.oblivion.core.AppConfig;
 import pl.oblivion.core.AppConfigRunner;

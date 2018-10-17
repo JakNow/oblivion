@@ -1,5 +1,8 @@
 package pl.oblivion.engine;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
@@ -12,10 +15,10 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
 
-  private int width;
-  private int height;
-  private String title;
-  private long window;
+  @Getter @Setter private int width;
+  @Getter @Setter private int height;
+  @Setter(AccessLevel.PROTECTED) private String title;
+  @Getter @Setter private long window;
 
   Window(int width, int height, String title) {
     this.width = width;
