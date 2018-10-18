@@ -1,8 +1,12 @@
 package pl.oblivion.engine;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pl.oblivion.core.AppConfigRunner;
 
 public abstract class Application implements Runnable {
+
+  private static final Logger logger = LogManager.getLogger(Application.class);
 
   private final Window window;
   private final Timer timer;
@@ -11,13 +15,14 @@ public abstract class Application implements Runnable {
   private int ups;
 
   public Application() {
+    logger.info("Starting Application");
     this.gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
     new AppConfigRunner();
     this.window = new Window();
     this.timer = new Timer();
     this.ups = Integer.getInteger("engine.ups") != null ? Integer.getInteger("engine.ups") : 30;
     this.fps = Integer.getInteger("engine.fps") != null ? Integer.getInteger("engine.fps") : 60;
-    
+
     this.start();
   }
 
@@ -42,7 +47,7 @@ public abstract class Application implements Runnable {
     float interval = 1f / ups;
 
     while (!window.windowShouldClose()) {
-        elapsedTime = timer.getElapsedTime();
+      elapsedTime = timer.getElapsedTime();
       accumulator += elapsedTime;
 
       while (accumulator >= interval) {
@@ -67,7 +72,7 @@ public abstract class Application implements Runnable {
       try {
         Thread.sleep(1);
       } catch (InterruptedException ie) {
-        ie.printStackTrace();
+        logger.warn("Thread sleep was interrupted. ", ie);
       }
     }
   }

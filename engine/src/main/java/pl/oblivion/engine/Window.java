@@ -1,7 +1,7 @@
 package pl.oblivion.engine;
 
-import lombok.Getter;
-import lombok.Setter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -16,6 +16,8 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
+
+  private static final Logger logger = LogManager.getLogger(Window.class);
 
   private int width;
   private int height;
@@ -40,14 +42,20 @@ public class Window {
   protected void init() {
     GLFWErrorCallback.createPrint(System.err).set();
 
-    if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
+    if (!glfwInit()) {
+      logger.error("Unable to initialize GLFW");
+      throw new IllegalStateException();
+    }
 
     glfwDefaultWindowHints();
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
     this.window = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
-    if (window == NULL) throw new RuntimeException("Failed to create the GLFW window");
+    if (window == NULL){
+        logger.error("Failed to create the GLFW window");
+        throw new RuntimeException();
+    }
 
     glfwSetKeyCallback(
         window,
@@ -84,6 +92,7 @@ public class Window {
   }
 
   public boolean windowShouldClose() {
+      logger.info("Closing window.");
     return glfwWindowShouldClose(window);
   }
 
@@ -100,10 +109,11 @@ public class Window {
     // Terminate GLFW and free the error callback
     glfwTerminate();
     glfwSetErrorCallback(null).free();
+    
+    logger.info("Terminating GLFW");
   }
 
   public boolean isvSync() {
     return vSync;
   }
 }
-
