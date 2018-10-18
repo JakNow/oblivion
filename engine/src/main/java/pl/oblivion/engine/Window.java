@@ -1,5 +1,7 @@
 package pl.oblivion.engine;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -104,3 +106,4 @@ public class Window {
     return vSync;
   }
 }
+

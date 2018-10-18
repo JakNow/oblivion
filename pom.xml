@@ -17,6 +17,8 @@
         <junit.version>4.12</junit.version>
         <reflections.version>0.9.11</reflections.version>
         <assertj.version>3.11.1</assertj.version>
+        <projectlombok.version>1.18.2</projectlombok.version>
+        <apache.logging.log4j.version>2.11.1</apache.logging.log4j.version>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/junit/junit -->
@@ -45,19 +47,18 @@
         <dependency>
 		<groupId>org.projectlombok</groupId>
 		<artifactId>lombok</artifactId>
-		<version>1.16.16</version>
+		<version>${projectlombok.version}</version>
 		<scope>provided</scope>
-	</dependency>
-        
+	</dependency>        
         <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-api</artifactId>
-                <version>2.11.1</version>
+                <version>${apache.logging.log4j.version}</version>
         </dependency>
         <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>
-                <version>2.11.1</version>
+                <version>${apache.logging.log4j.version}</version>
         </dependency>
 
     </dependencies>
