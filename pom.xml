@@ -17,7 +17,7 @@
         <junit.version>4.12</junit.version>
         <reflections.version>0.9.11</reflections.version>
         <assertj.version>3.11.1</assertj.version>
-        <projectlombok.version>1.16.16</projectlombok.version>
+        <projectlombok.version>1.18.2</projectlombok.version>
         <apache.logging.log4j.version>2.11.1</apache.logging.log4j.version>
     </properties>
     <dependencies>
@@ -27,6 +27,7 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+            <type>jar</type>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.reflections/reflections -->
