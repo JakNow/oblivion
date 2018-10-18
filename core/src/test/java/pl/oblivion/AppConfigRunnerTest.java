@@ -10,9 +10,10 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 @AppConfig("app.properties")
 public class AppConfigRunnerTest {
 
+
   @BeforeClass
-  public static void init() {
-    AppConfigRunner appConfigRunner = new AppConfigRunner();
+  public static void  init() {
+        new AppConfigRunner();
   }
 
   @Test

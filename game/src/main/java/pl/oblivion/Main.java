@@ -12,7 +12,7 @@ public class Main extends Application{
     private static final Logger log = LogManager.getLogger(Main.class);
     
     public static void main(String[] args) {
-        new Main().start();
+        new Main();
     }
     
     protected void update(float delta) {
