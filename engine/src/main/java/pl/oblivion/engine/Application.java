@@ -1,7 +1,5 @@
 package pl.oblivion.engine;
 
-import lombok.Getter;
-import lombok.Setter;
 import pl.oblivion.core.AppConfigRunner;
 
 public abstract class Application implements Runnable {
@@ -9,8 +7,8 @@ public abstract class Application implements Runnable {
   private final Window window;
   private final Timer timer;
   private final Thread gameLoopThread;
-  @Getter @Setter private int fps;
-  @Getter @Setter private int ups;
+  private int fps;
+  private int ups;
 
   public Application() {
     this.gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");

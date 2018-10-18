@@ -17,11 +17,11 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
 
-  @Getter @Setter private int width;
-  @Getter @Setter private int height;
-  @Setter private String title;
-  @Getter @Setter private long window;
-  @Getter @Setter private boolean vSync;
+  private int width;
+  private int height;
+  private String title;
+  private long window;
+  private boolean vSync;
 
   Window() {
     this.width =
