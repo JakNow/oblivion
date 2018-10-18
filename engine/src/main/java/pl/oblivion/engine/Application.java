@@ -2,59 +2,77 @@ package pl.oblivion.engine;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.lwjgl.Version;
-import org.lwjgl.opengl.GL;
+import pl.oblivion.core.AppConfigRunner;
 
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-
-public class Application {
+public abstract class Application implements Runnable {
 
   private final Window window;
-  @Getter @Setter private int width = 300;
-  @Getter @Setter private int height = width * 9 / 16;
-  @Setter private String title = "Default Title";
-  @Getter @Setter private int ups = 60;
-  @Getter @Setter private int fps = 60;
+  private final Timer timer;
+  private final Thread gameLoopThread;
+  @Getter @Setter private int fps;
+  @Getter @Setter private int ups;
 
-  
   public Application() {
-
-    if (System.getProperty("window.width") != null) {
-      width = Integer.parseInt(System.getProperty("window.width"));
-    }
-    if (System.getProperty("window.height") != null) {
-      height = Integer.parseInt(System.getProperty("window.height"));
-    }
-    if (System.getProperty("window.title") != null) {
-      title = System.getProperty("window.title");
-    }
-
-    this.window = new Window(width, height, title);
+    this.gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
+    new AppConfigRunner();
+    this.window = new Window();
+    this.timer = new Timer();
+    this.ups = Integer.getInteger("engine.ups") != null ? Integer.getInteger("engine.ups") : 30;
+    this.fps = Integer.getInteger("engine.fps") != null ? Integer.getInteger("engine.fps") : 60;
   }
 
+  public void start() {
+    gameLoopThread.start();
+  }
+
+  @Override
   public void run() {
-    System.out.println("Hello LWJGL " + Version.getVersion() + "!");
-
-    this.window.init();
-    loop();
-
-    glfwFreeCallbacks(this.window.getWindow());
-    glfwDestroyWindow(this.window.getWindow());
-
-    glfwTerminate();
-    glfwSetErrorCallback(null).free();
+    init();
+    gameloop();
   }
 
-  private void loop() {
-    GL.createCapabilities();
-    glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+  private void init() {
+    this.window.init();
+    this.timer.getTime();
+  }
 
-    while (!glfwWindowShouldClose(this.window.getWindow())) {
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      glfwSwapBuffers(this.window.getWindow());
-      glfwPollEvents();
+  private void gameloop() {
+    float elapsedTime;
+    float accumulator = 0f;
+    float interval = 1f / ups;
+
+    while (!window.windowShouldClose()) {
+      elapsedTime = timer.getElapsedTime();
+      accumulator += elapsedTime;
+
+      while (accumulator >= interval) {
+        update(interval);
+        accumulator -= interval;
+      }
+
+      render();
+
+      window.updateAfterRendering();
+      if (!window.isvSync()) {
+        sync();
+      }
+    }
+    window.destroy();
+  }
+
+  private void sync() {
+    float loopSlot = 1f / fps;
+    double endTime = timer.getLastLoopTime() + loopSlot;
+    while (timer.getTime() < endTime) {
+      try {
+        Thread.sleep(1);
+      } catch (InterruptedException ie) {
+        ie.printStackTrace();
+      }
     }
   }
+
+  protected abstract void update(float delta);
+
+  protected abstract void render();
 }
