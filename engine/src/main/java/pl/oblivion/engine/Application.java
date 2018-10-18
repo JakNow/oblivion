@@ -17,9 +17,11 @@ public abstract class Application implements Runnable {
     this.timer = new Timer();
     this.ups = Integer.getInteger("engine.ups") != null ? Integer.getInteger("engine.ups") : 30;
     this.fps = Integer.getInteger("engine.fps") != null ? Integer.getInteger("engine.fps") : 60;
+    
+    this.start();
   }
 
-  public void start() {
+  private void start() {
     gameLoopThread.start();
   }
 
@@ -40,7 +42,7 @@ public abstract class Application implements Runnable {
     float interval = 1f / ups;
 
     while (!window.windowShouldClose()) {
-      elapsedTime = timer.getElapsedTime();
+        elapsedTime = timer.getElapsedTime();
       accumulator += elapsedTime;
 
       while (accumulator >= interval) {

@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 public class Main extends Application{
     
     public static void main(String[] args) {
-        new Main().start();
+        new Main();
     }
     
     protected void update(float delta) {
