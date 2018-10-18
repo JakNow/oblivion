@@ -9,6 +9,8 @@ import org.apache.logging.log4j.LogManager;
 @AppConfig("app.properties")
 public class Main extends Application{
     
+    private static final Logger log = LogManager.getLogger(Main.class);
+    
     public static void main(String[] args) {
         new Main();
     }
