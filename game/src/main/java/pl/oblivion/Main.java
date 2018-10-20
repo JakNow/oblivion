@@ -1,7 +1,8 @@
 package pl.oblivion;
 
-import pl.oblivion.core.AppConfig;
+import pl.oblivion.common.annotations.AppConfig;
 import pl.oblivion.engine.Application;
+
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
