@@ -1,8 +1,14 @@
 package pl.oblivion.engine;
 
+import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.oblivion.common.annotations.AppConfigRunner;
+import pl.oblivion.engine.renderer.RendererHandler;
+
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11C.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11C.glClear;
 
 public abstract class Application implements Runnable {
 
@@ -11,6 +17,9 @@ public abstract class Application implements Runnable {
   private final Window window;
   private final Timer timer;
   private final Thread gameLoopThread;
+  @Getter
+  private final RendererHandler rendererHandler;
+  
   private int fps;
   private int ups;
 
@@ -20,6 +29,8 @@ public abstract class Application implements Runnable {
     new AppConfigRunner();
     this.window = new Window();
     this.timer = new Timer();
+    this.rendererHandler = RendererHandler.getInstance();
+    
     this.ups = Integer.getInteger("engine.ups") != null ? Integer.getInteger("engine.ups") : 30;
     this.fps = Integer.getInteger("engine.fps") != null ? Integer.getInteger("engine.fps") : 60;
 
@@ -47,6 +58,7 @@ public abstract class Application implements Runnable {
     float interval = 1f / ups;
 
     while (!window.windowShouldClose()) {
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       elapsedTime = timer.getElapsedTime();
       accumulator += elapsedTime;
 
@@ -54,10 +66,10 @@ public abstract class Application implements Runnable {
         update(interval);
         accumulator -= interval;
       }
-
-      render();
-
-      window.updateAfterRendering();
+    
+        rendererHandler.render();
+    
+        window.updateAfterRendering();
       if (!window.isvSync()) {
         sync();
       }
@@ -79,5 +91,4 @@ public abstract class Application implements Runnable {
 
   protected abstract void update(float delta);
 
-  protected abstract void render();
 }
