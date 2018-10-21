@@ -12,6 +12,7 @@
         <module>core</module>
         <module>engine</module>
         <module>common</module>
+        <module>model</module>
     </modules>
 
     <properties>
