@@ -1,4 +1,4 @@
-package pl.oblivion.core;
+package pl.oblivion.common.annotations;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

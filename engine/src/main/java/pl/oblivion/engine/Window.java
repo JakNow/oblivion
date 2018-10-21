@@ -84,7 +84,7 @@ public class Window {
     glfwShowWindow(window);
     GL.createCapabilities();
 
-    glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
   }
 
   public long getWindow() {
@@ -117,3 +117,4 @@ public class Window {
     return vSync;
   }
 }
+
