@@ -13,20 +13,8 @@ import java.util.Properties;
  */
 public class GetSystemProperty {
     
-    GetSystemProperty(){
-        
-    }
-    
-    public static int getInt(int a){
-        
-      Properties p = System.getProperties();
-      
-      if(p.isEmpty()){
-        p.list(System.out);  
-      }else{
-        return a;  
-      }  
-        return 0;
+    public static Integer getInt(String key) {
+     return Integer.getInteger(key);
     }
     
     public static float getFloat(float b){
