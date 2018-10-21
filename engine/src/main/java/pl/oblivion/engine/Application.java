@@ -2,7 +2,7 @@ package pl.oblivion.engine;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pl.oblivion.core.AppConfigRunner;
+import pl.oblivion.common.annotations.AppConfigRunner;
 
 public abstract class Application implements Runnable {
 
