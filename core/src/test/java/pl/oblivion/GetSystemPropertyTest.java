@@ -5,16 +5,21 @@
  */
 package pl.oblivion;
 
+import static org.assertj.core.api.Java6Assertions.assertThat;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import pl.oblivion.core.utils.GetSystemProperty;
 
-import static org.assertj.core.api.Assertions.assertThat;
 
-/** @author Piotr */
-public class GetSystemPropertyTest {
+/**
+ *
+ * @author Piotr
+ */
 
+public class GetSystemPropertyTest
+{
+ 
   @BeforeClass
   public static void setUp() {
     System.getProperties().setProperty("Int", "1");
@@ -37,27 +42,71 @@ public class GetSystemPropertyTest {
         .isNull();
   }
 
-  @Test
-  public void getFloat_test() {
-    float x = 1;
-    Assert.assertEquals(2, GetSystemProperty.getFloat(x));
+  @BeforeClass
+  public static void setUp2() {
+    System.getProperties().setProperty("float", "3.6");
   }
 
   @Test
-  public void getDouble_test() {
-    double x = 1.0;
-    Assert.assertEquals(2.0, GetSystemProperty.getDouble(x));
+  public void getFloat_propertyAvailable_Test() {
+    assertThat(GetSystemProperty.getFloat("float"))
+        .withFailMessage("Couldn't read float property")
+        .isNotNull();
+    assertThat(GetSystemProperty.getFloat("float"))
+        .withFailMessage("Property value is not correct")
+        .isEqualTo(3.6);
   }
 
   @Test
-  public void getChar_test() {
-    char x = 'a';
-    Assert.assertEquals('a', GetSystemProperty.getChar(x));
+  public void getFloat_propertyNotPresent_Test() {
+    assertThat(GetSystemProperty.getFloat("NotPresent"))
+        .withFailMessage("Should return null value.")
+        .isNull();
+  }
+  
+  @BeforeClass
+  public static void setUp3() {
+    System.getProperties().setProperty("double", "2.0");
   }
 
   @Test
-  public void getString_test() {
-    String x = "test";
-    Assert.assertEquals("test", GetSystemProperty.getString(x));
+  public void getDouble_propertyAvailable_Test() {
+    assertThat(GetSystemProperty.getDouble("double"))
+        .withFailMessage("Couldn't read int property")
+        .isNotNull();
+    assertThat(GetSystemProperty.getDouble("Int"))
+        .withFailMessage("Property value is not correct")
+        .isEqualTo(2.0);
   }
+
+  @Test
+  public void getDouble_propertyNotPresent_Test() {
+    assertThat(GetSystemProperty.getDouble("NotPresent"))
+        .withFailMessage("Should return null value.")
+        .isNull();
+  }
+  
+    @BeforeClass
+    public static void setUp4() {
+    System.getProperties().setProperty("char", "a");
+  }
+
+  @Test
+  public void getChar_propertyAvailable_Test() {
+    assertThat(GetSystemProperty.getChar("char"))
+        .withFailMessage("Couldn't read int property")
+        .isNotNull();
+    assertThat(GetSystemProperty.getChar("char"))
+        .withFailMessage("Property value is not correct")
+        .isEqualTo('a');
+  }
+
+  @Test
+  public void getChar_propertyNotPresent_Test() {
+    assertThat(GetSystemProperty.getChar("NotPresent"))
+        .withFailMessage("Should return null value.")
+        .isNull();
+  }
+  
+ 
 }
