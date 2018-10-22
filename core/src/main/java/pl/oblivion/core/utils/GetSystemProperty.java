@@ -13,10 +13,6 @@ import java.util.Properties;
  */
 public class GetSystemProperty {
     
-    GetSystemProperty(){
-        
-    }
-    
     public static int getInt(String a, int b) {
         Properties p = System.getProperties();
         if(p.isEmpty()){

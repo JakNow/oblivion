@@ -23,6 +23,10 @@ public class GetSystemPropertyTest
   @BeforeClass
   public static void setUp() {
     System.getProperties().setProperty("Int", "1");
+    System.getProperties().setProperty("float", "3.6");
+    System.getProperties().setProperty("double", "2.0");
+    System.getProperties().setProperty("char", "a");
+    
   }
 
   @Test
@@ -42,11 +46,6 @@ public class GetSystemPropertyTest
         .isNull();
   }
 
-  @BeforeClass
-  public static void setUp2() {
-    System.getProperties().setProperty("float", "3.6");
-  }
-
   @Test
   public void getFloat_propertyAvailable_Test() {
     assertThat(GetSystemProperty.getFloat("float"))
@@ -62,11 +61,6 @@ public class GetSystemPropertyTest
     assertThat(GetSystemProperty.getFloat("NotPresent"))
         .withFailMessage("Should return null value.")
         .isNull();
-  }
-  
-  @BeforeClass
-  public static void setUp3() {
-    System.getProperties().setProperty("double", "2.0");
   }
 
   @Test
@@ -84,11 +78,6 @@ public class GetSystemPropertyTest
     assertThat(GetSystemProperty.getDouble("NotPresent"))
         .withFailMessage("Should return null value.")
         .isNull();
-  }
-  
-    @BeforeClass
-    public static void setUp4() {
-    System.getProperties().setProperty("char", "a");
   }
 
   @Test

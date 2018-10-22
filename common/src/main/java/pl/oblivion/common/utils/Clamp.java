@@ -13,30 +13,31 @@ public class Clamp {
     
     public static int minmax(int target,int min,int max){
       
-        if(target<min)
+        if(target<min){
             return min;
-        else if(target>max)
+        }else if(target>max){
             return max;
-        else
+        }else{
             return target;
-        
+        }
     }
     
     public static int min(int target,int min){
         
-        if(target<min)
+        if(target<min){
             return min;
-        else
+        }else{
             return target;
-        
+        }
     }
     
     public static int max(int target, int max){
         
-        if(target>max)
+        if(target>max){
             return max;
-        else 
+        }else{ 
             return target;
+        }
     }
     
 }
