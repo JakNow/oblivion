@@ -19,7 +19,6 @@ public class Main extends Application{
         
     }
     public static void main(String[] args) {
-        logger.info("WELCOME TO OBLIVION ENGINE!");
         new Main();
     }
     
@@ -27,3 +26,5 @@ public class Main extends Application{
     
     }
 }
+
+
