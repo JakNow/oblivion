@@ -19,18 +19,19 @@ public abstract class Application implements Runnable {
   private final Thread gameLoopThread;
   @Getter
   private final RendererHandler rendererHandler;
-  
+
   private int fps;
   private int ups;
 
   public Application() {
+    logger.info("WELCOME TO OBLIVION ENGINE!");
     logger.info("Starting Application");
     this.gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
     new AppConfigRunner();
     this.window = new Window();
     this.timer = new Timer();
     this.rendererHandler = RendererHandler.getInstance();
-    
+
     this.ups = Integer.getInteger("engine.ups") != null ? Integer.getInteger("engine.ups") : 30;
     this.fps = Integer.getInteger("engine.fps") != null ? Integer.getInteger("engine.fps") : 60;
 
@@ -66,10 +67,10 @@ public abstract class Application implements Runnable {
         update(interval);
         accumulator -= interval;
       }
-    
-        rendererHandler.render();
-    
-        window.updateAfterRendering();
+
+      rendererHandler.render();
+
+      window.updateAfterRendering();
       if (!window.isvSync()) {
         sync();
       }
@@ -90,5 +91,4 @@ public abstract class Application implements Runnable {
   }
 
   protected abstract void update(float delta);
-
 }
