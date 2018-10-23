@@ -13,33 +13,39 @@ import java.util.Properties;
  */
 public class GetSystemProperty {
        
-    public static Integer getInt(String key) {
-      Properties p = System.getProperties();
-      p.list(System.out);  
-        return Integer.getInteger(key);
-    }  
-    
-    public static Float getFloat(String key) {
-      Properties p = System.getProperties();
-      p.list(System.out);  
-        return Float.parseFloat(key);
-    }
-    
-    public static Double getDouble(String key) {
-      Properties p = System.getProperties();
-      p.list(System.out);  
-        return Double.parseDouble(key);
-    }
-    
-    public static char getChar(String key) {
-      Properties p = System.getProperties();
-      p.list(System.out);  
-        return key.charAt(0);
-    }
-    
-    public static String getString(String key) {
-      Properties p = System.getProperties();
-      p.list(System.out);  
-        return key;
+    public static int getInt(String key,int key2) {
+        if(!key.isEmpty()){
+            return Integer.parseInt(key);
+        }else{
+            return key2;
+        } 
+    }   
+    public static float getFloat(String key,float key2) {
+        if(!key.isEmpty()){
+            return Integer.parseInt(key);
+        }else{
+            return key2;
+        } 
+    }    
+    public static double getDouble(String key,double key2) {
+        if(!key.isEmpty()){
+            return Integer.parseInt(key);
+        }else{
+            return key2;
+        } 
+    }    
+    public static char getChar(String key,char key2) {
+        if(!key.isEmpty()){
+            return key.charAt(0);
+        }else{
+            return key2;
+        } 
+    }   
+    public static String getString(String key,String key2) {
+        if(!key.isEmpty()){
+            return key;
+        }else{
+            return key2;
+        } 
     }
 }
