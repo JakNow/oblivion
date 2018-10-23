@@ -12,59 +12,34 @@ import java.util.Properties;
  * @author Piotr
  */
 public class GetSystemProperty {
-    
+       
     public static Integer getInt(String key) {
-     return Integer.getInteger(key);
-    }
-    
-    public static float getFloat(float b){
-       
-       Properties p = System.getProperties();
-      
-      if(p.isEmpty()){
-        p.list(System.out);  
-      }else{
-        return b;  
-      }  
-        return 0;        
-    }
-    
-    public static double getDouble(double c){
-        
       Properties p = System.getProperties();
-      
-      if(p.isEmpty()){
-        p.list(System.out);  
-      }else{
-        return c;  
-      }  
-        return 0;
+      p.list(System.out);  
+        return Integer.getInteger(key);
+    }  
+    
+    public static Float getFloat(String key) {
+      Properties p = System.getProperties();
+      p.list(System.out);  
+        return Float.parseFloat(key);
     }
     
-    public static char getChar(char d){
-       
-       Properties p = System.getProperties();
-      
-      if(p.isEmpty()){
-        p.list(System.out);  
-      }else{
-        return d;  
-      }  
-        return 0;        
+    public static Double getDouble(String key) {
+      Properties p = System.getProperties();
+      p.list(System.out);  
+        return Double.parseDouble(key);
     }
     
-    public static String getString(String e){
-        
-        Properties p = System.getProperties();
-      
-      if(p.isEmpty()){
-        p.list(System.out);  
-      }else{
-        return e;  
-      }  
-        return " ";
+    public static char getChar(String key) {
+      Properties p = System.getProperties();
+      p.list(System.out);  
+        return key.charAt(0);
     }
-
     
-    
+    public static String getString(String key) {
+      Properties p = System.getProperties();
+      p.list(System.out);  
+        return key;
+    }
 }
