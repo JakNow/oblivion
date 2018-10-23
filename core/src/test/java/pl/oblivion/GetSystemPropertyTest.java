@@ -32,19 +32,19 @@ public class GetSystemPropertyTest
 
   @Test
   public void getInt_propertyAvailable_Test() {
-    assertThat(GetSystemProperty.getInt("1"))
+    assertThat(GetSystemProperty.getInt("1",123))
         .withFailMessage("Couldn't read int property")
         .isNotNull();
-    assertThat(GetSystemProperty.getInt("1"))
+    assertThat(GetSystemProperty.getInt("1",123))
         .withFailMessage("Property value is not correct")
         .isEqualTo(1);
   }
 
   @Test
   public void getInt_propertyNotPresent_Test() {
-    assertThat(GetSystemProperty.getInt("NotPresent"))
-        .withFailMessage("Should return null value.")
-        .isNull();
+    assertThat(GetSystemProperty.getInt("NotPresent",123))
+        .withFailMessage("Should return 123 value.")
+        .isEqualTo(123);
   }
 
   @Test
