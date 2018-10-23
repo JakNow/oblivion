@@ -10,8 +10,8 @@ public class GetSystemPropertyTest {
   @BeforeClass
   public static void setUp() {
     System.getProperties().setProperty("GetInt", "1");
-    System.getProperties().setProperty("GetFloat", "1.0");
-    System.getProperties().setProperty("GetDouble", "1.0");
+    System.getProperties().setProperty("GetFloat", "1.23f");
+    System.getProperties().setProperty("GetDouble", "123456789");
     System.getProperties().setProperty("GetString", "String");
     System.getProperties().setProperty("GetChar", "a");
   }
@@ -40,14 +40,14 @@ public class GetSystemPropertyTest {
         .isNotNull();
     assertThat(GetSystemProperty.getFloat("GetFloat", 123.0f))
         .withFailMessage("Property value is not correct")
-        .isEqualTo(1.0f);
+        .isEqualTo(1.23f);
   }
 
   @Test
   public void getFloat_propertyNotPresent_SetDefault_Test() {
-    assertThat(GetSystemProperty.getFloat("NotPresent", 123.0f))
+    assertThat(GetSystemProperty.getFloat("NotPresent", 1.491f))
         .withFailMessage("Should return 123.0f value.")
-        .isEqualTo(123.0f);
+        .isEqualTo(1.491f);
   }
 
   @Test
@@ -57,14 +57,14 @@ public class GetSystemPropertyTest {
         .isNotNull();
     assertThat(GetSystemProperty.getDouble("GetDouble", 123.0))
         .withFailMessage("Property value is not correct")
-        .isEqualTo(1.0);
+        .isEqualTo(1.23456789E8);
   }
 
   @Test
   public void getDouble_propertyNotPresent_SetDefault_Test() {
-    assertThat(GetSystemProperty.getDouble("NotPresent", 123))
+    assertThat(GetSystemProperty.getDouble("NotPresent", 12345678))
         .withFailMessage("Should return 123 value.")
-        .isEqualTo(123.0D);
+        .isEqualTo(1.2345678E7);
   }
 
   @Test
