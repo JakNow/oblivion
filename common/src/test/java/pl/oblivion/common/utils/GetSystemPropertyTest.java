@@ -14,6 +14,7 @@ public class GetSystemPropertyTest {
     System.getProperties().setProperty("GetDouble", "1.23512d");
     System.getProperties().setProperty("GetString", "String");
     System.getProperties().setProperty("GetChar", "a");
+    System.getProperties().setProperty("GetBoolean", "true");
   }
 
   @Test
@@ -91,7 +92,7 @@ public class GetSystemPropertyTest {
         .isNotNull();
     assertThat(GetSystemProperty.getString("GetString", "abc"))
         .withFailMessage("Property value is not correct")
-        .isEqualTo("a");
+        .isEqualTo("String");
   }
 
   @Test
@@ -99,5 +100,22 @@ public class GetSystemPropertyTest {
     assertThat(GetSystemProperty.getString("NotPresent", "abc"))
         .withFailMessage("Should return abc value.")
         .isEqualTo("abc");
+  }
+
+  @Test
+  public void getBoolean_propertyAvailable_Test() {
+    assertThat(GetSystemProperty.getBoolean("GetBoolean", true))
+        .withFailMessage("Couldn't read String property")
+        .isNotNull();
+    assertThat(GetSystemProperty.getBoolean("GetBoolean", true))
+        .withFailMessage("Property value is not correct")
+        .isEqualTo(true);
+  }
+
+  @Test
+  public void getBoolean_propertyNotPresent_SetDefault_Test() {
+    assertThat(GetSystemProperty.getBoolean("NotPresent", true))
+        .withFailMessage("Should return abc value.")
+        .isEqualTo(true);
   }
 }
