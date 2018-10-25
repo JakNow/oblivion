@@ -14,6 +14,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import pl.oblivion.common.utils.GetSystemProperty;
 
 public class Window {
 
@@ -26,7 +27,10 @@ public class Window {
   private boolean vSync;
 
   Window() {
-    this.width =
+    this.width = GetSystemProperty.getInt("window.width", 600);
+    this.height = GetSystemProperty.getInt("window.height", (600*9/16));
+    this.title = GetSystemProperty.getString("window.title", "Default title");
+    /*this.width =
         Integer.getInteger("window.width") != null ? Integer.getInteger("window.width") : 600;
     this.height =
         Integer.getInteger("window.height") != null
@@ -35,7 +39,7 @@ public class Window {
     this.title =
         System.getProperty("window.title") != null
             ? System.getProperty("window.title")
-            : "Default title";
+            : "Default title";*/
     this.vSync = true;
   }
 
