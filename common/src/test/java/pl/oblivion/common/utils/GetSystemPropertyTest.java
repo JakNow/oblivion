@@ -10,8 +10,8 @@ public class GetSystemPropertyTest {
   @BeforeClass
   public static void setUp() {
     System.getProperties().setProperty("GetInt", "1");
-    System.getProperties().setProperty("GetFloat", "1.23f");
-    System.getProperties().setProperty("GetDouble", "123456789");
+    System.getProperties().setProperty("GetFloat", "1.23512f");
+    System.getProperties().setProperty("GetDouble", "1.23512d");
     System.getProperties().setProperty("GetString", "String");
     System.getProperties().setProperty("GetChar", "a");
   }
@@ -40,7 +40,7 @@ public class GetSystemPropertyTest {
         .isNotNull();
     assertThat(GetSystemProperty.getFloat("GetFloat", 123.0f))
         .withFailMessage("Property value is not correct")
-        .isEqualTo(1.23f);
+        .isEqualTo(1.23512f);
   }
 
   @Test
@@ -57,7 +57,7 @@ public class GetSystemPropertyTest {
         .isNotNull();
     assertThat(GetSystemProperty.getDouble("GetDouble", 123.0))
         .withFailMessage("Property value is not correct")
-        .isEqualTo(1.23456789E8);
+        .isEqualTo(1.23512d);
   }
 
   @Test
