@@ -14,7 +14,6 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
-import pl.oblivion.common.utils.GetSystemProperty;
 import static pl.oblivion.common.utils.GetSystemProperty.*;
 
 public class Window {
