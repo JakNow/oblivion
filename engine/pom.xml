@@ -149,7 +149,6 @@
             <groupId>pl.oblivion</groupId>
             <artifactId>model</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
-        
+        </dependency>       
     </dependencies>
 </project>

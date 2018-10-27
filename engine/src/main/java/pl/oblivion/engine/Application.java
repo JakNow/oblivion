@@ -9,6 +9,7 @@ import pl.oblivion.engine.renderer.RendererHandler;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11C.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11C.glClear;
+import static pl.oblivion.common.utils.GetSystemProperty.*;
 
 public abstract class Application implements Runnable {
 
@@ -32,8 +33,8 @@ public abstract class Application implements Runnable {
     this.timer = new Timer();
     this.rendererHandler = RendererHandler.getInstance();
 
-    this.ups = Integer.getInteger("engine.ups") != null ? Integer.getInteger("engine.ups") : 30;
-    this.fps = Integer.getInteger("engine.fps") != null ? Integer.getInteger("engine.fps") : 60;
+    this.ups = getInt("engine.ups", 30);
+    this.fps = getInt("engine.fps", 60);
 
     this.start();
   }
