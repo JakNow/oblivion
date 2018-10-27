@@ -15,59 +15,33 @@ import org.junit.Test;
  */
 public class ClampTest {
     
-  @BeforeClass
-  public static void setUp() {
-    
-  }
   
   @Test
-  public void getminmax_propertyAvailable_Test() {
-    assertThat(Clamp.minmax(123, 100, 200))
-        .withFailMessage("Couldn't read int property")
-        .isNotNull();
+  public void clamp_minmax_returnsCorrectValues_Test() {
     assertThat(Clamp.minmax(123,100,200))
-        .withFailMessage("Property value is not correct")
+        .withFailMessage("Output value is not correct. Should be 123")
         .isEqualTo(123);
-  }
-
-  @Test
-  public void getminmax_propertyNotPresent_SetDefault_Test() {
-    assertThat(Clamp.minmax(123,100,200))
-        .withFailMessage("Should return 123 value.")
+    assertThat(Clamp.min(100, 123))
+        .withFailMessage("Should return min")
         .isEqualTo(123);
-  }
-  
-  @Test
-  public void getmin_propertyAvailable_Test() {
-    assertThat(Clamp.min(123, 100))
-        .withFailMessage("Couldn't read int property")
-        .isNotNull();
-    assertThat(Clamp.min(123, 100))
-        .withFailMessage("Property value is not correct")
-        .isEqualTo(123);
-  }
-
-  @Test
-  public void getmin_propertyNotPresent_SetDefault_Test() {
-    assertThat(Clamp.min(123, 100))
-        .withFailMessage("Should return 123 value.")
+    assertThat(Clamp.max(200, 123))
+        .withFailMessage("should return max")
         .isEqualTo(123);
   }
   
   @Test
-  public void getmax_propertyAvailable_Test() {
+  public void clamp_min_returnsCorrectValues_Test() {
+    assertThat(Clamp.min(123, 100))
+        .withFailMessage("Output value is not correct. Should be 123")
+        .isEqualTo(123);
+  }
+  
+  @Test
+  public void clamp_max_returnsCorrectValues_Test() {
     assertThat(Clamp.max(123, 200))
-        .withFailMessage("Couldn't read int property")
-        .isNotNull();
-    assertThat(Clamp.max(123, 200))
-        .withFailMessage("Property value is not correct")
+        .withFailMessage("Output value is not correct. Should be 123")
         .isEqualTo(123);
   }
 
-  @Test
-  public void getmax_propertyNotPresent_SetDefault_Test() {
-    assertThat(Clamp.max(123, 200))
-        .withFailMessage("Should return 123 value.")
-        .isEqualTo(123);
-  }
+  
 }
