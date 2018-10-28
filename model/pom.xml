@@ -20,7 +20,7 @@
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl-opengl</artifactId>
-            <version>3.1.2</version>
+            <version>${lwjgl.version}</version>
         </dependency>
     </dependencies>
 
