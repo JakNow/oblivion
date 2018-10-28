@@ -9,17 +9,15 @@ import pl.oblivion.engine.renderer.RendererHandler;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11C.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11C.glClear;
-import static pl.oblivion.common.utils.GetSystemProperty.*;
+import static pl.oblivion.common.utils.GetSystemProperty.getInt;
 
-public abstract class Application implements Runnable {
+public abstract class Application {
 
   private static final Logger logger = LogManager.getLogger(Application.class);
 
   private final Window window;
   private final Timer timer;
-  private final Thread gameLoopThread;
-  @Getter
-  private final RendererHandler rendererHandler;
+  @Getter private final RendererHandler rendererHandler;
 
   private int fps;
   private int ups;
@@ -27,7 +25,6 @@ public abstract class Application implements Runnable {
   public Application() {
     logger.info("WELCOME TO OBLIVION ENGINE!");
     logger.info("Starting Application");
-    this.gameLoopThread = new Thread(this, "GAME_LOOP_THREAD");
     new AppConfigRunner();
     this.window = new Window();
     this.timer = new Timer();
@@ -36,17 +33,7 @@ public abstract class Application implements Runnable {
     this.ups = getInt("engine.ups", 30);
     this.fps = getInt("engine.fps", 60);
 
-    this.start();
-  }
-
-  private void start() {
-    gameLoopThread.start();
-  }
-
-  @Override
-  public void run() {
     init();
-    gameloop();
   }
 
   private void init() {
@@ -54,13 +41,12 @@ public abstract class Application implements Runnable {
     this.timer.getTime();
   }
 
-  private void gameloop() {
+  public void run() {
     float elapsedTime;
     float accumulator = 0f;
     float interval = 1f / ups;
 
     while (!window.windowShouldClose()) {
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       elapsedTime = timer.getElapsedTime();
       accumulator += elapsedTime;
 
@@ -76,6 +62,7 @@ public abstract class Application implements Runnable {
         sync();
       }
     }
+    rendererHandler.delete();
     window.destroy();
   }
 
