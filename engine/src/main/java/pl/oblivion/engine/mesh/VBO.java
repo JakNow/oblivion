@@ -1,10 +1,10 @@
-package pl.oblivion.model.mesh;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL15;
+package pl.oblivion.engine.mesh;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL15;
 
 /** Vertex Buffer Object */
 public class VBO {
@@ -40,19 +40,19 @@ public class VBO {
   public void storeData(FloatBuffer buffer) {
     GL15.glBufferData(type, buffer, GL15.GL_STATIC_DRAW);
   }
-  
-  public void storeData(int[] data){
-      IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
-      buffer.put(data);
-      buffer.flip();
-      storeData(buffer);
+
+  public void storeData(int[] data) {
+    IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
+    buffer.put(data);
+    buffer.flip();
+    storeData(buffer);
   }
-    
-    public void storeData(IntBuffer buffer) {
-        GL15.glBufferData(type, buffer, GL15.GL_STATIC_DRAW);
-    }
-    
-    public void delete(){
-      GL15.glDeleteBuffers(id);
-    }
+
+  public void storeData(IntBuffer buffer) {
+    GL15.glBufferData(type, buffer, GL15.GL_STATIC_DRAW);
+  }
+
+  public void delete() {
+    GL15.glDeleteBuffers(id);
+  }
 }

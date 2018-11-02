@@ -1,14 +1,12 @@
-package pl.oblivion.engine;
+package pl.oblivion.core;
 
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.oblivion.common.annotations.AppConfigRunner;
-import pl.oblivion.engine.renderer.RendererHandler;
+import pl.oblivion.engine.Timer;
+import pl.oblivion.engine.Window;
 
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11C.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11C.glClear;
 import static pl.oblivion.common.utils.GetSystemProperty.getInt;
 
 public abstract class Application {
@@ -17,14 +15,15 @@ public abstract class Application {
 
   private final Window window;
   private final Timer timer;
-  @Getter private final RendererHandler rendererHandler;
+  @Getter
+  private final RendererHandler rendererHandler;
 
   private int fps;
   private int ups;
 
-  public Application() {
+  protected Application() {
     logger.info("WELCOME TO OBLIVION ENGINE!");
-    logger.info("Starting Application");
+    logger.info("Starting the Application");
     new AppConfigRunner();
     this.window = new Window();
     this.timer = new Timer();
@@ -65,7 +64,7 @@ public abstract class Application {
     rendererHandler.delete();
     window.destroy();
   }
-
+  
   private void sync() {
     float loopSlot = 1f / fps;
     double endTime = timer.getLastLoopTime() + loopSlot;
@@ -79,4 +78,5 @@ public abstract class Application {
   }
 
   protected abstract void update(float delta);
+  
 }

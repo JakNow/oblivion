@@ -1,20 +1,21 @@
 package pl.oblivion.engine;
 
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static pl.oblivion.common.utils.GetSystemProperty.getInt;
+import static pl.oblivion.common.utils.GetSystemProperty.getString;
+
+import java.nio.IntBuffer;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
-
-import java.nio.IntBuffer;
-
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.MemoryUtil.NULL;
-import static pl.oblivion.common.utils.GetSystemProperty.*;
 
 public class Window {
 
@@ -26,14 +27,14 @@ public class Window {
   private long window;
   private boolean vSync;
 
-  Window() {
+  public Window() {
     this.width = getInt("window.width", 600);
-    this.height = getInt("window.height", (600*9/16));
+    this.height = getInt("window.height", (600 * 9 / 16));
     this.title = getString("window.title", "Default title");
     this.vSync = true;
   }
 
-  protected void init() {
+  public void init() {
     GLFWErrorCallback.createPrint(System.err).set();
 
     if (!glfwInit()) {
@@ -46,9 +47,9 @@ public class Window {
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
     this.window = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
-    if (window == NULL){
-        logger.error("Failed to create the GLFW window");
-        throw new RuntimeException();
+    if (window == NULL) {
+      logger.error("Failed to create the GLFW window");
+      throw new RuntimeException();
     }
 
     glfwSetKeyCallback(
@@ -86,16 +87,16 @@ public class Window {
   }
 
   public boolean windowShouldClose() {
-      logger.info("Closing window.");
+    logger.info("Closing window.");
     return glfwWindowShouldClose(window);
   }
 
-  protected void updateAfterRendering() {
+  public void updateAfterRendering() {
     glfwSwapBuffers(window); // swap the color buffers
     glfwPollEvents();
   }
 
-  protected void destroy() {
+  public void destroy() {
     // Free the window callbacks and destroy the window
     glfwFreeCallbacks(window);
     glfwDestroyWindow(window);
@@ -103,7 +104,7 @@ public class Window {
     // Terminate GLFW and free the error callback
     glfwTerminate();
     glfwSetErrorCallback(null).free();
-    
+
     logger.info("Terminating GLFW");
   }
 
@@ -111,4 +112,3 @@ public class Window {
     return vSync;
   }
 }
-
