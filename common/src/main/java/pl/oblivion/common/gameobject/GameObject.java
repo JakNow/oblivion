@@ -1,5 +1,3 @@
 package pl.oblivion.common.gameobject;
 
-public abstract class GameObject {
-
-}
+public abstract class GameObject {}

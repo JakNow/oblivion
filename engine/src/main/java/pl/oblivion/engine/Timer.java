@@ -4,7 +4,7 @@ public class Timer {
 
   private double lastLoopTime;
 
-  Timer() {
+  public Timer() {
     this.init();
   }
 
@@ -12,18 +12,18 @@ public class Timer {
     lastLoopTime = getTime();
   }
 
-  double getTime() {
+  public double getTime() {
     return System.nanoTime() / 1000_000_000.0;
   }
 
-  float getElapsedTime() {
+  public float getElapsedTime() {
     double time = getTime();
     float elapsedTime = (float) (time - lastLoopTime);
     lastLoopTime = time;
     return elapsedTime;
   }
 
-  double getLastLoopTime() {
+  public double getLastLoopTime() {
     return lastLoopTime;
   }
 }
