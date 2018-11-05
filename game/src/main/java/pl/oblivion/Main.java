@@ -6,7 +6,7 @@ import pl.oblivion.common.annotations.AppConfig;
 import pl.oblivion.core.Application;
 
 @AppConfig("app.properties")
-public class Main extends Application {
+public class Main {
 
   private static final Logger logger = LogManager.getLogger(Main.class);
   
@@ -15,8 +15,6 @@ public class Main extends Application {
   }
   
   public static void main(String[] args) {
-    new Main().run();
+    Application.start(Main.class,args);
   }
-
-  protected void update(float delta) {}
 }

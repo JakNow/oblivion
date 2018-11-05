@@ -3,13 +3,14 @@ package pl.oblivion.core;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pl.oblivion.common.annotations.AppConfig;
 import pl.oblivion.common.annotations.AppConfigRunner;
 import pl.oblivion.engine.Timer;
 import pl.oblivion.engine.Window;
 
 import static pl.oblivion.common.utils.GetSystemProperty.getInt;
 
-public abstract class Application {
+public class Application {
 
   private static final Logger logger = LogManager.getLogger(Application.class);
 
@@ -21,10 +22,9 @@ public abstract class Application {
   private int fps;
   private int ups;
 
-  protected Application() {
+  private Application() {
     logger.info("WELCOME TO OBLIVION ENGINE!");
     logger.info("Starting the Application");
-    new AppConfigRunner();
     this.window = new Window();
     this.timer = new Timer();
     this.rendererHandler = RendererHandler.getInstance();
@@ -34,13 +34,19 @@ public abstract class Application {
 
     init();
   }
-
+  
+  public static void start(Class mainClass, String[] args) {
+    AppConfig appConfig = (AppConfig) mainClass.getAnnotation(AppConfig.class);
+    new AppConfigRunner(appConfig.value());
+    new Application().run();
+  }
+  
   private void init() {
     this.window.init();
     this.timer.getTime();
   }
 
-  public void run() {
+  private void run() {
     float elapsedTime;
     float accumulator = 0f;
     float interval = 1f / ups;
@@ -77,6 +83,8 @@ public abstract class Application {
     }
   }
 
-  protected abstract void update(float delta);
+  private void update(float delta){
+  
+  }
   
 }

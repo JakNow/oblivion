@@ -10,7 +10,8 @@ public class AppConfigRunnerTest {
 
   @BeforeClass
   public static void init() {
-    new AppConfigRunner();
+    AppConfig annotation = AppConfigRunnerTest.class.getAnnotation(AppConfig.class);
+    new AppConfigRunner(annotation.value());
   }
 
   @Test

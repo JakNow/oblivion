@@ -12,23 +12,15 @@ public class AppConfigRunner {
 
   private static final Logger logger = LogManager.getLogger(AppConfigRunner.class);
 
-  public AppConfigRunner() {
-    importProperties();
+  public AppConfigRunner(String path) {
+    loadProperties(path);
   }
 
-  private static void loadProperties(String fileName) {
+  private void loadProperties(String fileName) {
     try (InputStream is = AppConfigRunner.class.getClassLoader().getResourceAsStream(fileName)) {
       System.getProperties().load(is);
     } catch (IOException e) {
       logger.info("Couldn't read %.", fileName, e);
-    }
-  }
-
-  private void importProperties() {
-    Reflections reflections = new Reflections();
-    Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(AppConfig.class);
-    for (Class<?> main : annotated) {
-      loadProperties(main.getAnnotation(AppConfig.class).value());
     }
   }
 }
