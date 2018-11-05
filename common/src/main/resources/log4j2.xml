@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug" name="XMLConfigTest" packages="org.apache.logging.log4j.test">
+    <Properties>
+        <Property name="module">common</Property>
+        <Property name="filename">../logs/${module}.log</Property>
+    </Properties>
+    <ThresholdFilter level="trace"/>
+
+    <Appenders>
+        <Console name="STDOUT">
+            <PatternLayout>
+                <pattern>
+                    %highlight{%d{yyyy-MM-dd HH:mm:ss} [${module}] %-5p %c{1}:%L }{FATAL=red bold, ERROR=bright red,
+                    WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue}- %m%n
+                </pattern>
+                <disableAnsi>false</disableAnsi>
+            </PatternLayout>
+        </Console>
+        <Console name="FLOW">
+            <!-- this pattern outputs class name and line number -->
+            <PatternLayout pattern="%C{1}.%M %m %ex%n"/>
+            <filters>
+                <MarkerFilter marker="FLOW" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+                <MarkerFilter marker="EXCEPTION" onMatch="ACCEPT" onMismatch="DENY"/>
+            </filters>
+        </Console>
+        <File name="File" fileName="${filename}">
+            <PatternLayout>
+                <pattern>%d %p %C{1.} [%t] %m%n</pattern>
+            </PatternLayout>
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.apache.logging.log4j.test1" level="debug" additivity="false">
+            <ThreadContextMapFilter>
+                <KeyValuePair key="test" value="123"/>
+            </ThreadContextMapFilter>
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
+
+        <Logger name="org.apache.logging.log4j.test2" level="debug" additivity="false">
+            <Property name="user">${sys:user.name}</Property>
+            <AppenderRef ref="File">
+                <ThreadContextMapFilter>
+                    <KeyValuePair key="test" value="123"/>
+                </ThreadContextMapFilter>
+            </AppenderRef>
+            <AppenderRef ref="STDOUT" level="error"/>
+        </Logger>
+
+        <Root level="trace">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+    </Loggers>
+
+</Configuration>
