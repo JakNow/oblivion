@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="debug" name="XMLConfigTest" packages="org.apache.logging.log4j.test">
     <Properties>
-        <Property name="module">common</Property>
+        <Property name="module">engine</Property>
         <Property name="filename">../logs/${module}.log</Property>
     </Properties>
     <ThresholdFilter level="trace"/>
@@ -10,8 +10,8 @@
         <Console name="STDOUT">
             <PatternLayout>
                 <pattern>
-                    %highlight{%d{yyyy-MM-dd HH:mm:ss} [${module}] %-5p %c{1}:%L }{FATAL=red bold, ERROR=pink,
-                    WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue}- %m%n
+                    %highlight{%d{yyyy-MM-dd HH:mm:ss} [${module}] %-5p %c{1}:%L }{FATAL=chocolat bold, ERROR=liquid sunset,
+                    WARN=ivory bold, INFO=black, DEBUG=botanica bold, TRACE=bounty}- %m%n
                 </pattern>
                 <disableAnsi>false</disableAnsi>
             </PatternLayout>
