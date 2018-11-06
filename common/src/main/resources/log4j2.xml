@@ -10,10 +10,9 @@
         <Console name="STDOUT">
             <PatternLayout>
                 <pattern>
+                    %highlight{%-5p %c{1}:%L}- %m%n
                     %highlight{%d{yyyy-MM-dd HH:mm:ss} [${module}] }{FATAL=red bold, ERROR=red,
-                    WARN=red bold, INFO=red, DEBUG=red bold, TRACE=red}- %m%n
-                    %highlight{%-5p %c{1}:%L}{FATAL=green bold, ERROR=green,
-                    WARN=green bold, INFO=green, DEBUG=green bold, TRACE=green}- %m%n
+                    WARN=red bold, INFO=red, DEBUG=red bold, TRACE=red}
                 </pattern>
                 <disableAnsi>false</disableAnsi>
             </PatternLayout>
