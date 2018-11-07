@@ -18,22 +18,19 @@ class RendererHandler {
 
   private final Map<RendererType, AbstractRenderer> rendererMap;
 
-  private StaticRenderer staticRenderer;
-
   private RendererHandler() {
     rendererMap = new HashMap<>();
   }
 
-  public void initRenderers() {
-    staticRenderer = new StaticRenderer();
-    rendererMap.put(RendererType.STATIC_RENDERER, staticRenderer);
-  }
-
-  public static synchronized RendererHandler getInstance() {
+  static synchronized RendererHandler getInstance() {
     if (instance == null) {
       instance = new RendererHandler();
     }
     return instance;
+  }
+
+  void initRenderers() {
+    rendererMap.put(RendererType.STATIC_RENDERER, new StaticRenderer());
   }
 
   void delete() {
