@@ -1,14 +1,15 @@
 package pl.oblivion.core;
 
-import lombok.Getter;
+import static pl.oblivion.common.utils.GetSystemProperty.getInt;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import lombok.Getter;
 import pl.oblivion.common.annotations.AppConfig;
 import pl.oblivion.common.annotations.AppConfigRunner;
 import pl.oblivion.engine.Timer;
 import pl.oblivion.engine.Window;
-
-import static pl.oblivion.common.utils.GetSystemProperty.getInt;
 
 public class Application {
 
@@ -16,8 +17,7 @@ public class Application {
 
   private final Window window;
   private final Timer timer;
-  @Getter
-  private final RendererHandler rendererHandler;
+  @Getter private final RendererHandler rendererHandler;
 
   private int fps;
   private int ups;
@@ -34,16 +34,17 @@ public class Application {
 
     init();
   }
-  
+
   public static void start(Class mainClass, String[] args) {
     AppConfig appConfig = (AppConfig) mainClass.getAnnotation(AppConfig.class);
     new AppConfigRunner(appConfig.value());
     new Application().run();
   }
-  
+
   private void init() {
     this.window.init();
     this.timer.getTime();
+    this.rendererHandler.initRenderers();
   }
 
   private void run() {
@@ -70,7 +71,7 @@ public class Application {
     rendererHandler.delete();
     window.destroy();
   }
-  
+
   private void sync() {
     float loopSlot = 1f / fps;
     double endTime = timer.getLastLoopTime() + loopSlot;
@@ -83,8 +84,5 @@ public class Application {
     }
   }
 
-  private void update(float delta){
-  
-  }
-  
+  private void update(float delta) {}
 }

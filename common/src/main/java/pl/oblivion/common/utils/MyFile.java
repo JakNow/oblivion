@@ -2,6 +2,7 @@ package pl.oblivion.common.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -10,8 +11,8 @@ import org.apache.logging.log4j.Logger;
 
 public class MyFile {
 
-  private static final String FILE_SEPARATOR = System.lineSeparator();
   private static final Logger logger = LogManager.getLogger(MyFile.class);
+  private static final String FILE_SEPARATOR = "/";
 
   private String path;
   private String name;
@@ -19,16 +20,18 @@ public class MyFile {
   private BufferedReader bufferedReader;
 
   public MyFile(String path) {
-    this.path = FILE_SEPARATOR + path;
+    this.path = path;
     String[] dirs = path.split(FILE_SEPARATOR);
     this.name = dirs[dirs.length - 1];
   }
 
   public MyFile(String... paths) {
     this.path = "";
-    for (String part : paths) {
-      this.path += (FILE_SEPARATOR + part); //todo replace with StringBuilder
+    int length = paths.length;
+    for (int i = 0; i < length - 1; i++) {
+      this.path += paths[i] + FILE_SEPARATOR; // todo replace with StringBuilder
     }
+    this.path += paths[length - 1];
     String[] dirs = path.split(FILE_SEPARATOR);
     this.name = dirs[dirs.length - 1];
   }
@@ -40,9 +43,11 @@ public class MyFile {
 
   public MyFile(MyFile file, String... subFiles) {
     this.path = file.path;
-    for (String part : subFiles) {
-      this.path += (FILE_SEPARATOR + part); //todo replace with StringBuilder
+    int length = subFiles.length;
+    for (int i = 0; i < length - 1; i++) {
+      this.path += subFiles[i] + FILE_SEPARATOR; // todo replace with StringBuilder
     }
+    this.path += subFiles[length - 1];
     String[] dirs = path.split(FILE_SEPARATOR);
     this.name = dirs[dirs.length - 1];
   }
@@ -56,14 +61,10 @@ public class MyFile {
     return path;
   }
 
-  public BufferedReader getReader() {
-    try {
-      bufferedReader = Files.newBufferedReader(Paths.get(path));
-      return bufferedReader;
-    } catch (IOException e) {
-      logger.error("Couldn't get reader for %", path, e);
-    }
-    return null;
+  public BufferedReader getReader() throws IOException, URISyntaxException {
+    bufferedReader =
+        Files.newBufferedReader(Paths.get(ClassLoader.getSystemResource(path).toURI()));
+    return bufferedReader;
   }
 
   public void closeReader() {
