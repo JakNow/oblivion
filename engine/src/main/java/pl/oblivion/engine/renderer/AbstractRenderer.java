@@ -23,7 +23,7 @@ public abstract class AbstractRenderer {
 
   public abstract void end();
 
-  private void cleanUp() {
+  public void cleanUp() {
     this.shader.cleanUp();
   }
 }
