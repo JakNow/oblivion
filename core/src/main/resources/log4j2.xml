@@ -3,7 +3,7 @@
     <Properties>
         <Property name="module">core</Property>
         <Property name="filename">../logs/${module}.log</Property>
-        <Property name="color">green</Property>
+        <Property name="color">yellow</Property>
         <Property name="moduleColor">FATAL=${color},ERROR=${color}, WARN=${color}, INFO=${color}, DEBUG=${color},
             TRACE=${color}</Property>
         <Property name="levelColor">FATAL=red bold,ERROR=bright red, WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue</Property>
