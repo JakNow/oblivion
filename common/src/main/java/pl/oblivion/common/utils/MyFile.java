@@ -1,13 +1,11 @@
 package pl.oblivion.common.utils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class MyFile {
 
@@ -61,9 +59,9 @@ public class MyFile {
     return path;
   }
 
-  public BufferedReader getReader() throws IOException, URISyntaxException {
+  public BufferedReader getReader(){
     bufferedReader =
-        Files.newBufferedReader(Paths.get(ClassLoader.getSystemResource(path).toURI()));
+        new BufferedReader(new InputStreamReader(Class.class.getResourceAsStream(path)));
     return bufferedReader;
   }
 
