@@ -34,7 +34,7 @@ public abstract class AbstractShader {
 
   private int loadShader(String shaderType, String shader, int type) {
     StringBuilder shaderSource = new StringBuilder();
-    file = new MyFile("shaders/" + shaderType + "/" + shader);
+    file = new MyFile("/shaders/" + shaderType + "/" + shader);
     try (BufferedReader br = file.getReader()) {
       shaderSource.append(br.lines().collect(Collectors.joining("\n")));
     } catch (Exception e) {
