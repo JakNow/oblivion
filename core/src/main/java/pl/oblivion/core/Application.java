@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import lombok.Getter;
 import pl.oblivion.common.annotations.AppConfig;
 import pl.oblivion.common.annotations.AppConfigRunner;
+import pl.oblivion.engine.Camera;
 import pl.oblivion.engine.Timer;
 import pl.oblivion.engine.Window;
 
@@ -17,6 +18,7 @@ public class Application {
 
   private final Window window;
   private final Timer timer;
+  private final Camera camera;
   @Getter private final RendererHandler rendererHandler;
 
   private int fps;
@@ -27,6 +29,7 @@ public class Application {
     logger.info("Starting the Application");
     this.window = new Window();
     this.timer = new Timer();
+    this.camera = new Camera();
     this.rendererHandler = RendererHandler.getInstance();
 
     this.ups = getInt("engine.ups", 30);
@@ -44,7 +47,7 @@ public class Application {
   private void init() {
     this.window.init();
     this.timer.getTime();
-    this.rendererHandler.initRenderers();
+    this.rendererHandler.initRenderers(this.window, this.camera);
   }
 
   private void run() {
@@ -64,7 +67,7 @@ public class Application {
       rendererHandler.render();
 
       window.updateAfterRendering();
-      if (!window.isvSync()) {
+      if (!window.isVSync()) {
         sync();
       }
     }

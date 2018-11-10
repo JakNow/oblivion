@@ -1,13 +1,14 @@
 package pl.oblivion.core;
 
-import static org.lwjgl.opengl.GL11C.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11C.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11C.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 
+import pl.oblivion.engine.Camera;
+import pl.oblivion.engine.Window;
 import pl.oblivion.engine.renderer.AbstractRenderer;
 import pl.oblivion.engine.renderer.RendererType;
 import pl.oblivion.engine.renderer.StaticRenderer;
@@ -15,8 +16,11 @@ import pl.oblivion.engine.renderer.StaticRenderer;
 class RendererHandler {
 
   private static RendererHandler instance;
-
+  private Window window;
   private final Map<RendererType, AbstractRenderer> rendererMap;
+
+  private float currentWidth;
+  private float currentHeight;
 
   private RendererHandler() {
     rendererMap = new HashMap<>();
@@ -29,8 +33,11 @@ class RendererHandler {
     return instance;
   }
 
-  void initRenderers() {
-    rendererMap.put(RendererType.STATIC_RENDERER, new StaticRenderer());
+  void initRenderers(Window window, Camera camera) {
+    rendererMap.put(RendererType.STATIC_RENDERER, new StaticRenderer(window, camera));
+    this.window = window;
+    this.currentWidth = window.getWidth();
+    this.currentHeight = window.getHeight();
   }
 
   void delete() {
@@ -42,8 +49,19 @@ class RendererHandler {
   }
 
   void render() {
+    if (window.isResized()) {
+      glViewport(0, 0, window.getWidth(), window.getHeight());
+      window.updateProjectionMatrix();
+      currentWidth = window.getWidth();
+      currentHeight = window.getHeight();
+    }
     GL11.glClearColor(1f, 0, 0, 1f);
     GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    rendererMap.forEach((k, v) -> v.render());
+    rendererMap.forEach(
+        (k, v) -> {
+          v.prepare();
+          v.render();
+          v.end();
+        });
   }
 }
