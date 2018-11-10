@@ -1,21 +1,21 @@
 package pl.oblivion.engine;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.joml.Matrix4f;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
+
+import java.nio.IntBuffer;
+
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
-import static pl.oblivion.common.utils.GetSystemProperty.getInt;
-import static pl.oblivion.common.utils.GetSystemProperty.getString;
-
-import java.nio.IntBuffer;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryStack;
+import static pl.oblivion.common.utils.GetSystemProperty.*;
 
 public class Window {
 
@@ -26,12 +26,23 @@ public class Window {
   private String title;
   private long window;
   private boolean vSync;
-
+  private final Matrix4f projectionMatrix;
+  private boolean resized;
+  
+  private final float fov;
+  private final float near;
+  private final float far;
+  
   public Window() {
     this.width = getInt("window.width", 600);
     this.height = getInt("window.height", (600 * 9 / 16));
     this.title = getString("window.title", "Default title");
     this.vSync = true;
+    this.projectionMatrix = new Matrix4f();
+    this.resized = false;
+    this.fov = getFloat("window.fov", 70);
+    this.near = getFloat("window.near", 0.1f);
+    this.far = getFloat("window.far", 1000f);
   }
 
   public void init() {
@@ -47,10 +58,17 @@ public class Window {
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
     this.window = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
+    
     if (window == NULL) {
       logger.error("Failed to create the GLFW window");
       throw new RuntimeException();
     }
+    
+    glfwSetFramebufferSizeCallback(window,(window, width,height)-> {
+      this.width = width;
+      this.height = height;
+      this.setResized(true);
+    });
 
     glfwSetKeyCallback(
         window,
@@ -72,7 +90,7 @@ public class Window {
     }
 
     glfwMakeContextCurrent(window);
-    if (isvSync()) {
+    if (this.isVSync()) {
       glfwSwapInterval(1);
     }
 
@@ -81,13 +99,8 @@ public class Window {
 
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
   }
-
-  public long getWindow() {
-    return window;
-  }
-
+  
   public boolean windowShouldClose() {
-    logger.info("Closing window.");
     return glfwWindowShouldClose(window);
   }
 
@@ -107,8 +120,25 @@ public class Window {
 
     logger.info("Terminating GLFW");
   }
-
-  public boolean isvSync() {
-    return vSync;
+  
+  public void updateProjectionMatrix(){
+    float aspectRatio  = width / height;
+    this.projectionMatrix.setPerspective(fov,aspectRatio,near,far);
+  }
+  
+  public boolean isVSync() {
+    return this.vSync;
+  }
+  
+  public Matrix4f getProjectionMatrix() {
+    return this.projectionMatrix;
+  }
+  
+  public boolean isResized() {
+    return this.resized;
+  }
+  
+  public void setResized(boolean resized) {
+    this.resized = resized;
   }
 }

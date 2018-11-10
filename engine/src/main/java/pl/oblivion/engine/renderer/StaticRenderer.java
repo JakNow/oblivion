@@ -3,6 +3,8 @@ package pl.oblivion.engine.renderer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
+import pl.oblivion.engine.Camera;
+import pl.oblivion.engine.Window;
 import pl.oblivion.engine.mesh.Attribute;
 import pl.oblivion.engine.mesh.Mesh;
 import pl.oblivion.engine.shader.StaticShader;
@@ -13,28 +15,35 @@ public class StaticRenderer extends AbstractRenderer {
 
   private TestModel mesh;
 
-  public StaticRenderer() {
-    super(staticShader);
+  public StaticRenderer(Window window, Camera camera) {
+    super(staticShader,window,camera);
+    staticShader.start();
+    staticShader.getProjectionMatrix().loadMatrix(this.getProjectionMatrix());
+    staticShader.stop();
     mesh = new TestModel();
   }
 
   @Override
   public void render() {
-    staticShader.start();
     GL30.glBindVertexArray(mesh.getId());
     mesh.bind(0);
     GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.getIndexCount(), GL11.GL_UNSIGNED_INT, 0);
-    staticShader.stop();
   }
 
   @Override
-  public void prepare() {}
+  public void prepare() {
+    staticShader.start();
+    staticShader.getProjectionMatrix().loadMatrix(this.getWindow().getProjectionMatrix());
+    staticShader.getViewMatrix().loadMatrix(this.getCamera().getViewMatrix());
+  }
 
   @Override
   public void delete() {}
 
   @Override
-  public void end() {}
+  public void end() {
+    staticShader.stop();
+  }
 
   public class TestModel extends Mesh {
     public TestModel() {
