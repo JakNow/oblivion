@@ -4,38 +4,48 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
+import static java.io.File.separator;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class MyFile {
 
   private static final Logger logger = LogManager.getLogger(MyFile.class);
-  private static final String FILE_SEPARATOR = "/";
+  private static final String separator = "/";
 
-  private String path;
+  private StringBuilder path;
   private String name;
 
   private BufferedReader bufferedReader;
 
   public MyFile(String path) {
-    this.path = path;
-    String[] dirs = path.split(FILE_SEPARATOR);
+      if(path.equals("/w+"))
+          this.path.append(path);
+      else
+          this.path.append(separator).append(path);
+    String[] dirs = path.split(separator);
     this.name = dirs[dirs.length - 1];
   }
 
   public MyFile(String... paths) {
-    this.path = "";
+    this.path.append("/");
     int length = paths.length;
     for (int i = 0; i < length - 1; i++) {
-      this.path += paths[i] + FILE_SEPARATOR; // todo replace with StringBuilder
+        if(paths.equals("/w+"))
+            this.path.append(paths[i]); // todo replace with StringBuilder
+        else
+            this.path.append(paths[i]);
     }
-    this.path += paths[length - 1];
-    String[] dirs = path.split(FILE_SEPARATOR);
+    this.path.append(paths[length - 1]);
+    String[] dirs = path.toString().split(separator);
     this.name = dirs[dirs.length - 1];
   }
 
   public MyFile(MyFile file, String subFile) {
-    this.path = file.path + FILE_SEPARATOR + subFile;
+    if(file.path.equals("/w+"))
+        this.path.append(file.path).append(subFile);
+    else
+        this.path.append(file.path).append(subFile);
     this.name = subFile;
   }
 
@@ -43,10 +53,13 @@ public class MyFile {
     this.path = file.path;
     int length = subFiles.length;
     for (int i = 0; i < length - 1; i++) {
-      this.path += subFiles[i] + FILE_SEPARATOR; // todo replace with StringBuilder
+        if(file.path.equals("/w+"))
+            this.path.append(subFiles[i]); // todo replace with StringBuilder
+        else
+            this.path.append(subFiles[i]);
     }
-    this.path += subFiles[length - 1];
-    String[] dirs = path.split(FILE_SEPARATOR);
+    this.path.append(subFiles[length - 1]);
+    String[] dirs = path.toString().split(separator);
     this.name = dirs[dirs.length - 1];
   }
 
@@ -56,12 +69,12 @@ public class MyFile {
   }
 
   public String getPath() {
-    return path;
+    return path.toString();
   }
 
   public BufferedReader getReader(){
     bufferedReader =
-        new BufferedReader(new InputStreamReader(Class.class.getResourceAsStream(path)));
+        new BufferedReader(new InputStreamReader(Class.class.getResourceAsStream(path.toString())));
     return bufferedReader;
   }
 
