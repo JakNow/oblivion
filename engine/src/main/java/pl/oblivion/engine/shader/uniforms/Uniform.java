@@ -13,9 +13,9 @@ public abstract class Uniform {
 
   public Uniform(String name) {
     this.name = name;
-    this.logger.info("Creating {} with name={}",this.getClass().getSimpleName(),name);
+    this.logger.info("Creating {} with name={}", this.getClass().getSimpleName(), name);
   }
-  
+
   public void storeUniformLocation(int programID) {
     location = GL20.glGetUniformLocation(programID, name);
     if (location == NOT_FOUND) {

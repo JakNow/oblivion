@@ -11,9 +11,7 @@ public class Main {
 
   private static final Logger logger = LogManager.getLogger(Main.class);
 
-  public Main() {
-  
-  }
+  public Main() {}
 
   public static void main(String[] args) {
     Application.start(Main.class, args);

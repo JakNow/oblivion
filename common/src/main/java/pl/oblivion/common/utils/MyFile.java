@@ -1,11 +1,11 @@
 package pl.oblivion.common.utils;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MyFile {
 
@@ -59,7 +59,7 @@ public class MyFile {
     return path;
   }
 
-  public BufferedReader getReader(){
+  public BufferedReader getReader() {
     bufferedReader =
         new BufferedReader(new InputStreamReader(Class.class.getResourceAsStream(path)));
     return bufferedReader;

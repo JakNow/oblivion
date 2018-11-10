@@ -1,5 +1,14 @@
 package pl.oblivion.engine;
 
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static pl.oblivion.common.utils.GetSystemProperty.*;
+
+import java.nio.IntBuffer;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Matrix4f;
@@ -8,31 +17,24 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
-import java.nio.IntBuffer;
-
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.MemoryUtil.NULL;
-import static pl.oblivion.common.utils.GetSystemProperty.*;
+import lombok.Getter;
 
 public class Window {
 
   private static final Logger logger = LogManager.getLogger(Window.class);
 
-  private int width;
-  private int height;
+  @Getter private int width;
+  @Getter private int height;
   private String title;
   private long window;
   private boolean vSync;
   private final Matrix4f projectionMatrix;
   private boolean resized;
-  
+
   private final float fov;
   private final float near;
   private final float far;
-  
+
   public Window() {
     this.width = getInt("window.width", 600);
     this.height = getInt("window.height", (600 * 9 / 16));
@@ -58,17 +60,19 @@ public class Window {
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
     this.window = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
-    
+
     if (window == NULL) {
       logger.error("Failed to create the GLFW window");
       throw new RuntimeException();
     }
-    
-    glfwSetFramebufferSizeCallback(window,(window, width,height)-> {
-      this.width = width;
-      this.height = height;
-      this.setResized(true);
-    });
+
+    glfwSetFramebufferSizeCallback(
+        window,
+        (window, width, height) -> {
+          this.width = width;
+          this.height = height;
+          this.setResized(true);
+        });
 
     glfwSetKeyCallback(
         window,
@@ -90,6 +94,7 @@ public class Window {
     }
 
     glfwMakeContextCurrent(window);
+    this.updateProjectionMatrix();
     if (this.isVSync()) {
       glfwSwapInterval(1);
     }
@@ -99,7 +104,7 @@ public class Window {
 
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
   }
-  
+
   public boolean windowShouldClose() {
     return glfwWindowShouldClose(window);
   }
@@ -120,24 +125,26 @@ public class Window {
 
     logger.info("Terminating GLFW");
   }
-  
-  public void updateProjectionMatrix(){
-    float aspectRatio  = width / height;
-    this.projectionMatrix.setPerspective(fov,aspectRatio,near,far);
+
+  public void updateProjectionMatrix() {
+    float aspectRatio = (float) width / (float) height;
+    this.projectionMatrix.setPerspective(fov, aspectRatio, near, far);
+    this.setResized(false);
+    logger.info("Updating projection matrix due to resize.");
   }
-  
+
   public boolean isVSync() {
     return this.vSync;
   }
-  
+
   public Matrix4f getProjectionMatrix() {
     return this.projectionMatrix;
   }
-  
+
   public boolean isResized() {
     return this.resized;
   }
-  
+
   public void setResized(boolean resized) {
     this.resized = resized;
   }
