@@ -1,65 +1,66 @@
 package pl.oblivion.common.utils;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.BufferedReader;
-import static java.io.File.separator;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MyFile {
 
   private static final Logger logger = LogManager.getLogger(MyFile.class);
-  private static final String separator = "/";
+  private static final String FILE_SEPARATOR = "/";
 
-  private StringBuilder path;
+  private String path;
   private String name;
 
   private BufferedReader bufferedReader;
 
   public MyFile(String path) {
-      if(path.equals("/w+"))
-          this.path.append(path);
-      else
-          this.path.append(separator).append(path);
-    String[] dirs = path.split(separator);
+    this.path = path.startsWith(FILE_SEPARATOR) ? path : FILE_SEPARATOR + path;
+    String[] dirs = path.split(FILE_SEPARATOR);
     this.name = dirs[dirs.length - 1];
   }
 
   public MyFile(String... paths) {
-    this.path.append("/");
-    int length = paths.length;
-    for (int i = 0; i < length - 1; i++) {
-        if(paths.equals("/w+"))
-            this.path.append(paths[i]); // todo replace with StringBuilder
-        else
-            this.path.append(paths[i]);
+    StringBuilder sb = new StringBuilder();
+    for (String path : paths) {
+      if (path.startsWith(FILE_SEPARATOR)) {
+        sb.append(path);
+      } else {
+        sb.append(FILE_SEPARATOR).append(path);
+      }
+      if (path.endsWith(FILE_SEPARATOR)) {
+        sb.deleteCharAt(sb.length() - 1);
+      }
     }
-    this.path.append(paths[length - 1]);
-    String[] dirs = path.toString().split(separator);
+    this.path = sb.toString();
+    String[] dirs = path.split(FILE_SEPARATOR);
     this.name = dirs[dirs.length - 1];
   }
 
   public MyFile(MyFile file, String subFile) {
-    if(file.path.equals("/w+"))
-        this.path.append(file.path).append(subFile);
-    else
-        this.path.append(file.path).append(subFile);
-    this.name = subFile;
+    this.path =
+        file.path + (subFile.startsWith(FILE_SEPARATOR) ? subFile : FILE_SEPARATOR + subFile);
+    String[] dirs = path.split(FILE_SEPARATOR);
+    this.name = dirs[dirs.length - 1];
   }
 
   public MyFile(MyFile file, String... subFiles) {
-    this.path = file.path;
-    int length = subFiles.length;
-    for (int i = 0; i < length - 1; i++) {
-        if(file.path.equals("/w+"))
-            this.path.append(subFiles[i]); // todo replace with StringBuilder
-        else
-            this.path.append(subFiles[i]);
+    StringBuilder sb = new StringBuilder(file.path);
+    for (String path : subFiles) {
+      if (path.startsWith(FILE_SEPARATOR)) {
+        sb.append(path);
+      } else {
+        sb.append(FILE_SEPARATOR).append(path);
+      }
+      if (path.endsWith(FILE_SEPARATOR)) {
+        sb.deleteCharAt(sb.length() - 1);
+      }
     }
-    this.path.append(subFiles[length - 1]);
-    String[] dirs = path.toString().split(separator);
+    this.path = sb.toString();
+    String[] dirs = path.split(FILE_SEPARATOR);
     this.name = dirs[dirs.length - 1];
   }
 
@@ -69,12 +70,12 @@ public class MyFile {
   }
 
   public String getPath() {
-    return path.toString();
+    return path;
   }
 
-  public BufferedReader getReader(){
+  public BufferedReader getReader() {
     bufferedReader =
-        new BufferedReader(new InputStreamReader(Class.class.getResourceAsStream(path.toString())));
+        new BufferedReader(new InputStreamReader(Class.class.getResourceAsStream(path)));
     return bufferedReader;
   }
 
