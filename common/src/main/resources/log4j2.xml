@@ -3,19 +3,21 @@
     <Properties>
         <Property name="module">common</Property>
         <Property name="filename">../logs/${module}.log</Property>
-         <Property name="color">red</Property>
+        <Property name="color">red</Property>
         <Property name="moduleColor">FATAL=${color},ERROR=${color}, WARN=${color}, INFO=${color}, DEBUG=${color},
-            TRACE=${color}</Property>
-        <Property name="levelColor">FATAL=red bold,ERROR=bright red, WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue</Property>
+            TRACE=${color}
+        </Property>
+        <Property name="levelColor">FATAL=red bold,ERROR=bright red, WARN=yellow bold, INFO=black, DEBUG=green bold,
+            TRACE=blue
+        </Property>
     </Properties>
     <ThresholdFilter level="trace"/>
 
     <Appenders>
         <Console name="STDOUT">
-            <PatternLayout>
-                <pattern>%highlight{%d{yyyy-MM-dd HH:mm:ss} [${module}]}{${moduleColor}} %highlight{%-5p %c{1}:%L}{${levelColor}} - %m%n</pattern>
-                <disableAnsi>false</disableAnsi>
-            </PatternLayout>
+            <PatternLayout
+                    pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss} [${module}]}{${moduleColor}} %highlight{%-5p %c{1}:%L}{${levelColor}} - %m%n"
+                    disableAnsi="false"/>
         </Console>
         <Console name="FLOW">
             <!-- this pattern outputs class name and line number -->
