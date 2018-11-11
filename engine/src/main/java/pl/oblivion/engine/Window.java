@@ -22,18 +22,16 @@ import lombok.Getter;
 public class Window {
 
   private static final Logger logger = LogManager.getLogger(Window.class);
-
+  private final Matrix4f projectionMatrix;
+  private final float fov;
+  private final float near;
+  private final float far;
   @Getter private int width;
   @Getter private int height;
   private String title;
   private long window;
   private boolean vSync;
-  private final Matrix4f projectionMatrix;
   private boolean resized;
-
-  private final float fov;
-  private final float near;
-  private final float far;
 
   public Window() {
     this.width = getInt("window.width", 600);
