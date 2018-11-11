@@ -16,9 +16,8 @@ import pl.oblivion.engine.renderer.StaticRenderer;
 class RendererHandler {
 
   private static RendererHandler instance;
-  private Window window;
   private final Map<RendererType, AbstractRenderer> rendererMap;
-
+  private Window window;
   private float currentWidth;
   private float currentHeight;
 
