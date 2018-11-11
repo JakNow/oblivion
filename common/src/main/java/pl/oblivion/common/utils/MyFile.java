@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 public class MyFile {
 
   private static final Logger logger = LogManager.getLogger(MyFile.class);
-  private static final String separator = "/";
+  private static final String FILE_SEPARATOR = "/";
 
   private String path;
   private String name;
@@ -19,49 +19,49 @@ public class MyFile {
   private BufferedReader bufferedReader;
 
   public MyFile(String path) {
-    this.path = path.startsWith(separator) ? path : separator + path;
-    String[] dirs = path.split(separator);
+    this.path = path.startsWith(FILE_SEPARATOR) ? path : FILE_SEPARATOR + path;
+    String[] dirs = path.split(FILE_SEPARATOR);
     this.name = dirs[dirs.length - 1];
   }
 
   public MyFile(String... paths) {
     StringBuilder sb = new StringBuilder();
     for (String path : paths) {
-      if (path.startsWith(separator)) {
+      if (path.startsWith(FILE_SEPARATOR)) {
         sb.append(path);
       } else {
-        sb.append(separator).append(path);
+        sb.append(FILE_SEPARATOR).append(path);
       }
-      if (path.endsWith(separator)) {
+      if (path.endsWith(FILE_SEPARATOR)) {
         sb.deleteCharAt(sb.length() - 1);
       }
     }
     this.path = sb.toString();
-    String[] dirs = path.split(separator);
+    String[] dirs = path.split(FILE_SEPARATOR);
     this.name = dirs[dirs.length - 1];
   }
 
   public MyFile(MyFile file, String subFile) {
     this.path =
-        file.path + (subFile.startsWith(separator) ? subFile : separator + subFile);
-    String[] dirs = path.split(separator);
+        file.path + (subFile.startsWith(FILE_SEPARATOR) ? subFile : FILE_SEPARATOR + subFile);
+    String[] dirs = path.split(FILE_SEPARATOR);
     this.name = dirs[dirs.length - 1];
   }
 
   public MyFile(MyFile file, String... subFiles) {
     StringBuilder sb = new StringBuilder(file.path);
     for (String path : subFiles) {
-      if (path.startsWith(separator)) {
+      if (path.startsWith(FILE_SEPARATOR)) {
         sb.append(path);
       } else {
-        sb.append(separator).append(path);
+        sb.append(FILE_SEPARATOR).append(path);
       }
-      if (path.endsWith(separator)) {
+      if (path.endsWith(FILE_SEPARATOR)) {
         sb.deleteCharAt(sb.length() - 1);
       }
     }
     this.path = sb.toString();
-    String[] dirs = path.split(separator);
+    String[] dirs = path.split(FILE_SEPARATOR);
     this.name = dirs[dirs.length - 1];
   }
 
