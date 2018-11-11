@@ -1,19 +1,17 @@
-package pl.oblivion;
+package pl.oblivion.common.annotations;
+
+import static org.assertj.core.api.Java6Assertions.assertThat;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import pl.oblivion.core.AppConfig;
-import pl.oblivion.core.AppConfigRunner;
-
-import static org.assertj.core.api.Java6Assertions.assertThat;
 
 @AppConfig("app.properties")
 public class AppConfigRunnerTest {
 
-
   @BeforeClass
-  public static void  init() {
-        new AppConfigRunner();
+  public static void init() {
+    AppConfig annotation = AppConfigRunnerTest.class.getAnnotation(AppConfig.class);
+    new AppConfigRunner(annotation.value());
   }
 
   @Test
