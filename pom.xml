@@ -11,6 +11,8 @@
     <modules>
         <module>core</module>
         <module>engine</module>
+        <module>common</module>
+        <module>model</module>
     </modules>
 
     <properties>
@@ -21,6 +23,9 @@
         <maven.surefire.version>2.18</maven.surefire.version>
         <projectlombok.version>1.18.2</projectlombok.version>
         <apache.logging.log4j.version>2.11.1</apache.logging.log4j.version>
+        <lwjgl.version>3.2.0</lwjgl.version>
+        <joml.version>1.9.11</joml.version>
+        <lwjgl.natives>natives-windows</lwjgl.natives>
     </properties>
 
     <build>
@@ -31,6 +36,10 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <annotationProcessors>
+                        <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor
+                        </annotationProcessor>
+                    </annotationProcessors>
                 </configuration>
             </plugin>
             <plugin>
@@ -47,7 +56,6 @@
             </plugin>
         </plugins>
     </build>
-
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/junit/junit -->
@@ -73,22 +81,26 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-     	    <groupId>org.projectlombok</groupId>
-	    	<artifactId>lombok</artifactId>
-	    	<version>${projectlombok.version}</version>
-		<scope>provided</scope>
-	    </dependency>        
-        <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-api</artifactId>
-                <version>${apache.logging.log4j.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${projectlombok.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-core</artifactId>
-                <version>${apache.logging.log4j.version}</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${apache.logging.log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${apache.logging.log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.joml</groupId>
+            <artifactId>joml</artifactId>
+            <version>${joml.version}</version>
         </dependency>
     </dependencies>
-
 
 </project>
