@@ -76,3 +76,4 @@ public class MyFileTest {
     assertThat(myFile.getPath()).isEqualTo("/tests/myfile/MyFileTest.txt");
   }
 }
+

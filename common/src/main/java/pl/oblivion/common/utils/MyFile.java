@@ -1,6 +1,7 @@
 package pl.oblivion.common.utils;
 
 import java.io.BufferedReader;
+import static java.io.File.separator;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -18,34 +19,48 @@ public class MyFile {
   private BufferedReader bufferedReader;
 
   public MyFile(String path) {
-    this.path = path;
+    this.path = path.startsWith(FILE_SEPARATOR) ? path : FILE_SEPARATOR + path;
     String[] dirs = path.split(FILE_SEPARATOR);
     this.name = dirs[dirs.length - 1];
   }
 
   public MyFile(String... paths) {
-    this.path = "";
-    int length = paths.length;
-    for (int i = 0; i < length - 1; i++) {
-      this.path += paths[i] + FILE_SEPARATOR; // todo replace with StringBuilder
+    StringBuilder sb = new StringBuilder();
+    for (String path : paths) {
+      if (path.startsWith(FILE_SEPARATOR)) {
+        sb.append(path);
+      } else {
+        sb.append(FILE_SEPARATOR).append(path);
+      }
+      if (path.endsWith(FILE_SEPARATOR)) {
+        sb.deleteCharAt(sb.length() - 1);
+      }
     }
-    this.path += paths[length - 1];
+    this.path = sb.toString();
     String[] dirs = path.split(FILE_SEPARATOR);
     this.name = dirs[dirs.length - 1];
   }
 
   public MyFile(MyFile file, String subFile) {
-    this.path = file.path + FILE_SEPARATOR + subFile;
-    this.name = subFile;
+    this.path =
+        file.path + (subFile.startsWith(FILE_SEPARATOR) ? subFile : FILE_SEPARATOR + subFile);
+    String[] dirs = path.split(FILE_SEPARATOR);
+    this.name = dirs[dirs.length - 1];
   }
 
   public MyFile(MyFile file, String... subFiles) {
-    this.path = file.path;
-    int length = subFiles.length;
-    for (int i = 0; i < length - 1; i++) {
-      this.path += subFiles[i] + FILE_SEPARATOR; // todo replace with StringBuilder
+    StringBuilder sb = new StringBuilder(file.path);
+    for (String path : subFiles) {
+      if (path.startsWith(FILE_SEPARATOR)) {
+        sb.append(path);
+      } else {
+        sb.append(FILE_SEPARATOR).append(path);
+      }
+      if (path.endsWith(FILE_SEPARATOR)) {
+        sb.deleteCharAt(sb.length() - 1);
+      }
     }
-    this.path += subFiles[length - 1];
+    this.path = sb.toString();
     String[] dirs = path.split(FILE_SEPARATOR);
     this.name = dirs[dirs.length - 1];
   }
