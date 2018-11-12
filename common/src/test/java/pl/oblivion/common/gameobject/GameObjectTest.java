@@ -9,6 +9,7 @@ public class GameObjectTest {
   @Test
   public void addObjectWithNoParent_Test() {
     GameObject gameObject = new GameObject() {};
+
     assertThat(gameObject.getParent()).isNull();
   }
 
@@ -25,6 +26,7 @@ public class GameObjectTest {
   public void addObjectToParent_Test() {
     GameObject child = new GameObject() {};
     GameObject parent = new GameObject() {};
+
     assertThat(parent.addChild(child)).isTrue();
     assertThat(child.getParent()).isEqualTo(parent);
     assertThat(parent.getChildren().get(0)).isEqualTo(child);
@@ -34,6 +36,7 @@ public class GameObjectTest {
   public void addParentToObject_Test() {
     GameObject child = new GameObject() {};
     GameObject parent = new GameObject() {};
+
     assertThat(child.setParent(parent)).isTrue();
     assertThat(child.getParent()).isEqualTo(parent);
     assertThat(parent.getChildren().get(0)).isEqualTo(child);
