@@ -29,7 +29,7 @@ public class Application {
     logger.info("Starting the Application");
     this.window = new Window();
     this.timer = new Timer();
-    this.camera = new Camera();
+    this.camera = new Camera(null);
     this.rendererHandler = RendererHandler.getInstance();
 
     this.ups = getInt("engine.ups", 30);

@@ -10,8 +10,8 @@ public class Model extends GameObject {
 
   private final Mesh mesh;
 
-  public Model(Transformation transformation, Mesh mesh) {
-    super(transformation);
+  public Model(Transformation transformation, GameObject parent, Mesh mesh) {
+    super(transformation, parent);
     this.mesh = mesh;
   }
 }

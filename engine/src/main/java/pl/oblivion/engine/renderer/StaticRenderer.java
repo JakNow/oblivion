@@ -16,25 +16,27 @@ public class StaticRenderer extends AbstractRenderer {
 
   private static StaticShader staticShader = new StaticShader();
 
+  private GameObject parent;
   private TestModel testModel;
+  private TestModel testModel2;
 
   public StaticRenderer(Window window, Camera camera) {
     super(staticShader, window, camera);
     staticShader.start();
     staticShader.getProjectionMatrix().loadMatrix(this.getProjectionMatrix());
     staticShader.stop();
-    testModel = new TestModel();
-    testModel.getTransformation().getPosition().set(0, 0, -4);
+    parent = new GameObject(new Transformation(),null) {
+    };
+    testModel = new TestModel(parent);
+    testModel2 = new TestModel(parent);
+    testModel.getTransformation().getPosition().set(-2, 0, -6);
+    testModel2.getTransformation().getPosition().set(2, 0, -6);
     GL11.glEnable(GL11.GL_DEPTH_TEST);
   }
 
   @Override
   public void render() {
-    testModel.funnyAnimation();
-    GL30.glBindVertexArray(testModel.getMesh().getId());
-    testModel.getMesh().bind(0);
-    GL11.glDrawElements(
-        GL11.GL_TRIANGLES, testModel.getMesh().getIndexCount(), GL11.GL_UNSIGNED_INT, 0);
+  
   }
 
   @Override
@@ -45,6 +47,24 @@ public class StaticRenderer extends AbstractRenderer {
     staticShader
         .getTransformationMatrix()
         .loadMatrix(testModel.getTransformation().getTransformationMatrix());
+  
+    testModel.funnyAnimation(-2,2);
+    GL30.glBindVertexArray(testModel.getMesh().getId());
+    testModel.getMesh().bind(0);
+    GL11.glDrawElements(
+            GL11.GL_TRIANGLES, testModel.getMesh().getIndexCount(), GL11.GL_UNSIGNED_INT, 0);
+    testModel.getMesh().unbind(0);
+    
+    staticShader
+            .getTransformationMatrix()
+            .loadMatrix(testModel2.getTransformation().getTransformationMatrix());
+    
+    testModel2.funnyAnimation(2,2);
+    GL30.glBindVertexArray(testModel2.getMesh().getId());
+    testModel2.getMesh().bind(0);
+    GL11.glDrawElements(
+            GL11.GL_TRIANGLES, testModel2.getMesh().getIndexCount(), GL11.GL_UNSIGNED_INT, 0);
+    testModel2.getMesh().unbind(0);
   }
 
   @Override
@@ -62,10 +82,10 @@ public class StaticRenderer extends AbstractRenderer {
     int xDirection = 1;
     int yDirection = 1;
     int zDirection = 1;
-    float speed = 0.005f;
+    float speed = 0.015f;
 
-    public TestModel() {
-      super(new Transformation());
+    public TestModel(GameObject parent) {
+      super(new Transformation(),parent);
       mesh =
           new Mesh(
               new int[] {
@@ -120,20 +140,21 @@ public class StaticRenderer extends AbstractRenderer {
                   })) {};
     }
 
-    void funnyAnimation() {
-      testModel.getTransformation().rotate(1, 1, 1);
+    void funnyAnimation(float min, float max) {
+      //this.getTransformation().rotate(1, 1, 1);
 
       xDirection =
-          setDirection(testModel.getTransformation().getPosition().x, -0.5f, 0.5f, xDirection);
-      yDirection =
-          setDirection(testModel.getTransformation().getPosition().y, -0.5f, 0.5f, yDirection);
-      zDirection = setDirection(testModel.getTransformation().getPosition().z, -4, -3f, zDirection);
+          setDirection(this.getTransformation().getPosition().x, min, max, xDirection);
+      yDirection = 0;
+          //setDirection(this.getTransformation().getPosition().y, min, max, yDirection);
+      zDirection = 0;
+              //setDirection(this.getTransformation().getPosition().z, -6,-5, zDirection);
 
       float xSpeed = speed * xDirection;
       float ySpeed = speed * yDirection;
       float zSpeed = speed * zDirection;
 
-      testModel.getTransformation().translate(xSpeed, ySpeed, zSpeed);
+      this.getTransformation().translate(xSpeed, ySpeed, zSpeed);
     }
 
     private int setDirection(float variable, float min, float max, int current) {

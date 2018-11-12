@@ -9,8 +9,8 @@ public class Camera extends GameObject {
 
   private Matrix4f viewMatrix;
 
-  public Camera() {
-    super(new Transformation());
+  public Camera(GameObject parent) {
+    super(new Transformation(),parent);
 
     this.viewMatrix = new Matrix4f();
   }
