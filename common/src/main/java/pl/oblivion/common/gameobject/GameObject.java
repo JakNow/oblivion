@@ -31,23 +31,32 @@ public abstract class GameObject {
   
   public GameObject(GameObject parent){
     this.transformation = new Transformation();
-    this.parent = parent;
+    this.addParent(parent);
     this.children = new LinkedList<>();
+    
   }
   
   public boolean addChild(GameObject child){
-   return false;
+    this.children.add(child);
+    child.addParent(this);
+    return true;
   }
   
-  public boolean setParent(GameObject parent){
-    return false;
+  public boolean addParent(GameObject parent){
+    this.parent = parent;
+    this.parent.getChildren().add(this);
+    return true;
   }
   
   public boolean removeChild(GameObject child){
-    return false;
+    child.setParent(null);
+    this.getChildren().remove(child);
+    return true;
   }
   
   public boolean removeParent(){
+    this.parent.getChildren().remove(this);
+    this.parent = null;
     return true;
   }
   

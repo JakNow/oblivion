@@ -37,7 +37,7 @@ public class GameObjectTest {
     GameObject child = new GameObject() {};
     GameObject parent = new GameObject() {};
 
-    assertThat(child.setParent(parent)).isTrue();
+    assertThat(child.addParent(parent)).isTrue();
     assertThat(child.getParent()).isEqualTo(parent);
     assertThat(parent.getChildren().get(0)).isEqualTo(child);
   }
