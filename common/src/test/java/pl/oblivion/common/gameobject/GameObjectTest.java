@@ -53,7 +53,7 @@ public class GameObjectTest {
   }
 
   @Test
-  public void removeParentFromObject() {
+  public void removeParentFromObject_Test() {
     GameObject parent = new GameObject() {};
     GameObject child = new GameObject(parent) {};
 
