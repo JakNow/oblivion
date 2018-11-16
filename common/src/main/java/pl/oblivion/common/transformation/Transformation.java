@@ -1,5 +1,6 @@
 package pl.oblivion.common.transformation;
 
+import lombok.ToString;
 import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -10,6 +11,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@ToString
 public class Transformation {
 
   private final Vector3f position;
@@ -22,6 +24,13 @@ public class Transformation {
     this.rotation = new Quaternionf();
     this.scale = new Vector3f(1, 1, 1);
     this.transformationMatrix = new Matrix4f();
+  }
+  
+  public Transformation(Transformation transformation){
+    this.position = new Vector3f(transformation.getPosition());
+    this.rotation = new Quaternionf(transformation.getRotation());
+    this.scale = new Vector3f(transformation.getScale());
+    this.transformationMatrix = new Matrix4f(transformation.getTransformationMatrix());
   }
 
   public Matrix4f getTransformationMatrix() {
@@ -42,5 +51,19 @@ public class Transformation {
     this.position.x += x;
     this.position.y += y;
     this.position.z += z;
+  }
+  
+  public void translate(Vector3f translation){
+    this.position.x += translation.x;
+    this.position.y += translation.y;
+    this.position.z += translation.z;
+  }
+  
+  public void set(Transformation transformation) {
+    this.position.set(transformation.getPosition());
+    this.rotation.set(transformation.getRotation());
+    this.scale.set(transformation.getScale());
+    this.transformationMatrix.set(transformation.getTransformationMatrix());
+  
   }
 }

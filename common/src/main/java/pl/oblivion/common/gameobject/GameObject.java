@@ -3,6 +3,7 @@ package pl.oblivion.common.gameobject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import pl.oblivion.common.transformation.Transformation;
 
 import java.util.LinkedList;
@@ -11,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@ToString
 public abstract class GameObject {
 
   private final Transformation transformation;
@@ -18,13 +20,19 @@ public abstract class GameObject {
   private List<GameObject> children;
   
   public GameObject(Transformation transformation, GameObject parent){
-    this.transformation = transformation;
+    this.transformation = new Transformation(transformation);
     this.parent = parent;
     this.children = new LinkedList<>();
   }
   
   public GameObject(){
     this.transformation = new Transformation();
+    this.parent = null;
+    this.children = new LinkedList<>();
+  }
+  
+  public GameObject(Transformation transformation){
+    this.transformation = new Transformation(transformation);
     this.parent = null;
     this.children = new LinkedList<>();
   }
@@ -60,5 +68,8 @@ public abstract class GameObject {
     return true;
   }
   
+  public void setTransformation(Transformation transformation){
+    this.transformation.set(transformation);
+  }
   
 }
