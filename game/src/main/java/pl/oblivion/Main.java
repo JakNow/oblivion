@@ -14,12 +14,6 @@ public class Main {
   public Main() {}
 
   public static void main(String[] args) {
-   
-   try{
-       Application.start(Main.class, args);
-   }catch(Throwable e){
-       e.printStackTrace();
-   }
-    
+       Application.start(Main.class, args);   
   }
 }

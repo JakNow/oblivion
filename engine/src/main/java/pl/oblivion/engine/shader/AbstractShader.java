@@ -33,13 +33,13 @@ public abstract class AbstractShader {
 
   private int loadShader(RendererType shaderType, String shader, int type) {
     StringBuilder shaderSource = new StringBuilder();
-    MyFile file = new MyFile("/shaders/" + shaderType + "/" + shader);
+    MyFile file = new MyFile("/shaders/" + shaderType.getLocation() + "/" + shader);
     try (BufferedReader br = file.getReader()) {
       shaderSource.append(br.lines().collect(Collectors.joining("\n")));
     } catch (Exception e) {
       logger.error("Could not read file.");
       e.printStackTrace();
-      System.exit(-1);
+     // System.exit(-1);
     } finally {
       file.closeReader();
       logger.info("Closing reader.");
