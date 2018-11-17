@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 import pl.oblivion.common.utils.MyFile;
+import pl.oblivion.engine.renderer.RendererType;
 import pl.oblivion.engine.shader.uniforms.Uniform;
 
 public abstract class AbstractShader {
@@ -16,9 +17,7 @@ public abstract class AbstractShader {
   private final Logger logger = LogManager.getLogger(this.getClass());
   private int programID;
 
-  private MyFile file;
-
-  public AbstractShader(String type, String... inVariables) {
+  public AbstractShader(RendererType type, String... inVariables) {
     int vertexShaderID = loadShader(type, "vertex.vert", GL20.GL_VERTEX_SHADER);
     int fragmentShaderID = loadShader(type, "fragment.frag", GL20.GL_FRAGMENT_SHADER);
     programID = GL20.glCreateProgram();
@@ -32,9 +31,9 @@ public abstract class AbstractShader {
     GL20.glDeleteShader(fragmentShaderID);
   }
 
-  private int loadShader(String shaderType, String shader, int type) {
+  private int loadShader(RendererType shaderType, String shader, int type) {
     StringBuilder shaderSource = new StringBuilder();
-    file = new MyFile("/shaders/" + shaderType + "/" + shader);
+    MyFile file = new MyFile("/shaders/" + shaderType.getLocation() + "/" + shader);
     try (BufferedReader br = file.getReader()) {
       shaderSource.append(br.lines().collect(Collectors.joining("\n")));
     } catch (Exception e) {

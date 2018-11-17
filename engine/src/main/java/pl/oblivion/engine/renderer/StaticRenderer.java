@@ -14,7 +14,7 @@ import pl.oblivion.engine.shader.StaticShader;
 
 public class StaticRenderer extends AbstractRenderer {
 
-  private static StaticShader staticShader = new StaticShader();
+  private static StaticShader staticShader = new StaticShader(RendererType.STATIC_RENDERER);
 
   private GameObject parent;
   private TestModel testModel;
