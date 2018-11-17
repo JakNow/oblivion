@@ -36,18 +36,4 @@ lib/
 #MacOS
 .DS_store
 
-core/.settings/
-common/.settings/
-engine/.settings/
-game/.settings/
-model/.settings/
-core/.classpath
-common/.classpath
-engine/.classpath
-game/.classpath
-model/.classpath
-core/.project
-common/.project
-engine/.project
-game/.project
-model/.project
+
