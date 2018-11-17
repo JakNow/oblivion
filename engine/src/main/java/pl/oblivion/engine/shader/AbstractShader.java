@@ -39,7 +39,7 @@ public abstract class AbstractShader {
     } catch (Exception e) {
       logger.error("Could not read file.");
       e.printStackTrace();
-     // System.exit(-1);
+	  System.exit(-1);
     } finally {
       file.closeReader();
       logger.info("Closing reader.");
