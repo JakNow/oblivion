@@ -68,8 +68,4 @@ public abstract class GameObject {
     return true;
   }
   
-  public void setTransformation(Transformation transformation){
-    this.transformation.set(transformation);
-  }
-  
 }
