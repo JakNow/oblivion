@@ -35,3 +35,8 @@ lib/
 
 #MacOS
 .DS_store
+
+.project
+.classpath
+.settings
+*/.settings/*
