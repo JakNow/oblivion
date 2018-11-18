@@ -1,18 +1,15 @@
 package pl.oblivion.common.transformation;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.joml.AxisAngle4f;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import pl.oblivion.common.gameobject.GameObject;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class TranslateTest {
-  
+
   private static Transformation transformation;
 
   @BeforeClass
@@ -24,38 +21,42 @@ public class TranslateTest {
   public void resetTransformation() {
     transformation.set(new Transformation());
   }
-  
+
   @Test
-  public void receivedTranslation_isEqualToMatrixTranslation(){
+  public void receivedTranslation_isEqualToMatrixTranslation() {
     Vector3f receivedTranslation = new Vector3f();
     transformation.getTransformationMatrix().getTranslation(receivedTranslation);
     assertThat(transformation.getPosition()).isEqualTo(receivedTranslation);
   }
-  
+
   @Test
-  public void receivedRotation_isEqualToMatrixRotation(){
+  public void receivedRotation_isEqualToMatrixRotation() {
     AxisAngle4f receivedRotation = new AxisAngle4f();
     transformation.getTransformationMatrix().getRotation(receivedRotation);
     assertThat(transformation.getRotation()).isEqualTo(receivedRotation);
   }
-  
+
   @Test
-  public void receivedScale_isEqualToMatrixScale(){
+  public void receivedScale_isEqualToMatrixScale() {
     Vector3f receivedScale = new Vector3f();
     transformation.getTransformationMatrix().getScale(receivedScale);
     assertThat(transformation.getScale()).isEqualTo(receivedScale);
   }
-  
+
   @Test
   public void translateXYZ_GameObjectIsTranslated_Test() {
     transformation.translate(0.5f, 52.5f, 100);
-    assertThat(transformation.getPosition()).extracting("x", "y", "z").contains(0.5f, 52.5f, 100.0f);
+    assertThat(transformation.getPosition())
+        .extracting("x", "y", "z")
+        .contains(0.5f, 52.5f, 100.0f);
   }
 
   @Test
   public void translateVector_GameObjectIsTranslated_Test() {
     transformation.translate(new Vector3f(0.5f, 52.5f, 100));
-    assertThat(transformation.getPosition()).extracting("x", "y", "z").contains(0.5f, 52.5f, 100.0f);
+    assertThat(transformation.getPosition())
+        .extracting("x", "y", "z")
+        .contains(0.5f, 52.5f, 100.0f);
   }
 
   @Test
