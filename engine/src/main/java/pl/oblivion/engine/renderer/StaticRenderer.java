@@ -29,8 +29,8 @@ public class StaticRenderer extends AbstractRenderer {
     };
     testModel = new TestModel(parent);
     testModel2 = new TestModel(parent);
-    testModel.getTransformation().getPosition().set(-2, 0, -6);
-    testModel2.getTransformation().getPosition().set(2, 0, -6);
+    testModel.getTransformation().translate(-2, 0, -6);
+    testModel2.getTransformation().translate(2, 0, -6);
     GL11.glEnable(GL11.GL_DEPTH_TEST);
   }
 
