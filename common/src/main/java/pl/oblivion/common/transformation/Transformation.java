@@ -1,13 +1,11 @@
 package pl.oblivion.common.transformation;
 
 import lombok.ToString;
-import org.joml.Math;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
+import org.joml.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.joml.Math;
 
 @Getter
 @AllArgsConstructor
@@ -15,55 +13,67 @@ import lombok.Getter;
 public class Transformation {
 
   private final Vector3f position;
-  private final Quaternionf rotation;
+  private final AxisAngle4f rotation;
   private final Vector3f scale;
   private final Matrix4f transformationMatrix;
 
   public Transformation() {
     this.position = new Vector3f();
-    this.rotation = new Quaternionf();
+    this.rotation = new AxisAngle4f();
     this.scale = new Vector3f(1, 1, 1);
-    this.transformationMatrix = new Matrix4f();
+    this.transformationMatrix = new Matrix4f().translate(this.position).rotate(this.rotation).scale(this.scale);
   }
   
   public Transformation(Transformation transformation){
-    this.position = new Vector3f(transformation.getPosition());
-    this.rotation = new Quaternionf(transformation.getRotation());
-    this.scale = new Vector3f(transformation.getScale());
     this.transformationMatrix = new Matrix4f(transformation.getTransformationMatrix());
-  }
+    this.position = new Vector3f();
+    this.rotation = new AxisAngle4f();
+    this.scale = new Vector3f(1, 1, 1);
 
-  public Matrix4f getTransformationMatrix() {
-    return transformationMatrix
-        .identity()
-        .translate(this.position)
-        .rotate(this.rotation)
-        .scale(this.scale);
-  }
-
-  public void rotate(float x, float y, float z) {
-    this.rotation.rotateX((float) Math.toRadians(x));
-    this.rotation.rotateY((float) Math.toRadians(y));
-    this.rotation.rotateZ((float) Math.toRadians(z));
-  }
-
-  public void translate(float x, float y, float z) {
-    this.position.x += x;
-    this.position.y += y;
-    this.position.z += z;
+    this.transformationMatrix.getTranslation(this.position);
+    this.transformationMatrix.getRotation(this.rotation);
+    this.transformationMatrix.getScale(this.scale);
   }
   
-  public void translate(Vector3f translation){
-    this.position.x += translation.x;
-    this.position.y += translation.y;
-    this.position.z += translation.z;
+  public Matrix4f getTransformationMatrix() {
+    return transformationMatrix;
+  }
+
+  public void translate(float xAxis, float yAxis, float zAxis){
+    this.transformationMatrix.translateLocal(xAxis,yAxis,zAxis);
+  }
+  
+  public void translate(Vector3f translationVector){
+    this.transformationMatrix.translateLocal(translationVector);
+  }
+  
+  public void rotate(AxisAngle4f rotationAxisAngle){
+    this.transformationMatrix.rotate(rotationAxisAngle);
+  }
+  
+  public void scale(float xAxis, float yAxis, float zAxis){
+    this.transformationMatrix.scaleLocal(xAxis,yAxis,zAxis);
   }
   
   public void set(Transformation transformation) {
-    this.position.set(transformation.getPosition());
-    this.rotation.set(transformation.getRotation());
-    this.scale.set(transformation.getScale());
-    this.transformationMatrix.set(transformation.getTransformationMatrix());
+    this.position.set(new Vector3f(transformation.getPosition()));
+    this.rotation.set(new Quaternionf(transformation.getRotation()));
+    this.scale.set(new Vector3f(transformation.getScale()));
+    this.transformationMatrix.set(new Matrix4f(transformation.getTransformationMatrix()));
+  }
   
+  public Vector3f getPosition(){
+    this.transformationMatrix.getTranslation(this.position);
+    return this.position;
+  }
+  
+  public AxisAngle4f getRotation(){
+    this.transformationMatrix.getRotation(this.rotation);
+    return this.rotation;
+  }
+  
+  public Vector3f getScale(){
+    this.transformationMatrix.getScale(this.scale);
+    return this.scale;
   }
 }
