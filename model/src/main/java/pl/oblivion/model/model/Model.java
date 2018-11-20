@@ -2,7 +2,7 @@ package pl.oblivion.model.model;
 
 import lombok.Getter;
 import pl.oblivion.common.gameobject.GameObject;
-import pl.oblivion.common.transformation.Transformation;
+import pl.oblivion.common.gameobject.Transformation;
 import pl.oblivion.model.mesh.Mesh;
 
 @Getter
