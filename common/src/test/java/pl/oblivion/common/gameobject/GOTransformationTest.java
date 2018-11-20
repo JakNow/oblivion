@@ -2,14 +2,13 @@ package pl.oblivion.common.gameobject;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.assertj.core.api.SoftAssertions;
 import org.joml.Vector3f;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import pl.oblivion.common.transformation.Transformation;
-
-public class TransformationTest {
+public class GOTransformationTest {
 
   private static GameObject gameObject;
   private static Transformation gameObjectTransformation;
@@ -42,5 +41,25 @@ public class TransformationTest {
 
     gameObject.translate(xyzTranslation);
     assertThat(gameObject.getPosition()).isEqualTo(xyzTranslation);
+  }
+
+  @Test
+  public void translateOverTimeGameObject_GameObjectIsTranslatedInSteps_Test() {
+    float xSpeed = 0.5f;
+    float ySpeed = 1.25f;
+    float zSpeed = 1;
+
+    int translationTimes = 100;
+    SoftAssertions softAssertions = new SoftAssertions();
+    for (int i = 0; i < translationTimes; i++) {
+      gameObject.translate(xSpeed, ySpeed, zSpeed);
+      softAssertions.assertThat(gameObject.getPosition().x).isEqualTo(xSpeed * (i + 1));
+      softAssertions.assertThat(gameObject.getPosition().y).isEqualTo(ySpeed * (i + 1));
+      softAssertions.assertThat(gameObject.getPosition().z).isEqualTo(zSpeed * (i + 1));
+    }
+    softAssertions.assertAll();
+    assertThat(gameObject.getPosition())
+        .extracting("x", "y", "z")
+        .contains(xSpeed * translationTimes, ySpeed * translationTimes, zSpeed * translationTimes);
   }
 }

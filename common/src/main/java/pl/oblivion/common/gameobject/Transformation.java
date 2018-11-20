@@ -1,4 +1,4 @@
-package pl.oblivion.common.transformation;
+package pl.oblivion.common.gameobject;
 
 import org.joml.AxisAngle4f;
 import org.joml.Matrix4f;
@@ -42,20 +42,20 @@ public class Transformation {
     return transformationMatrix;
   }
 
-  public void translate(float xAxis, float yAxis, float zAxis) {
-    this.transformationMatrix.translateLocal(xAxis, yAxis, zAxis);
+  void translate(float xAxis, float yAxis, float zAxis) {
+    this.transformationMatrix.translate(xAxis, yAxis, zAxis);
   }
 
-  public void translate(Vector3f translationVector) {
+  void translate(Vector3f translationVector) {
     this.transformationMatrix.translateLocal(translationVector);
   }
 
-  public void rotate(AxisAngle4f rotationAxisAngle) {
+  void rotate(AxisAngle4f rotationAxisAngle) {
     this.transformationMatrix.rotate(rotationAxisAngle);
   }
 
-  public void scale(float xAxis, float yAxis, float zAxis) {
-    this.transformationMatrix.scaleLocal(xAxis, yAxis, zAxis);
+  void scale(float xAxis, float yAxis, float zAxis) {
+    this.transformationMatrix.scale(xAxis, yAxis, zAxis);
   }
 
   public void set(Transformation transformation) {

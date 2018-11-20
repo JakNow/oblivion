@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL30;
 
 import lombok.Getter;
 import pl.oblivion.common.gameobject.GameObject;
-import pl.oblivion.common.transformation.Transformation;
+import pl.oblivion.common.gameobject.Transformation;
 import pl.oblivion.engine.Camera;
 import pl.oblivion.engine.Window;
 import pl.oblivion.engine.mesh.Attribute;
@@ -29,8 +29,8 @@ public class StaticRenderer extends AbstractRenderer {
     };
     testModel = new TestModel(parent);
     testModel2 = new TestModel(parent);
-    testModel.getTransformation().translate(-2, 0, -6);
-    testModel2.getTransformation().translate(2, 0, -6);
+    testModel.translate(-2, 0, -6);
+    testModel2.translate(2, 0, -6);
     GL11.glEnable(GL11.GL_DEPTH_TEST);
   }
 
@@ -41,6 +41,7 @@ public class StaticRenderer extends AbstractRenderer {
 
   @Override
   public void prepare() {
+    testModel.translate(0.015f,0,0);
     staticShader.start();
     staticShader.getProjectionMatrix().loadMatrix(this.getWindow().getProjectionMatrix());
     staticShader.getViewMatrix().loadMatrix(this.getCamera().getViewMatrix());
@@ -48,7 +49,6 @@ public class StaticRenderer extends AbstractRenderer {
         .getTransformationMatrix()
         .loadMatrix(testModel.getTransformation().getTransformationMatrix());
   
-    testModel.funnyAnimation(-2,2);
     GL30.glBindVertexArray(testModel.getMesh().getId());
     testModel.getMesh().bind(0);
     GL11.glDrawElements(
@@ -59,7 +59,6 @@ public class StaticRenderer extends AbstractRenderer {
             .getTransformationMatrix()
             .loadMatrix(testModel2.getTransformation().getTransformationMatrix());
     
-    testModel2.funnyAnimation(2,2);
     GL30.glBindVertexArray(testModel2.getMesh().getId());
     testModel2.getMesh().bind(0);
     GL11.glDrawElements(
@@ -154,7 +153,7 @@ public class StaticRenderer extends AbstractRenderer {
       float ySpeed = speed * yDirection;
       float zSpeed = speed * zDirection;
 
-      this.getTransformation().translate(xSpeed, ySpeed, zSpeed);
+      this.translate(xSpeed, ySpeed, zSpeed);
     }
 
     private int setDirection(float variable, float min, float max, int current) {

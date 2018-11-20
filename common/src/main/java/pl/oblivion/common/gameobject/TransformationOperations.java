@@ -1,4 +1,4 @@
-package pl.oblivion.common.transformation;
+package pl.oblivion.common.gameobject;
 
 import org.joml.Vector3f;
 

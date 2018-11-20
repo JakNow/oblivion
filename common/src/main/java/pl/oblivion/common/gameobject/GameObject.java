@@ -9,8 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import pl.oblivion.common.transformation.Transformation;
-import pl.oblivion.common.transformation.TransformationOperations;
 
 @Getter
 @Setter
@@ -71,13 +69,15 @@ public abstract class GameObject implements TransformationOperations {
   }
 
   @Override
-  public void translate(float x, float y, float z) {}
+  public void translate(float x, float y, float z) {
+    this.transformation.translate(x,y,z);
+  }
 
   @Override
   public void translate(Vector3f translationVector) {}
 
   @Override
   public Vector3f getPosition() {
-    return null;
+    return transformation.getPosition();
   }
 }

@@ -3,7 +3,7 @@ package pl.oblivion.engine;
 import org.joml.Matrix4f;
 
 import pl.oblivion.common.gameobject.GameObject;
-import pl.oblivion.common.transformation.Transformation;
+import pl.oblivion.common.gameobject.Transformation;
 
 public class Camera extends GameObject {
 
