@@ -1,13 +1,13 @@
 package pl.oblivion.common.gameobject;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.assertj.core.api.SoftAssertions;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class GOTransformationTest {
 
@@ -148,4 +148,60 @@ public class GOTransformationTest {
         .extracting("x", "y", "z")
         .contains(xTranslation + 2, yTranslation + 3, zTranslation + 4);
   }
+    
+    @Test
+    public void rotateByAxisGameObject_GameObjectIsRotated_Test() {
+    }
+    
+    @Test
+    public void rotateByVectorGameObject_GameObjectIsRotated_Test() {
+    }
+    
+    @Test
+    public void rotateOverTimeGameObject_GameObjectIsRotatedInSteps_Test() {
+    }
+    
+    @Test
+    public void rotateByAxisParent_ParentAndChildAreRotated_Test() {
+    }
+    
+    @Test
+    public void rotateByVectorParent_ParentAndChildAreRotated_Test() {
+    }
+    
+    @Test
+    public void rotateOverTimeParent_ParentAndChildAreRotatedInSteps_Test() {
+    }
+    
+    @Test
+    public void rotateParentLocally_thenRotateGlobally_Test() {
+    }
+    
+    @Test
+    public void scaleByAxisGameObject_GameObjectIsScaled_Test() {
+    }
+    
+    @Test
+    public void scaleByVectorGameObject_GameObjectIsScaled_Test() {
+    }
+    
+    @Test
+    public void scaleOverTimeGameObject_GameObjectIsScaledInSteps_Test() {
+    }
+    
+    @Test
+    public void scaleByAxisParent_ParentAndChildAreScaled_Test() {
+    }
+    
+    @Test
+    public void scaleByVectorParent_ParentAndChildAreScaled_Test() {
+    }
+    
+    @Test
+    public void scaleOverTimeParent_ParentAndChildAreScaledInSteps_Test() {
+    }
+    
+    @Test
+    public void scaleParentLocally_thenRotateGlobally_Test() {
+    }
 }
