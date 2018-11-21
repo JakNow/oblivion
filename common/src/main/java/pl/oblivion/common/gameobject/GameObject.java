@@ -2,6 +2,7 @@ package pl.oblivion.common.gameobject;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import org.joml.Vector3f;
 
@@ -22,7 +23,7 @@ public abstract class GameObject implements TransformationOperations {
 
   public GameObject(Transformation transformation, GameObject parent) {
     this.transformation = new Transformation(transformation);
-    this.parent = parent;
+    this.addParent(parent);
     this.children = new LinkedList<>();
   }
 
@@ -70,12 +71,26 @@ public abstract class GameObject implements TransformationOperations {
 
   @Override
   public void translate(float x, float y, float z) {
-    this.transformation.translate(x,y,z);
+    this.translateLocal(x,y,z);
+    children.stream().filter(Objects::nonNull).forEach(child -> child.translate(x,y,z));
   }
 
   @Override
-  public void translate(Vector3f translationVector) {}
-
+  public void translate(Vector3f translationVector) {
+    this.translateLocal(translationVector);
+    children.stream().filter(Objects::nonNull).forEach(child -> child.translate(translationVector));
+  }
+  
+  @Override
+  public void translateLocal(float x, float y, float z) {
+    this.transformation.translate(x,y,z);
+  }
+  
+  @Override
+  public void translateLocal(Vector3f translationVector) {
+    this.transformation.translate(translationVector);
+  }
+  
   @Override
   public Vector3f getPosition() {
     return transformation.getPosition();

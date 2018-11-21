@@ -5,12 +5,10 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
-@AllArgsConstructor
 @ToString
 public class Transformation {
 
@@ -37,7 +35,15 @@ public class Transformation {
     this.transformationMatrix.getRotation(this.rotation);
     this.transformationMatrix.getScale(this.scale);
   }
-
+  
+  public Transformation(Vector3f position, AxisAngle4f rotation, Vector3f scale) {
+    this.position = position;
+    this.rotation = rotation;
+    this.scale = scale;
+    this.transformationMatrix =
+            new Matrix4f().translate(this.position).rotate(this.rotation).scale(this.scale);
+  }
+  
   public Matrix4f getTransformationMatrix() {
     return transformationMatrix;
   }
