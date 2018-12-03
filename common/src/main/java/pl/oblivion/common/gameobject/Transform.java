@@ -123,6 +123,19 @@ public class Transform {
         this.transformationScale.mul(parent.transform.scale);
     }
     
+    public void scale(float xScale, float yScale, float zScale) {
+        this.scale.mul(xScale, yScale, zScale);
+        this.transformationScale.mul(xScale, yScale, zScale);
+        this.children.forEach(child -> child.transform.scale(xScale, yScale, zScale));
+    }
+    
+    public void scale(Vector3f scaleVector) {
+        this.scale.mul(scaleVector);
+        this.transformationScale.mul(scaleVector);
+        this.children.forEach(child -> child.transform.scale(scaleVector));
+    }
+    
+    
     @Getter
     class SinCos {
         float sin;

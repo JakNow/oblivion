@@ -81,4 +81,51 @@ public class TransformTest {
                 .isEqualToComparingFieldByField(new Vector3f(28.5f, 137.5f, -17));
         assertThat(child.transform.getPosition()).isEqualTo(new Vector3f(27.5f, 135.5f, -20));
     }
+    
+    @Test
+    public void scaleIsInheritedByChild() {
+        GameObject parent =
+                new GameObject(
+                        new Transform(
+                                new Vector3f(1, 2, 3),
+                                new Quaternionf(),
+                                new Vector3f(2.5f, 0.3f, 10),
+                                Collections.emptyList())) {
+                };
+        
+        GameObject child = new GameObject(parent) {
+        };
+        Vector3f scaleFromTransformationMatrix = new Vector3f();
+        child.transform.getTransformationMatrix().getScale(scaleFromTransformationMatrix);
+        assertThat(scaleFromTransformationMatrix)
+                .isEqualToComparingFieldByField(new Vector3f(2.5f, 0.3f, 10));
+        assertThat(child.transform.getScale()).isEqualTo(new Vector3f(1, 1, 1));
+    }
+    
+    @Test
+    public void whenParentScalesChildScales() {
+        GameObject parent =
+                new GameObject(
+                        new Transform(
+                                new Vector3f(1, 2, 3),
+                                new Quaternionf(),
+                                new Vector3f(2.5f, 0.3f, 10), Collections.emptyList())) {
+                };
+        
+        GameObject child = new GameObject(parent) {
+        };
+        
+        parent.transform.scale(new Vector3f(2, 10, 0.5f));
+        Vector3f scaleFromTransformationMatrix = new Vector3f();
+        child.transform.getTransformationMatrix().getScale(scaleFromTransformationMatrix);
+        assertThat(scaleFromTransformationMatrix)
+                .isEqualToComparingFieldByField(new Vector3f(5, 3, 5));
+        assertThat(child.transform.getScale()).isEqualTo(new Vector3f(2, 10, 0.5f));
+        
+        parent.transform.scale(0.2f, 2, 0.4f);
+        child.transform.getTransformationMatrix().getScale(scaleFromTransformationMatrix);
+        assertThat(scaleFromTransformationMatrix)
+                .isEqualToComparingFieldByField(new Vector3f(1, 6, 2f));
+        assertThat(child.transform.getScale()).isEqualTo(new Vector3f(0.4f, 20f, 0.2f));
+    }
 }
