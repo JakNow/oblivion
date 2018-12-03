@@ -1,48 +1,46 @@
 package pl.oblivion.common.gameobject;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-import org.joml.Vector3f;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-@Getter
-@Setter
 @AllArgsConstructor
-@ToString
-public abstract class GameObject implements TransformationOperations {
-
-  private final Transformation transformation;
-  private GameObject parent;
-  private List<GameObject> children;
-
-  public GameObject(Transformation transformation, GameObject parent) {
-    this.transformation = new Transformation(transformation);
+public abstract class GameObject {
+    
+    public final Transform transform;
+    @Getter
+    @Setter
+    private GameObject parent;
+    @Getter
+    @Setter
+    private List<GameObject> children;
+    
+    public GameObject(Transform transform, GameObject parent) {
     this.addParent(parent);
     this.children = new LinkedList<>();
+        this.transform = new Transform(transform, children);
   }
 
   public GameObject() {
-    this.transformation = new Transformation();
     this.parent = null;
     this.children = new LinkedList<>();
+      this.transform = new Transform(children);
   }
-
-  public GameObject(Transformation transformation) {
-    this.transformation = new Transformation(transformation);
+    
+    public GameObject(Transform transform) {
     this.parent = null;
     this.children = new LinkedList<>();
+        this.transform = new Transform(transform, children);
   }
 
   public GameObject(GameObject parent) {
-    this.transformation = new Transformation();
-    this.addParent(parent);
     this.children = new LinkedList<>();
+      this.transform = new Transform(this.children);
+      this.addParent(parent);
   }
 
   public boolean addChild(GameObject child) {
@@ -52,9 +50,14 @@ public abstract class GameObject implements TransformationOperations {
   }
 
   public boolean addParent(GameObject parent) {
-    this.parent = parent;
-    this.parent.getChildren().add(this);
-    return true;
+      if (Objects.nonNull(parent)) {
+          this.parent = parent;
+          this.parent.getChildren().add(this);
+          this.transform.inheritTransformationFromParent(parent);
+        
+          return true;
+      }
+      return false;
   }
 
   public boolean removeChild(GameObject child) {
@@ -67,32 +70,5 @@ public abstract class GameObject implements TransformationOperations {
     this.parent.getChildren().remove(this);
     this.parent = null;
     return true;
-  }
-
-  @Override
-  public void translate(float x, float y, float z) {
-    this.translateLocal(x,y,z);
-    children.stream().filter(Objects::nonNull).forEach(child -> child.translate(x,y,z));
-  }
-
-  @Override
-  public void translate(Vector3f translationVector) {
-    this.translateLocal(translationVector);
-    children.stream().filter(Objects::nonNull).forEach(child -> child.translate(translationVector));
-  }
-  
-  @Override
-  public void translateLocal(float x, float y, float z) {
-    this.transformation.translate(x,y,z);
-  }
-  
-  @Override
-  public void translateLocal(Vector3f translationVector) {
-    this.transformation.translate(translationVector);
-  }
-  
-  @Override
-  public Vector3f getPosition() {
-    return transformation.getPosition();
   }
 }
