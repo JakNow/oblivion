@@ -1,11 +1,10 @@
 package pl.oblivion.engine.renderer;
 
+import lombok.Getter;
+import org.joml.Quaternionf;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
-
-import lombok.Getter;
 import pl.oblivion.common.gameobject.GameObject;
-import pl.oblivion.common.gameobject.Transformation;
 import pl.oblivion.engine.Camera;
 import pl.oblivion.engine.Window;
 import pl.oblivion.engine.mesh.Attribute;
@@ -19,35 +18,40 @@ public class StaticRenderer extends AbstractRenderer {
   private GameObject parent;
   private TestModel testModel;
   private TestModel testModel2;
-
+  
+  Quaternionf rot = new Quaternionf(0, 1, 0, (float) Math.toRadians(0.2));
+  
+  @Override
+  public void render() {
+  
+  }
+  
   public StaticRenderer(Window window, Camera camera) {
     super(staticShader, window, camera);
     staticShader.start();
     staticShader.getProjectionMatrix().loadMatrix(this.getProjectionMatrix());
     staticShader.stop();
-    parent = new GameObject(new Transformation(),null) {
+    parent = new GameObject() {
     };
     testModel = new TestModel(parent);
     testModel2 = new TestModel(parent);
-    testModel.translate(-2, 0, -6);
-    testModel2.translate(2, 0, -6);
+    // testModel.rotate(new Quaternionf(0.0f, 1.0f, 0.0f, (float) Math.toRadians(90)));
+    testModel.transform.translate(2, 0, -4);
+    testModel2.transform.translate(-2, 0, -4);
+    //  testModel2.rotate(new Quaternionf(0.0f, 1.0f, 0.0f, (float) Math.toRadians(90)));
     GL11.glEnable(GL11.GL_DEPTH_TEST);
   }
 
   @Override
-  public void render() {
-  
-  }
-
-  @Override
   public void prepare() {
-    testModel.translate(0.015f,0,0);
+    //testModel.transform.rotate(rot);
+    //  testModel.translate(0.015f,0,0);
     staticShader.start();
     staticShader.getProjectionMatrix().loadMatrix(this.getWindow().getProjectionMatrix());
     staticShader.getViewMatrix().loadMatrix(this.getCamera().getViewMatrix());
     staticShader
         .getTransformationMatrix()
-        .loadMatrix(testModel.getTransformation().getTransformationMatrix());
+            .loadMatrix(testModel.transform.getTransformationMatrix());
   
     GL30.glBindVertexArray(testModel.getMesh().getId());
     testModel.getMesh().bind(0);
@@ -57,7 +61,7 @@ public class StaticRenderer extends AbstractRenderer {
     
     staticShader
             .getTransformationMatrix()
-            .loadMatrix(testModel2.getTransformation().getTransformationMatrix());
+            .loadMatrix(testModel2.transform.getTransformationMatrix());
     
     GL30.glBindVertexArray(testModel2.getMesh().getId());
     testModel2.getMesh().bind(0);
@@ -84,7 +88,7 @@ public class StaticRenderer extends AbstractRenderer {
     float speed = 0.015f;
 
     public TestModel(GameObject parent) {
-      super(new Transformation(),parent);
+      super(parent);
       mesh =
           new Mesh(
               new int[] {
@@ -140,20 +144,20 @@ public class StaticRenderer extends AbstractRenderer {
     }
 
     void funnyAnimation(float min, float max) {
-      //this.getTransformation().rotate(1, 1, 1);
+      //this.getTransform().rotate(1, 1, 1);
 
       xDirection =
-          setDirection(this.getTransformation().getPosition().x, min, max, xDirection);
+              setDirection(this.transform.getPosition().x, min, max, xDirection);
       yDirection = 0;
-          //setDirection(this.getTransformation().getPosition().y, min, max, yDirection);
+      //setDirection(this.getTransform().getPosition().y, min, max, yDirection);
       zDirection = 0;
-              //setDirection(this.getTransformation().getPosition().z, -6,-5, zDirection);
+      //setDirection(this.getTransform().getPosition().z, -6,-5, zDirection);
 
       float xSpeed = speed * xDirection;
       float ySpeed = speed * yDirection;
       float zSpeed = speed * zDirection;
-
-      this.translate(xSpeed, ySpeed, zSpeed);
+  
+      this.transform.translate(xSpeed, ySpeed, zSpeed);
     }
 
     private int setDirection(float variable, float min, float max, int current) {
