@@ -3,6 +3,7 @@ package pl.oblivion.common.gameobject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import pl.oblivion.common.gameobject.transform.Transform;
 
 import java.util.LinkedList;
 import java.util.List;

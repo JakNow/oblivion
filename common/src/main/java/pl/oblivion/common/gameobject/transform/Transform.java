@@ -1,10 +1,11 @@
-package pl.oblivion.common.gameobject;
+package pl.oblivion.common.gameobject.transform;
 
 import lombok.Getter;
 import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import pl.oblivion.common.gameobject.GameObject;
 
 import java.util.List;
 
@@ -133,6 +134,13 @@ public class Transform {
         this.scale.mul(scaleVector);
         this.transformationScale.mul(scaleVector);
         this.children.forEach(child -> child.transform.scale(scaleVector));
+    }
+    
+    public void rotate(Vector3f axis, float angle) {
+        float angleInRadians = (float)Math.toRadians(angle);
+        this.rotation.rotateAxis(angleInRadians,axis);
+        this.transformationRotation.rotateAxis(angleInRadians,axis);
+        this.children.forEach(child -> child.transform.rotate(axis, angleInRadians));
     }
     
     
