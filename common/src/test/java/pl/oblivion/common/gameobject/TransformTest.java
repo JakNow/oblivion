@@ -171,7 +171,31 @@ public class TransformTest {
   }
 
   @Test
-  public void rotateByQuaternion() {}
+  public void rotateByAngles(){
+      Transform transform = new Transform(Collections.emptyList());
+    
+      transform.rotate(45,45,45);
+      assertSoftly(
+              softAssertions -> {
+                  softAssertions.assertThat(transform.getRotation().x).isEqualTo(0f);
+                  softAssertions.assertThat(transform.getRotation().y).isEqualTo(0f);
+                  softAssertions.assertThat(transform.getRotation().z).isEqualTo(0.2588f, within(0.001f));
+                  softAssertions.assertThat(transform.getRotation().w).isEqualTo(0.9659f, within(0.001f));
+              });
+  }
+  @Test
+  public void rotateByQuaternion() {
+      Transform transform = new Transform(Collections.emptyList());
+    
+      transform.rotate(new Quaternionf(0.5f,0.5f,0.5f,0.5f));
+      assertSoftly(
+              softAssertions -> {
+                  softAssertions.assertThat(transform.getRotation().x).isEqualTo(0f);
+                  softAssertions.assertThat(transform.getRotation().y).isEqualTo(0f);
+                  softAssertions.assertThat(transform.getRotation().z).isEqualTo(0.2588f, within(0.001f));
+                  softAssertions.assertThat(transform.getRotation().w).isEqualTo(0.9659f, within(0.001f));
+              });
+  }
 
   @Test
   public void rotateByVectorAroundPoint() {}
