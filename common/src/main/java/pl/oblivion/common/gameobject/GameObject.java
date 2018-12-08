@@ -11,37 +11,38 @@ import java.util.Objects;
 
 @AllArgsConstructor
 public abstract class GameObject {
-    
-    public final Transform transform;
-    @Getter
-    @Setter
-    private GameObject parent;
-    @Getter
-    @Setter
-    private List<GameObject> children;
-    
-    public GameObject(Transform transform, GameObject parent) {
+
+  public final Transform transform;
+  @Getter @Setter private GameObject parent;
+  @Getter @Setter private List<GameObject> children;
+  @Getter @Setter private String name;
+
+  public GameObject(String name, Transform transform, GameObject parent) {
+    this.name = name;
     this.addParent(parent);
     this.children = new LinkedList<>();
-        this.transform = new Transform(transform, children);
+    this.transform = new Transform(transform, children);
   }
 
-  public GameObject() {
+  public GameObject(String name) {
+    this.name = name;
     this.parent = null;
     this.children = new LinkedList<>();
-      this.transform = new Transform(children);
-  }
-    
-    public GameObject(Transform transform) {
-    this.parent = null;
-    this.children = new LinkedList<>();
-        this.transform = new Transform(transform, children);
+    this.transform = new Transform(children);
   }
 
-  public GameObject(GameObject parent) {
+  public GameObject(String name, Transform transform) {
+    this.name = name;
+    this.parent = null;
     this.children = new LinkedList<>();
-      this.transform = new Transform(this.children);
-      this.addParent(parent);
+    this.transform = new Transform(transform, children);
+  }
+
+  public GameObject(String name, GameObject parent) {
+    this.name = name;
+    this.children = new LinkedList<>();
+    this.transform = new Transform(this.children);
+    this.addParent(parent);
   }
 
   public boolean addChild(GameObject child) {
@@ -51,13 +52,13 @@ public abstract class GameObject {
   }
 
   public boolean addParent(GameObject parent) {
-      if (Objects.nonNull(parent)) {
-          this.parent = parent;
-          this.parent.getChildren().add(this);
-          this.transform.inheritTransformationFromParent(parent);
-          return true;
-      }
-      return false;
+    if (Objects.nonNull(parent)) {
+      this.parent = parent;
+      this.parent.getChildren().add(this);
+      this.transform.inheritTransformationFromParent(parent);
+      return true;
+    }
+    return false;
   }
 
   public boolean removeChild(GameObject child) {

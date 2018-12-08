@@ -8,7 +8,7 @@ public class Camera extends GameObject {
   private Matrix4f viewMatrix;
 
   public Camera(GameObject parent) {
-    super(parent);
+    super("Camera",parent);
 
     this.viewMatrix = new Matrix4f();
   }

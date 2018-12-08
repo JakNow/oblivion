@@ -1,6 +1,5 @@
 package pl.oblivion.common.gameobject;
 
-import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.junit.Test;
@@ -44,7 +43,7 @@ public class TransformTest {
   public void positionIsInheritedByChild() {
     GameObject parent = prepareDefaultGameObject();
 
-    GameObject child = new GameObject(parent) {};
+    GameObject child = new GameObject("child", parent) {};
     Vector3f positionFromTransformationMatrix = new Vector3f();
     child.transform.getTransformationMatrix().getTranslation(positionFromTransformationMatrix);
     assertThat(positionFromTransformationMatrix)
@@ -55,7 +54,7 @@ public class TransformTest {
   public void whenParentMovesChildMoves() {
     GameObject parent = prepareDefaultGameObject();
 
-    GameObject child = new GameObject(parent) {};
+    GameObject child = new GameObject("child", parent) {};
 
     parent.transform.translate(new Vector3f(51, 123.5f, -5));
     Vector3f positionFromTransformationMatrix = new Vector3f();
@@ -75,7 +74,7 @@ public class TransformTest {
   public void scaleIsInheritedByChild() {
     GameObject parent = prepareScaledGameObject();
 
-    GameObject child = new GameObject(parent) {};
+    GameObject child = new GameObject("child", parent) {};
     Vector3f scaleFromTransformationMatrix = new Vector3f();
     child.transform.getTransformationMatrix().getScale(scaleFromTransformationMatrix);
     assertThat(scaleFromTransformationMatrix)
@@ -87,7 +86,7 @@ public class TransformTest {
   public void whenParentScalesChildScales() {
     GameObject parent = prepareScaledGameObject();
 
-    GameObject child = new GameObject(parent) {};
+    GameObject child = new GameObject("child", parent) {};
 
     parent.transform.scale(new Vector3f(2, 10, 0.5f));
     Vector3f scaleFromTransformationMatrix = new Vector3f();
@@ -172,35 +171,36 @@ public class TransformTest {
   }
 
   @Test
-  public void rotateByAngles(){
-      Transform transform = new Transform(Collections.emptyList());
+  public void rotateByAngles() {
+    Transform transform = new Transform(Collections.emptyList());
 
-      transform.rotate(45,45,45);
-      assertSoftly(
-              softAssertions -> {
-                  softAssertions.assertThat(transform.getRotation().x).isEqualTo( 0.462f, within(0.001f));
-                  softAssertions.assertThat(transform.getRotation().y).isEqualTo( 0.191f, within(0.001f));
-                  softAssertions.assertThat(transform.getRotation().z).isEqualTo(0.462f, within(0.001f));
-                  softAssertions.assertThat(transform.getRotation().w).isEqualTo(0.733f , within(0.001f));
-              });
+    transform.rotate(45, 45, 45);
+    assertSoftly(
+        softAssertions -> {
+          softAssertions.assertThat(transform.getRotation().x).isEqualTo(0.462f, within(0.001f));
+          softAssertions.assertThat(transform.getRotation().y).isEqualTo(0.191f, within(0.001f));
+          softAssertions.assertThat(transform.getRotation().z).isEqualTo(0.462f, within(0.001f));
+          softAssertions.assertThat(transform.getRotation().w).isEqualTo(0.733f, within(0.001f));
+        });
   }
+
   @Test
   public void rotateByQuaternion() {
-      Transform transform = new Transform(Collections.emptyList());
-    
-      transform.rotate(new Quaternionf(0.5f,0.5f,0.5f,0.5f));
-      assertSoftly(
-              softAssertions -> {
-                  softAssertions.assertThat(transform.getRotation().x).isEqualTo(0.5f);
-                  softAssertions.assertThat(transform.getRotation().y).isEqualTo(0.5f);
-                  softAssertions.assertThat(transform.getRotation().z).isEqualTo(0.5f);
-                  softAssertions.assertThat(transform.getRotation().w).isEqualTo(0.5f);
-              });
-  }
+    Transform transform = new Transform(Collections.emptyList());
 
+    transform.rotate(new Quaternionf(0.5f, 0.5f, 0.5f, 0.5f));
+    assertSoftly(
+        softAssertions -> {
+          softAssertions.assertThat(transform.getRotation().x).isEqualTo(0.5f);
+          softAssertions.assertThat(transform.getRotation().y).isEqualTo(0.5f);
+          softAssertions.assertThat(transform.getRotation().z).isEqualTo(0.5f);
+          softAssertions.assertThat(transform.getRotation().w).isEqualTo(0.5f);
+        });
+  }
 
   private GameObject prepareDefaultGameObject() {
     return new GameObject(
+        "Default GameObject",
         new Transform(
             new Vector3f(1, 2, 3),
             new Quaternionf(),
@@ -210,19 +210,21 @@ public class TransformTest {
 
   private GameObject prepareScaledGameObject() {
     return new GameObject(
+        "Scaled GameObject",
         new Transform(
             new Vector3f(1, 2, 3),
             new Quaternionf(),
             new Vector3f(2.5f, 0.3f, 10),
             Collections.emptyList())) {};
   }
-    
-    private GameObject prepareRotatedGameObject() {
-        return new GameObject(
-                new Transform(
-                        new Vector3f(),
-                        new Quaternionf(0.3f,0.5f,0.7f,0.9f),
-                        new Vector3f(1,1,1),
-                        Collections.emptyList())) {};
-    }
+
+  private GameObject prepareRotatedGameObject() {
+    return new GameObject(
+        "Rotated GameObject",
+        new Transform(
+            new Vector3f(),
+            new Quaternionf(0.3f, 0.5f, 0.7f, 0.9f),
+            new Vector3f(1, 1, 1),
+            Collections.emptyList())) {};
+  }
 }
