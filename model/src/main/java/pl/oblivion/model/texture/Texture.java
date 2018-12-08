@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.oblivion.engine.mesh;
+package pl.oblivion.model.texture;
 
 import pl.oblivion.common.utils.MyFile;
 
@@ -24,7 +24,7 @@ public class Texture {
 	/**
 	 * Stores the handle of the texture.
 	 */
-	private final int id;
+	private int id = 0;
 
 	/**
 	 * Width of the texture.
@@ -38,25 +38,28 @@ public class Texture {
 	/**
 	 * Creates a texture.
 	 */
-	public Texture(String fileName) throws Exception {
-		this(loadTexture(fileName));
+	public Texture(MyFile fileName) throws Exception {
+		loadTexture(fileName);
 	}
 
 	public Texture(int id) {
 		this.id = id;
 	}
 
-	public static int loadTexture(String fileName) throws Exception {
-		//InputStream in = new FileInputStream(new File(fileName));
-                MyFile inn = new MyFile(fileName);
-                InputStream in = new FileInputStream(new File(inn.getPath()));
-		PNGDecoder decoder = new PNGDecoder(in);
+	public static ByteBuffer loadTexture(MyFile myfile) throws Exception { //String filename
+		//InputStream in = new FileInputStream(new File(fileName.getName()));
+                //MyFile inn = new MyFile(fileName);
+                //InputStream in = new FileInputStream(new File(inn.getPath()));
+		//PNGDecoder decoder = new PNGDecoder(in);
+                
+                PNGDecoder decoder = new PNGDecoder(myfile.getInputStream());
 
 		ByteBuffer buf = ByteBuffer.allocateDirect(
 				4 * decoder.getWidth() * decoder.getHeight());
 		decoder.decode(buf, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
 		buf.flip();
 
+                
 		// Create a new OpenGL texture
 		int textureId = glGenTextures();
 		// Bind the texture
@@ -73,7 +76,8 @@ public class Texture {
 				GL_RGBA, GL_UNSIGNED_BYTE, buf);
 		// Generate Mip Map
 		glGenerateMipmap(GL_TEXTURE_2D);
-		return textureId;
+		//return textureId;
+               return buf; 
 	}
 
 	public Texture(Texture texture) {

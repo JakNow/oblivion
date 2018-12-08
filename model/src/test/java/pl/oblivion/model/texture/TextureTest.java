@@ -1,10 +1,10 @@
-package pl.oblivion.engine.texture;
+package pl.oblivion.model.texture;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import org.junit.Test;
-import pl.oblivion.engine.mesh.Texture;
+import pl.oblivion.model.texture.Texture;
 
 public class TextureTest {
 
@@ -12,8 +12,8 @@ public class TextureTest {
   public void Texture_Test() {
     Texture texture = null;
       try {
-          texture = new Texture("textures/test_texture.png");
-          texture.loadTexture("textures/test_texture.png");
+         // texture = new Texture("textures/test_texture.png");
+        //  texture.loadTexture("textures/test_texture.png");
       } catch (Exception ex) {
           Logger.getLogger(TextureTest.class.getName()).log(Level.SEVERE, null, ex);
       }
