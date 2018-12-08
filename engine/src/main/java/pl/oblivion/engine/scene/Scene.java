@@ -7,4 +7,8 @@ public class Scene extends GameObject {
     public Scene(String name) {
         super(name);
     }
+    
+    public void clear(){
+        //todo remove objects before closing
+    }
 }

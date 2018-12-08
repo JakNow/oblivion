@@ -5,6 +5,7 @@ import org.joml.Matrix4f;
 import lombok.Getter;
 import pl.oblivion.engine.Camera;
 import pl.oblivion.engine.Window;
+import pl.oblivion.engine.scene.Scene;
 import pl.oblivion.engine.shader.AbstractShader;
 
 @Getter
@@ -22,7 +23,7 @@ public abstract class AbstractRenderer {
     this.camera = camera;
   }
 
-  public abstract void render();
+  public abstract void render(Scene scene);
 
   public abstract void prepare();
 
@@ -30,7 +31,8 @@ public abstract class AbstractRenderer {
 
   public abstract void end();
 
-  public void cleanUp() {
+  public void cleanUp(Scene scene) {
     this.shader.cleanUp();
+    scene.clear();
   }
 }

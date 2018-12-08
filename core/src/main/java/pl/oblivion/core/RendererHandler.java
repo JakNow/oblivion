@@ -12,6 +12,7 @@ import pl.oblivion.engine.Window;
 import pl.oblivion.engine.renderer.AbstractRenderer;
 import pl.oblivion.engine.renderer.RendererType;
 import pl.oblivion.engine.renderer.StaticRenderer;
+import pl.oblivion.engine.scene.Scene;
 
 class RendererHandler {
 
@@ -21,6 +22,8 @@ class RendererHandler {
   private float currentWidth;
   private float currentHeight;
 
+  private Scene activeScene;
+  
   private RendererHandler() {
     rendererMap = new HashMap<>();
   }
@@ -32,18 +35,19 @@ class RendererHandler {
     return instance;
   }
 
-  void initRenderers(Window window, Camera camera) {
+  void initRenderers(Window window, Camera camera, Scene activeScene) {
     rendererMap.put(RendererType.STATIC_RENDERER, new StaticRenderer(window, camera));
     this.window = window;
     this.currentWidth = window.getWidth();
     this.currentHeight = window.getHeight();
+    this.activeScene = activeScene;
   }
 
   void delete() {
     rendererMap.forEach(
-        (k, v) -> {
-          v.delete();
-          v.cleanUp();
+        (rendererType, renderer) -> {
+          renderer.delete();
+          renderer.cleanUp(activeScene);
         });
   }
 
@@ -57,10 +61,10 @@ class RendererHandler {
     GL11.glClearColor(1f, 0, 0, 1f);
     GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     rendererMap.forEach(
-        (k, v) -> {
-          v.prepare();
-          v.render();
-          v.end();
+        (rendererType, renderer) -> {
+          renderer.prepare();
+          renderer.render(activeScene);
+          renderer.end();
         });
   }
 }

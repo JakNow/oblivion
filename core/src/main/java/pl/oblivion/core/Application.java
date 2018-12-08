@@ -11,6 +11,7 @@ import pl.oblivion.common.annotations.AppConfigRunner;
 import pl.oblivion.engine.Camera;
 import pl.oblivion.engine.Timer;
 import pl.oblivion.engine.Window;
+import pl.oblivion.engine.scene.Scene;
 
 public class Application {
 
@@ -47,7 +48,7 @@ public class Application {
   private void init() {
     this.window.init();
     this.timer.getTime();
-    this.rendererHandler.initRenderers(this.window, this.camera);
+    this.rendererHandler.initRenderers(this.window, this.camera, new Scene("Default Scene"));
   }
 
   private void run() {
