@@ -55,7 +55,6 @@ public abstract class GameObject {
           this.parent = parent;
           this.parent.getChildren().add(this);
           this.transform.inheritTransformationFromParent(parent);
-        
           return true;
       }
       return false;

@@ -1,5 +1,6 @@
 package pl.oblivion.common.gameobject;
 
+import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.junit.Test;
@@ -197,17 +198,6 @@ public class TransformTest {
               });
   }
 
-  @Test
-  public void rotateByVectorAroundPoint() {}
-
-  @Test
-  public void rotateByQuaternionAroundPoint() {}
-
-  @Test
-  public void rotationIsInheritedByChild() {}
-
-  @Test
-  public void whenParentRotateChildRotates() {}
 
   private GameObject prepareDefaultGameObject() {
     return new GameObject(
@@ -226,4 +216,13 @@ public class TransformTest {
             new Vector3f(2.5f, 0.3f, 10),
             Collections.emptyList())) {};
   }
+    
+    private GameObject prepareRotatedGameObject() {
+        return new GameObject(
+                new Transform(
+                        new Vector3f(),
+                        new Quaternionf(0.3f,0.5f,0.7f,0.9f),
+                        new Vector3f(1,1,1),
+                        Collections.emptyList())) {};
+    }
 }
