@@ -1,11 +1,11 @@
 package pl.oblivion.engine.shader.uniforms;
 
-import java.nio.FloatBuffer;
-
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.system.MemoryStack;
+
+import java.nio.FloatBuffer;
 
 public class UniformMatrix extends Uniform {
 

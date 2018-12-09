@@ -1,10 +1,10 @@
 package pl.oblivion.engine.mesh;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL15;
+
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 /** Vertex Buffer Object */
 public class VBO {

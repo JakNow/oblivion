@@ -1,6 +1,10 @@
 package pl.oblivion.common.gameobject;
 
 import org.junit.Test;
+import pl.oblivion.common.gameobject.transform.GameObjectType;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,10 +67,20 @@ public class GameObjectTest {
   }
 
   private GameObject defaultParent() {
-    return new GameObject("parent") {};
+    return new GameObject("parent") {
+      @Override
+      public void addToScene(Map<GameObjectType, List<GameObject>> sceneHierarchy) {
+    
+      }
+    };
   }
 
   private GameObject defaultChild(GameObject parent) {
-    return new GameObject("child", parent) {};
+    return new GameObject("child", parent) {
+      @Override
+      public void addToScene(Map<GameObjectType, List<GameObject>> sceneHierarchy) {
+    
+      }
+    };
   }
 }

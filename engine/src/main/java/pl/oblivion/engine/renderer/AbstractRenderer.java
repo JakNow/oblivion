@@ -1,10 +1,9 @@
 package pl.oblivion.engine.renderer;
 
-import org.joml.Matrix4f;
-
 import lombok.Getter;
-import pl.oblivion.engine.Camera;
+import org.joml.Matrix4f;
 import pl.oblivion.engine.Window;
+import pl.oblivion.engine.camera.Camera;
 import pl.oblivion.engine.scene.Scene;
 import pl.oblivion.engine.shader.AbstractShader;
 

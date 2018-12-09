@@ -1,9 +1,9 @@
 package pl.oblivion.common.utils;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class GetSystemPropertyTest {
 

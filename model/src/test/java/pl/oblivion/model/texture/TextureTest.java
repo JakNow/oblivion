@@ -16,6 +16,7 @@ public class TextureTest {
   private int width;
   private int height;
   private int textureBufferCapacity;
+
   public TextureTest(int width, int height) {
     this.width = width;
     this.height = height;

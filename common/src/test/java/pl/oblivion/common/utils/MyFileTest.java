@@ -1,9 +1,9 @@
 package pl.oblivion.common.utils;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
 import org.junit.After;
 import org.junit.Test;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class MyFileTest {
 
@@ -76,4 +76,3 @@ public class MyFileTest {
     assertThat(myFile.getPath()).isEqualTo("/tests/myfile/MyFileTest.txt");
   }
 }
-

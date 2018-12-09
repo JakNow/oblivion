@@ -1,16 +1,15 @@
 package pl.oblivion.engine.shader;
 
-import java.io.BufferedReader;
-import java.util.stream.Collectors;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-
 import pl.oblivion.common.utils.MyFile;
 import pl.oblivion.engine.renderer.RendererType;
 import pl.oblivion.engine.shader.uniforms.Uniform;
+
+import java.io.BufferedReader;
+import java.util.stream.Collectors;
 
 public abstract class AbstractShader {
 

@@ -149,20 +149,20 @@ public class Transform {
         (float) Math.toRadians(xAngle),
         (float) Math.toRadians(yAngle),
         (float) Math.toRadians(zAngle));
-      this.transformationRotation.rotateXYZ(
-              (float) Math.toRadians(xAngle),
-              (float) Math.toRadians(yAngle),
-              (float) Math.toRadians(zAngle));
-      this.children.forEach(child -> child.transform.rotate(xAngle, yAngle,zAngle));
+    this.transformationRotation.rotateXYZ(
+        (float) Math.toRadians(xAngle),
+        (float) Math.toRadians(yAngle),
+        (float) Math.toRadians(zAngle));
+    this.children.forEach(child -> child.transform.rotate(xAngle, yAngle, zAngle));
   }
-    
-    public void rotate(Quaternionf quaternionf) {
-      this.rotation.mul(quaternionf);
-      this.transformationRotation.mul(quaternionf);
-      this.children.forEach(child -> child.transform.rotate(quaternionf));
-    }
-    
-    @Getter
+
+  public void rotate(Quaternionf quaternionf) {
+    this.rotation.mul(quaternionf);
+    this.transformationRotation.mul(quaternionf);
+    this.children.forEach(child -> child.transform.rotate(quaternionf));
+  }
+
+  @Getter
   class SinCos {
     float sin;
     float cos;

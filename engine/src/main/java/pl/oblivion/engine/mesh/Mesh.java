@@ -1,14 +1,13 @@
 package pl.oblivion.engine.mesh;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import lombok.Getter;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import lombok.Getter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public abstract class Mesh implements MeshData {

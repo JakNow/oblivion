@@ -1,10 +1,10 @@
 package pl.oblivion.common.annotations;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class AppConfigRunner {
 

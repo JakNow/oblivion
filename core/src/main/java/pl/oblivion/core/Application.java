@@ -1,27 +1,26 @@
 package pl.oblivion.core;
 
-import static pl.oblivion.common.utils.GetSystemProperty.getInt;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import lombok.Getter;
 import pl.oblivion.common.annotations.AppConfig;
 import pl.oblivion.common.annotations.AppConfigRunner;
-import pl.oblivion.engine.Camera;
 import pl.oblivion.engine.Timer;
 import pl.oblivion.engine.Window;
 import pl.oblivion.engine.scene.Scene;
 
+import static pl.oblivion.common.utils.GetSystemProperty.getInt;
+
 public class Application {
 
   private static final Logger logger = LogManager.getLogger(Application.class);
+  private static Application instance;
 
   private final Window window;
   private final Timer timer;
-  private final Camera camera;
   @Getter private final RendererHandler rendererHandler;
-
+  @Getter @Setter private Scene activeScene;
   private int fps;
   private int ups;
 
@@ -30,7 +29,6 @@ public class Application {
     logger.info("Starting the Application");
     this.window = new Window();
     this.timer = new Timer();
-    this.camera = new Camera(null);
     this.rendererHandler = RendererHandler.getInstance();
 
     this.ups = getInt("engine.ups", 30);
@@ -39,19 +37,30 @@ public class Application {
     init();
   }
 
-  public static void start(Class mainClass, String[] args) {
+  public static void prepare(Class mainClass, String[] args) {
     AppConfig appConfig = (AppConfig) mainClass.getAnnotation(AppConfig.class);
     new AppConfigRunner(appConfig.value());
-    new Application().run();
+  }
+
+  public static synchronized Application getInstance() {
+    if (instance == null) {
+      instance = new Application();
+    }
+    return instance;
+  }
+
+  public static void start() {
+    instance.run();
   }
 
   private void init() {
     this.window.init();
     this.timer.getTime();
-    this.rendererHandler.initRenderers(this.window, this.camera, new Scene("Default Scene"));
   }
 
   private void run() {
+    this.rendererHandler.initRenderers(this.window, this.activeScene);
+
     float elapsedTime;
     float accumulator = 0f;
     float interval = 1f / ups;
