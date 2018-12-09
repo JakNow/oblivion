@@ -1,12 +1,9 @@
 package pl.oblivion.common.utils;
 
-import java.io.BufferedReader;
-import static java.io.File.separator;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.*;
 
 public class MyFile {
 
@@ -17,6 +14,8 @@ public class MyFile {
   private String name;
 
   private BufferedReader bufferedReader;
+
+  private InputStream inputstream;
 
   public MyFile(String path) {
     this.path = path.startsWith(FILE_SEPARATOR) ? path : FILE_SEPARATOR + path;
@@ -75,9 +74,12 @@ public class MyFile {
   }
 
   public BufferedReader getReader() {
-    bufferedReader =
-        new BufferedReader(new InputStreamReader(Class.class.getResourceAsStream(path)));
+    bufferedReader = new BufferedReader(new InputStreamReader(this.getInputStream()));
     return bufferedReader;
+  }
+
+  public InputStream getInputStream() {
+      return Class.class.getResourceAsStream(path);
   }
 
   public void closeReader() {
