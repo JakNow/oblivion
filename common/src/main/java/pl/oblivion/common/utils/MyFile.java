@@ -1,15 +1,9 @@
 package pl.oblivion.common.utils;
 
-import java.io.BufferedReader;
-import static java.io.File.separator;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.*;
 
 public class MyFile {
 
@@ -20,7 +14,7 @@ public class MyFile {
   private String name;
 
   private BufferedReader bufferedReader;
-  
+
   private InputStream inputstream;
 
   public MyFile(String path) {
@@ -80,42 +74,12 @@ public class MyFile {
   }
 
   public BufferedReader getReader() {
-    bufferedReader =
-        new BufferedReader(new InputStreamReader(Class.class.getResourceAsStream(path)));
+    bufferedReader = new BufferedReader(new InputStreamReader(this.getInputStream()));
     return bufferedReader;
   }
-  
 
-  public InputStream getInputStream() throws IOException {
-      String path2 = read(new InputStreamReader(Class.class.getResourceAsStream(path)));
-      inputstream = new FileInputStream(path2);
-      return inputstream;
-  }
-
-  public static String read( Reader reader ) throws IOException {
-      if (reader == null) return "";
-      StringBuilder sb = new StringBuilder();
-      boolean error = false;
-      try {
-          int numRead = 0;
-          char[] buffer = new char[1024];
-          while ((numRead = reader.read(buffer)) > -1) {
-              sb.append(buffer, 0, numRead);
-          }
-      } catch (IOException e) {
-          error = true; // this error should be thrown, even if there is an error closing reader
-          throw e;
-      } catch (RuntimeException e) {
-          error = true; // this error should be thrown, even if there is an error closing reader
-          throw e;
-      } finally {
-          try {
-              reader.close();
-          } catch (IOException e) {
-              if (!error) throw e;
-          }
-      }
-      return sb.toString();
+  public InputStream getInputStream() {
+      return Class.class.getResourceAsStream(path);
   }
 
   public void closeReader() {
@@ -131,5 +95,4 @@ public class MyFile {
   public String getName() {
     return name;
   }
-
 }
