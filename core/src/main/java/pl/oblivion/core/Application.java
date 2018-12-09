@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import lombok.Getter;
 import pl.oblivion.common.annotations.AppConfig;
 import pl.oblivion.common.annotations.AppConfigRunner;
+import pl.oblivion.common.annotations.MissingAppConfigAnnotationException;
 import pl.oblivion.engine.Camera;
 import pl.oblivion.engine.Timer;
 import pl.oblivion.engine.Window;
@@ -41,6 +42,9 @@ public class Application {
 
   public static void start(Class mainClass, String[] args) {
     AppConfig appConfig = (AppConfig) mainClass.getAnnotation(AppConfig.class);
+    if(appConfig== null)
+      throw new MissingAppConfigAnnotationException();
+    
     new AppConfigRunner(appConfig.value());
     new Application().run();
   }
