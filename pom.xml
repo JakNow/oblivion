@@ -13,7 +13,6 @@
         <module>engine</module>
         <module>common</module>
         <module>model</module>
-        <module>game</module>
     </modules>
 
     <properties>
