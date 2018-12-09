@@ -11,7 +11,7 @@ public class AppConfigRunner {
   private static final Logger logger = LogManager.getLogger(AppConfigRunner.class);
 
   public AppConfigRunner(String path) {
-    loadProperties(path);
+    if (!path.equals("")) loadProperties(path);
   }
 
   private void loadProperties(String fileName) {
