@@ -38,3 +38,6 @@ lib/
 
 #NetBeans
 bin/
+
+#GameTest
+game/
