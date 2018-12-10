@@ -6,7 +6,6 @@ import pl.oblivion.common.gameobject.transform.GameObjectType;
 import pl.oblivion.engine.camera.Camera;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
