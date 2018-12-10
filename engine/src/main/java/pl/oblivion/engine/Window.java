@@ -1,14 +1,6 @@
 package pl.oblivion.engine;
 
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.MemoryUtil.NULL;
-import static pl.oblivion.common.utils.GetSystemProperty.*;
-
-import java.nio.IntBuffer;
-
+import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Matrix4f;
@@ -16,16 +8,24 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
+import pl.oblivion.engine.camera.Camera;
+import pl.oblivion.engine.camera.OrthographicCamera;
+import pl.oblivion.engine.camera.PerspectiveCamera;
 
-import lombok.Getter;
+import java.nio.IntBuffer;
+
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static pl.oblivion.common.utils.GetSystemProperty.getInt;
+import static pl.oblivion.common.utils.GetSystemProperty.getString;
 
 public class Window {
 
   private static final Logger logger = LogManager.getLogger(Window.class);
   private final Matrix4f projectionMatrix;
-  private final float fov;
-  private final float near;
-  private final float far;
   @Getter private int width;
   @Getter private int height;
   private String title;
@@ -40,9 +40,6 @@ public class Window {
     this.vSync = true;
     this.projectionMatrix = new Matrix4f();
     this.resized = false;
-    this.fov = getFloat("window.fov", 70);
-    this.near = getFloat("window.near", 0.1f);
-    this.far = getFloat("window.far", 1000f);
   }
 
   public void init() {
@@ -92,7 +89,6 @@ public class Window {
     }
 
     glfwMakeContextCurrent(window);
-    this.updateProjectionMatrix();
     if (this.isVSync()) {
       glfwSwapInterval(1);
     }
@@ -124,11 +120,37 @@ public class Window {
     logger.info("Terminating GLFW");
   }
 
-  public void updateProjectionMatrix() {
-    float aspectRatio = (float) width / (float) height;
-    this.projectionMatrix.setPerspective(fov, aspectRatio, near, far);
-    this.setResized(false);
+  public void updateProjectionMatrix(Camera camera) {
     logger.info("Updating projection matrix due to resize.");
+    switch (camera.getCameraType()) {
+      case PERSPECTIVE:
+        updatePerspectiveProjection((PerspectiveCamera) camera);
+        break;
+      case ORTHOGRAPHIC:
+        updateOrthographicProjection((OrthographicCamera) camera);
+        break;
+    }
+  }
+
+  private void updatePerspectiveProjection(PerspectiveCamera camera) {
+    float aspectRatio = (float) width / (float) height;
+    this.projectionMatrix.setPerspective(
+        camera.getFieldOfView(), aspectRatio, camera.getNearPlane(), camera.getFarPlane());
+    this.setResized(false);
+    logger.info("Perspective camera updated");
+  }
+
+  private void updateOrthographicProjection(OrthographicCamera camera) {
+    float aspectRatio = (float) width / (float) height;
+    this.projectionMatrix.setOrtho(
+        camera.getLeft(),
+        camera.getRight(),
+        camera.getBottom() * aspectRatio,
+        camera.getTop() * aspectRatio,
+        camera.getNearPlane(),
+        camera.getFarPlane());
+    this.setResized(false);
+    logger.info("Orthographic camera updated");
   }
 
   public boolean isVSync() {

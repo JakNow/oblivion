@@ -35,3 +35,9 @@ lib/
 
 #MacOS
 .DS_store
+
+#NetBeans
+bin/
+
+#GameTest
+game/

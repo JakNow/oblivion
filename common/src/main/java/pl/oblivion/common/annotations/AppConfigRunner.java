@@ -1,17 +1,17 @@
 package pl.oblivion.common.annotations;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class AppConfigRunner {
 
   private static final Logger logger = LogManager.getLogger(AppConfigRunner.class);
 
   public AppConfigRunner(String path) {
-    loadProperties(path);
+    if (!path.equals("")) loadProperties(path);
   }
 
   private void loadProperties(String fileName) {
