@@ -1,11 +1,12 @@
 package pl.oblivion.engine.shader;
 
+import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import pl.oblivion.common.utils.MyFile;
-import pl.oblivion.engine.renderer.RendererType;
+import pl.oblivion.engine.renderer.ShaderType;
 import pl.oblivion.engine.shader.uniforms.Uniform;
 
 import java.io.BufferedReader;
@@ -14,9 +15,12 @@ import java.util.stream.Collectors;
 public abstract class AbstractShader {
 
   private final Logger logger = LogManager.getLogger(this.getClass());
+    @Getter
+    private final ShaderType shaderType;
   private int programID;
-
-  public AbstractShader(RendererType type, String... inVariables) {
+    
+    AbstractShader(ShaderType type, String... inVariables) {
+        this.shaderType = type;
     int vertexShaderID = loadShader(type, "vertex.vert", GL20.GL_VERTEX_SHADER);
     int fragmentShaderID = loadShader(type, "fragment.frag", GL20.GL_FRAGMENT_SHADER);
     programID = GL20.glCreateProgram();
@@ -29,10 +33,11 @@ public abstract class AbstractShader {
     GL20.glDeleteShader(vertexShaderID);
     GL20.glDeleteShader(fragmentShaderID);
   }
-
-  private int loadShader(RendererType shaderType, String shader, int type) {
+    
+    private int loadShader(ShaderType shaderType, String shader, int type) {
     StringBuilder shaderSource = new StringBuilder();
     MyFile file = new MyFile("/shaders/" + shaderType.getLocation() + "/" + shader);
+        logger.info("Opening reader for {}", file);
     try (BufferedReader br = file.getReader()) {
       shaderSource.append(br.lines().collect(Collectors.joining("\n")));
     } catch (Exception e) {
@@ -60,8 +65,8 @@ public abstract class AbstractShader {
       GL20.glBindAttribLocation(programID, i, inVariables[i]);
     }
   }
-
-  protected void storeAllUniformLocations(Uniform... uniforms) {
+    
+    void storeAllUniformLocations(Uniform... uniforms) {
     for (Uniform uniform : uniforms) {
       uniform.storeUniformLocation(programID);
     }

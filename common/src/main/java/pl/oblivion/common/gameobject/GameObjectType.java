@@ -1,4 +1,4 @@
-package pl.oblivion.common.gameobject.transform;
+package pl.oblivion.common.gameobject;
 
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ public enum GameObjectType {
     
     private final String name;
     
-    GameObjectType(String name){
+    GameObjectType(String name) {
         this.name = name;
     }
 }
