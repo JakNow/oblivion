@@ -1,16 +1,20 @@
 package pl.oblivion.core;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.oblivion.common.annotations.AppConfig;
 import pl.oblivion.common.annotations.AppConfigRunner;
 import pl.oblivion.common.annotations.MissingAppConfigAnnotationException;
+import pl.oblivion.core.scene.Scene;
 import pl.oblivion.engine.Timer;
 import pl.oblivion.engine.Window;
-import pl.oblivion.engine.scene.Scene;
+import pl.oblivion.engine.camera.Camera;
+import pl.oblivion.engine.camera.PerspectiveCamera;
+import pl.oblivion.engine.renderer.DiffuseRenderer;
+import pl.oblivion.engine.renderer.RendererCache;
 
+import static org.lwjgl.opengl.GL11.glViewport;
 import static pl.oblivion.common.utils.GetSystemProperty.getInt;
 
 public class Application {
@@ -20,17 +24,19 @@ public class Application {
 
   private final Window window;
   private final Timer timer;
-  @Getter private final RendererHandler rendererHandler;
-  @Getter @Setter private Scene activeScene;
+    @Getter
+    private Camera camera;
   private int fps;
   private int ups;
+    
+    private Scene activeScene;
 
   private Application() {
     logger.info("WELCOME TO OBLIVION ENGINE!");
     logger.info("Starting the Application");
     this.window = new Window();
     this.timer = new Timer();
-    this.rendererHandler = RendererHandler.getInstance();
+      this.camera = new PerspectiveCamera();
 
     this.ups = getInt("engine.ups", 30);
     this.fps = getInt("engine.fps", 60);
@@ -43,6 +49,7 @@ public class Application {
     if (appConfig == null) throw new MissingAppConfigAnnotationException();
 
     new AppConfigRunner(appConfig.value());
+      getInstance();
   }
 
   public static synchronized Application getInstance() {
@@ -53,22 +60,28 @@ public class Application {
   }
 
   public static void start() {
-    instance.run();
+      getInstance().run();
+  }
+    
+    public void setScene(Scene scene) {
+        activeScene = scene;
   }
 
   private void init() {
-    this.window.init();
     this.timer.getTime();
+      RendererCache.getInstance().addRenderer(new DiffuseRenderer(camera));
   }
 
   private void run() {
-    this.rendererHandler.initRenderers(this.window, this.activeScene);
-
     float elapsedTime;
     float accumulator = 0f;
     float interval = 1f / ups;
 
     while (!window.windowShouldClose()) {
+        if (window.isResized()) {
+            glViewport(0, 0, window.getWidth(), window.getHeight());
+            camera.updateProjectionMatrix(window);
+        }
       elapsedTime = timer.getElapsedTime();
       accumulator += elapsedTime;
 
@@ -76,15 +89,15 @@ public class Application {
         update(interval);
         accumulator -= interval;
       }
-
-      rendererHandler.render();
+    
+        activeScene.render();
 
       window.updateAfterRendering();
       if (!window.isVSync()) {
         sync();
       }
     }
-    rendererHandler.delete();
+      activeScene.delete();
     window.destroy();
   }
 
