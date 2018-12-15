@@ -1,11 +1,10 @@
 package pl.oblivion.engine.camera;
 
-import lombok.Getter;
+import pl.oblivion.engine.Window;
 
 import static pl.oblivion.common.utils.GetSystemProperty.getFloat;
 import static pl.oblivion.engine.camera.CameraType.ORTHOGRAPHIC;
 
-@Getter
 public class OrthographicCamera extends Camera {
 
   private final float left;
@@ -35,4 +34,17 @@ public class OrthographicCamera extends Camera {
     this.nearPlane = nearPlane;
     this.farPlane = farPlane;
   }
+    
+    public void updateProjectionMatrix(Window window) {
+        float aspectRatio = (float) window.getWidth() / (float) window.getHeight();
+        this.projectionMatrix.setOrtho(
+                this.left,
+                this.right,
+                this.bottom * aspectRatio,
+                this.top * aspectRatio,
+                this.nearPlane,
+                this.farPlane);
+        window.setResized(false);
+        logger.info("Orthographic camera updated");
+    }
 }

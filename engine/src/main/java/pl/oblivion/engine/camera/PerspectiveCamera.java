@@ -1,6 +1,7 @@
 package pl.oblivion.engine.camera;
 
 import lombok.Getter;
+import pl.oblivion.engine.Window;
 
 import static pl.oblivion.common.utils.GetSystemProperty.getFloat;
 import static pl.oblivion.engine.camera.CameraType.PERSPECTIVE;
@@ -25,4 +26,12 @@ public class PerspectiveCamera extends Camera {
     this.nearPlane = nearPlane;
     this.farPlane = farPlane;
   }
+    
+    public void updateProjectionMatrix(Window window) {
+        float aspectRatio = (float) window.getWidth() / (float) window.getHeight();
+        this.projectionMatrix.setPerspective(
+                this.fieldOfView, aspectRatio, this.nearPlane, this.farPlane);
+        window.setResized(false);
+        logger.info("Perspective camera updated");
+    }
 }
