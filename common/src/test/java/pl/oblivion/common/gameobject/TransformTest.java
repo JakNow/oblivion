@@ -3,13 +3,10 @@ package pl.oblivion.common.gameobject;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.junit.Test;
-import pl.oblivion.common.gameobject.transform.GameObjectType;
 import pl.oblivion.common.gameobject.transform.Rotation;
 import pl.oblivion.common.gameobject.transform.Transform;
 
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.within;
@@ -45,13 +42,9 @@ public class TransformTest {
   @Test
   public void positionIsInheritedByChild() {
     GameObject parent = prepareDefaultGameObject();
-
-    GameObject child = new GameObject("child", parent) {
-        @Override
-        public void addToScene(Map<GameObjectType, List<GameObject>> sceneHierarchy) {
-        
-        }
-    };
+    
+      GameObject child = new GameObject("child", parent, null) {
+      };
     Vector3f positionFromTransformationMatrix = new Vector3f();
     child.transform.getTransformationMatrix().getTranslation(positionFromTransformationMatrix);
     assertThat(positionFromTransformationMatrix)
@@ -61,12 +54,9 @@ public class TransformTest {
   @Test
   public void whenParentMovesChildMoves() {
     GameObject parent = prepareDefaultGameObject();
-
-    GameObject child = new GameObject("child", parent) {
-        @Override
-        public void addToScene(Map<GameObjectType, List<GameObject>> sceneHierarchy) {
-        }
-    };
+    
+      GameObject child = new GameObject("child", parent, null) {
+      };
 
     parent.transform.translate(new Vector3f(51, 123.5f, -5));
     Vector3f positionFromTransformationMatrix = new Vector3f();
@@ -85,13 +75,9 @@ public class TransformTest {
   @Test
   public void scaleIsInheritedByChild() {
     GameObject parent = prepareScaledGameObject();
-
-    GameObject child = new GameObject("child", parent) {
-        @Override
-        public void addToScene(Map<GameObjectType, List<GameObject>> sceneHierarchy) {
-        
-        }
-    };
+    
+      GameObject child = new GameObject("child", parent, null) {
+      };
     Vector3f scaleFromTransformationMatrix = new Vector3f();
     child.transform.getTransformationMatrix().getScale(scaleFromTransformationMatrix);
     assertThat(scaleFromTransformationMatrix)
@@ -102,13 +88,9 @@ public class TransformTest {
   @Test
   public void whenParentScalesChildScales() {
     GameObject parent = prepareScaledGameObject();
-
-    GameObject child = new GameObject("child", parent) {
-        @Override
-        public void addToScene(Map<GameObjectType, List<GameObject>> sceneHierarchy) {
-        
-        }
-    };
+    
+      GameObject child = new GameObject("child", parent, null) {
+      };
 
     parent.transform.scale(new Vector3f(2, 10, 0.5f));
     Vector3f scaleFromTransformationMatrix = new Vector3f();
@@ -227,11 +209,8 @@ public class TransformTest {
             new Vector3f(1, 2, 3),
             new Quaternionf(),
             new Vector3f(1, 1, 1),
-            Collections.emptyList())) {
-        @Override
-        public void addToScene(Map<GameObjectType, List<GameObject>> sceneHierarchy) {
-        
-        }
+                Collections.emptyList()),
+            null) {
     };
   }
 
@@ -242,11 +221,8 @@ public class TransformTest {
             new Vector3f(1, 2, 3),
             new Quaternionf(),
             new Vector3f(2.5f, 0.3f, 10),
-            Collections.emptyList())) {
-        @Override
-        public void addToScene(Map<GameObjectType, List<GameObject>> sceneHierarchy) {
-        
-        }
+                Collections.emptyList()),
+            null) {
     };
   }
 
@@ -257,11 +233,8 @@ public class TransformTest {
             new Vector3f(),
             new Quaternionf(0.3f, 0.5f, 0.7f, 0.9f),
             new Vector3f(1, 1, 1),
-            Collections.emptyList())) {
-        @Override
-        public void addToScene(Map<GameObjectType, List<GameObject>> sceneHierarchy) {
-        
-        }
+                Collections.emptyList()),
+            null) {
     };
   }
 }
