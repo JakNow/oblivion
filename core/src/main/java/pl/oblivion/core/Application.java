@@ -11,6 +11,7 @@ import pl.oblivion.engine.Timer;
 import pl.oblivion.engine.Window;
 import pl.oblivion.engine.camera.Camera;
 import pl.oblivion.engine.camera.PerspectiveCamera;
+import pl.oblivion.engine.input.InputManager;
 import pl.oblivion.engine.renderer.DiffuseRenderer;
 import pl.oblivion.engine.renderer.RendererCache;
 
@@ -24,19 +25,20 @@ public class Application {
 
   private final Window window;
   private final Timer timer;
-    @Getter
-    private Camera camera;
+  @Getter private Camera camera;
   private int fps;
   private int ups;
-    
-    private Scene activeScene;
+
+  private Scene activeScene;
+  @Getter private InputManager inputManager;
 
   private Application() {
     logger.info("WELCOME TO OBLIVION ENGINE!");
     logger.info("Starting the Application");
     this.window = new Window();
     this.timer = new Timer();
-      this.camera = new PerspectiveCamera();
+    this.camera = new PerspectiveCamera();
+    this.inputManager = window.getInputManager();
 
     this.ups = getInt("engine.ups", 30);
     this.fps = getInt("engine.fps", 60);
@@ -49,7 +51,7 @@ public class Application {
     if (appConfig == null) throw new MissingAppConfigAnnotationException();
 
     new AppConfigRunner(appConfig.value());
-      getInstance();
+    getInstance();
   }
 
   public static synchronized Application getInstance() {
@@ -60,16 +62,16 @@ public class Application {
   }
 
   public static void start() {
-      getInstance().run();
+    getInstance().run();
   }
-    
-    public void setScene(Scene scene) {
-        activeScene = scene;
+
+  public void setScene(Scene scene) {
+    activeScene = scene;
   }
 
   private void init() {
     this.timer.getTime();
-      RendererCache.getInstance().addRenderer(new DiffuseRenderer(camera));
+    RendererCache.getInstance().addRenderer(new DiffuseRenderer(camera));
   }
 
   private void run() {
@@ -78,10 +80,10 @@ public class Application {
     float interval = 1f / ups;
 
     while (!window.windowShouldClose()) {
-        if (window.isResized()) {
-            glViewport(0, 0, window.getWidth(), window.getHeight());
-            camera.updateProjectionMatrix(window);
-        }
+      if (window.isResized()) {
+        glViewport(0, 0, window.getWidth(), window.getHeight());
+        camera.updateProjectionMatrix(window);
+      }
       elapsedTime = timer.getElapsedTime();
       accumulator += elapsedTime;
 
@@ -89,15 +91,15 @@ public class Application {
         update(interval);
         accumulator -= interval;
       }
-    
-        activeScene.render();
+
+      activeScene.render();
 
       window.updateAfterRendering();
       if (!window.isVSync()) {
         sync();
       }
     }
-      activeScene.delete();
+    activeScene.delete();
     window.destroy();
   }
 
