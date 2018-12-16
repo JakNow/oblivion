@@ -19,6 +19,7 @@ public class MeshOGL implements Mesh {
     private VBO indexVBO;
     
     private int indexCount;
+    private int[] attributesBinding;
     
     public MeshOGL(int[] indices, Attribute... attributes) {
         this.id = generateId();
@@ -27,8 +28,10 @@ public class MeshOGL implements Mesh {
         
         this.bind();
         this.createIndexBuffer(indices);
+        this.attributesBinding = new int[attributes.length];
         for (int i = 0; i < attributes.length; i++) {
             this.createAttribute(i, attributes[i].attributes, attributes[i].size);
+            attributesBinding[i] = i;
         }
         this.unbind();
     }

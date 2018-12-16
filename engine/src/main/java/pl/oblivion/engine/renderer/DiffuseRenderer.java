@@ -28,17 +28,21 @@ public class DiffuseRenderer extends AbstractRenderer {
     }
     
     @Override
-    public void prepareModel(Transform transform) {
-        diffuseShader.getTransformationMatrix().loadMatrix(transform.getTransformationMatrix());
+    public void bindModel(MeshOGL meshOGL) {
+        meshOGL.bind(meshOGL.getAttributesBinding());
     }
     
     @Override
-    public void render(MeshOGL meshOGL) {
-        GL30.glBindVertexArray(meshOGL.getId());
-        meshOGL.bind(0);
+    public void render(Transform transform, MeshOGL meshOGL) {
+        diffuseShader.getTransformationMatrix().loadMatrix(transform.getTransformationMatrix());
         GL11.glDrawElements(GL11.GL_TRIANGLES, meshOGL.getIndexCount(), GL11.GL_UNSIGNED_INT, 0);
-        meshOGL.unbind(0);
+    
         GL30.glBindVertexArray(0);
+    }
+    
+    @Override
+    public void unbindModel(MeshOGL meshOGL){
+        meshOGL.unbind(meshOGL.getAttributesBinding());
     }
     
     @Override

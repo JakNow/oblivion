@@ -5,11 +5,13 @@ import pl.oblivion.engine.mesh.MeshOGL;
 
 public interface Rendering {
     
-    void render(MeshOGL meshOGL);
+    void render(Transform transform,MeshOGL meshOGL);
     
     void prepareShader();
     
-    void prepareModel(Transform transform);
+    void bindModel(MeshOGL meshOGL);
+    
+    void unbindModel(MeshOGL meshOGL);
     
     void end();
 }
