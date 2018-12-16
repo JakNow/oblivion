@@ -14,17 +14,17 @@ public abstract class AbstractRenderer implements Rendering {
   private AbstractShader shader;
   private Camera camera;
   
-  public AbstractRenderer(AbstractShader shader, Camera camera) {
+  AbstractRenderer(AbstractShader shader, Camera camera) {
     this.shader = shader;
     this.camera = camera;
   }
   
-  public void prepareScene() {
-    GL11.glClearColor(1f, 0, 0, 1f);
+  public static void prepareScene() {
+    GL11.glClearColor(0f, 0f, 0f, 1f);
     GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
   
   public void cleanUp() {
-    this.shader.cleanUp();
+    shader.cleanUp();
   }
 }
