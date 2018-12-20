@@ -7,6 +7,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
+import pl.oblivion.engine.input.InputManager;
 
 import java.nio.IntBuffer;
 
@@ -28,18 +29,21 @@ public class Window {
   private boolean vSync;
   private boolean resized;
 
+  @Getter private InputManager inputManager;
+
   public Window() {
-      logger.info("Creating window...");
+    logger.info("Creating window...");
     this.width = getInt("window.width", 600);
     this.height = getInt("window.height", (600 * 9 / 16));
     this.title = getString("window.title", "Default title");
     this.vSync = true;
+    this.inputManager = new InputManager();
     this.resized = false;
-      this.init();
-      logger.info("Window created {}", this);
+    this.init();
+    logger.info("Window created {}", this);
   }
-    
-    private void init() {
+
+  private void init() {
     GLFWErrorCallback.createPrint(System.err).set();
 
     if (!glfwInit()) {
@@ -66,12 +70,7 @@ public class Window {
           this.setResized(true);
         });
 
-    glfwSetKeyCallback(
-        window,
-        (window, key, scancode, action, mods) -> {
-          if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-            glfwSetWindowShouldClose(window, true);
-        });
+    glfwSetKeyCallback(window, inputManager);
 
     try (MemoryStack stack = stackPush()) {
       IntBuffer pWidth = stack.mallocInt(1);
@@ -128,19 +127,19 @@ public class Window {
   public void setResized(boolean resized) {
     this.resized = resized;
   }
-    
-    @Override
-    public String toString() {
-        return "Window{"
-                + "width="
-                + width
-                + ", height="
-                + height
-                + ", title='"
-                + title
-                + '\''
-                + ", window="
-                + window
-                + '}';
-    }
+
+  @Override
+  public String toString() {
+    return "Window{"
+        + "width="
+        + width
+        + ", height="
+        + height
+        + ", title='"
+        + title
+        + '\''
+        + ", window="
+        + window
+        + '}';
+  }
 }

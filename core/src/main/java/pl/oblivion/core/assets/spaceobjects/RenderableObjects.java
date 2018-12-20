@@ -6,6 +6,7 @@ import pl.oblivion.common.gameobject.GameObjectType;
 import pl.oblivion.engine.mesh.Attribute;
 import pl.oblivion.engine.mesh.MeshOGL;
 import pl.oblivion.engine.renderer.AbstractRenderer;
+import pl.oblivion.engine.renderer.RendererCache;
 import pl.oblivion.engine.renderer.ShaderType;
 import pl.oblivion.model.mesh.MeshData;
 
@@ -18,16 +19,19 @@ public abstract class RenderableObjects extends GameObject {
   MeshOGL meshOGL;
 
   RenderableObjects(
-      String name,
-      GameObjectType gameObjectType,
-      AbstractRenderer abstractRenderer,
-      MeshData meshData) {
+          String name,
+          GameObjectType gameObjectType,
+          ShaderType shaderType,
+          MeshData meshData) {
     super(name, gameObjectType);
-    this.abstractRenderer = abstractRenderer;
-    this.shaderType = abstractRenderer.getShader().getShaderType();
+      this.shaderType = shaderType;
     this.meshData = meshData;
-    this.meshOGL = new MeshOGL(meshData.getIndices(), new Attribute(3, meshData.getVertices()));
   }
+    
+    public void initObject() {
+        this.abstractRenderer = RendererCache.getInstance().getRenderer(shaderType);
+        this.meshOGL = new MeshOGL(meshData.getIndices(), new Attribute(3, meshData.getVertices()));
+    }
 
   public void bind() {
     this.abstractRenderer.bindModel(meshOGL);

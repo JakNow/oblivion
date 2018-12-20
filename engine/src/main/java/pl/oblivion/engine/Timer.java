@@ -1,13 +1,17 @@
 package pl.oblivion.engine;
 
+import static pl.oblivion.common.utils.GetSystemProperty.getInt;
+
 public class Timer {
 
   private double lastLoopTime;
-
-  public Timer() {
+    
+    public Timer() {
     this.init();
   }
-
+    
+    public static float deltaTime = 1f / getInt("engine.ups", 30);
+  
   private void init() {
     lastLoopTime = getTime();
   }
