@@ -10,10 +10,12 @@ import pl.oblivion.core.scene.Scene;
 import pl.oblivion.engine.Timer;
 import pl.oblivion.engine.Window;
 import pl.oblivion.engine.camera.Camera;
-import pl.oblivion.engine.camera.PerspectiveCamera;
 import pl.oblivion.engine.input.InputManager;
 import pl.oblivion.engine.renderer.DiffuseRenderer;
 import pl.oblivion.engine.renderer.RendererCache;
+import pl.oblivion.engine.renderer.ShaderType;
+import pl.oblivion.engine.shader.DiffuseShader;
+import pl.oblivion.engine.shader.ShaderCache;
 
 import static org.lwjgl.opengl.GL11.glViewport;
 import static pl.oblivion.common.utils.GetSystemProperty.getInt;
@@ -21,64 +23,52 @@ import static pl.oblivion.common.utils.GetSystemProperty.getInt;
 public class Application {
 
   private static final Logger logger = LogManager.getLogger(Application.class);
-  private static Application instance;
 
   private final Window window;
   private final Timer timer;
-  @Getter private Camera camera;
   private int fps;
-  private int ups;
-
-  private Scene activeScene;
+    
+    private Scene scene;
   @Getter private InputManager inputManager;
-
-  private Application() {
+    private Camera camera;
+    
+    public Application(Class mainClass, Scene scene) {
     logger.info("WELCOME TO OBLIVION ENGINE!");
     logger.info("Starting the Application");
+        loadConfig(mainClass);
     this.window = new Window();
     this.timer = new Timer();
-    this.camera = new PerspectiveCamera();
+        this.scene = scene;
+        this.camera = scene.getCamera();
     this.inputManager = window.getInputManager();
 
-    this.ups = getInt("engine.ups", 30);
     this.fps = getInt("engine.fps", 60);
-
-    init();
-  }
-
-  public static void prepare(Class mainClass, String[] args) {
+        
+        initShaders();
+    }
+    
+    private void loadConfig(Class mainClass) {
     AppConfig appConfig = (AppConfig) mainClass.getAnnotation(AppConfig.class);
     if (appConfig == null) throw new MissingAppConfigAnnotationException();
 
     new AppConfigRunner(appConfig.value());
-    getInstance();
-  }
-
-  public static synchronized Application getInstance() {
-    if (instance == null) {
-      instance = new Application();
+    
     }
-    return instance;
-  }
-
-  public static void start() {
-    getInstance().run();
-  }
-
-  public void setScene(Scene scene) {
-    activeScene = scene;
-  }
-
-  private void init() {
-    this.timer.getTime();
+    
+    public void start() {
+        scene.initObjects();
+        this.run();
+    }
+    
+    
+    private void initShaders() {
+        ShaderCache.getInstance().addShader(new DiffuseShader(ShaderType.DIFFUSE_SHADER));
     RendererCache.getInstance().addRenderer(new DiffuseRenderer(camera));
   }
-
-  private void run() {
+    
+    private void run() {
     float elapsedTime;
     float accumulator = 0f;
-    float interval = 1f / ups;
-
     while (!window.windowShouldClose()) {
       if (window.isResized()) {
         glViewport(0, 0, window.getWidth(), window.getHeight());
@@ -86,20 +76,20 @@ public class Application {
       }
       elapsedTime = timer.getElapsedTime();
       accumulator += elapsedTime;
-
-      while (accumulator >= interval) {
-        update(interval);
-        accumulator -= interval;
+    
+        while (accumulator >= Timer.deltaTime) {
+            update();
+            accumulator -= Timer.deltaTime;
       }
-
-      activeScene.render();
+    
+        scene.render();
 
       window.updateAfterRendering();
       if (!window.isVSync()) {
         sync();
       }
     }
-    activeScene.delete();
+        scene.delete();
     window.destroy();
   }
 
@@ -114,6 +104,8 @@ public class Application {
       }
     }
   }
-
-  private void update(float delta) {}
+    
+    private void update() {
+        scene.update();
+    }
 }
