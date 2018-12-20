@@ -38,10 +38,10 @@ public class OrthographicCamera extends Camera {
     public void updateProjectionMatrix(Window window) {
         float aspectRatio = (float) window.getWidth() / (float) window.getHeight();
         this.projectionMatrix.setOrtho(
-                this.left,
-                this.right,
-                this.bottom * aspectRatio,
-                this.top * aspectRatio,
+                this.left * aspectRatio,
+                this.right * aspectRatio,
+                this.bottom,
+                this.top,
                 this.nearPlane,
                 this.farPlane);
         window.setResized(false);
