@@ -1,7 +1,6 @@
 package pl.oblivion.core.assets.spaceobjects;
 
 import pl.oblivion.common.gameobject.GameObjectType;
-import pl.oblivion.engine.renderer.RendererCache;
 import pl.oblivion.engine.renderer.ShaderType;
 import pl.oblivion.model.primitive.CubePrimitive;
 
@@ -11,7 +10,7 @@ public class Cube extends RenderableObjects {
         super(
                 "Cube",
                 GameObjectType.SPACE_OBJECT,
-                RendererCache.getInstance().getRenderer(ShaderType.DIFFUSE_SHADER),
+                ShaderType.DIFFUSE_SHADER,
                 new CubePrimitive());
     }
 }
