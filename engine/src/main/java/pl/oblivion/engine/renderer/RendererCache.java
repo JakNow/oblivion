@@ -26,7 +26,7 @@ public class RendererCache {
     }
     
     public void addRenderer(AbstractRenderer abstractRenderer) {
-        logger.info("Adding Shader {}", abstractRenderer.getShader().getShaderType());
+        logger.info("Adding Renderer {}", abstractRenderer.getShader().getShaderType());
         rendererMap.put(abstractRenderer.getShader().getShaderType(), abstractRenderer);
     }
     

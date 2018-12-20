@@ -52,14 +52,12 @@ public class Application {
     if (appConfig == null) throw new MissingAppConfigAnnotationException();
 
     new AppConfigRunner(appConfig.value());
-    
     }
     
     public void start() {
         scene.initObjects();
         this.run();
     }
-    
     
     private void initShaders() {
         ShaderCache.getInstance().addShader(new DiffuseShader(ShaderType.DIFFUSE_SHADER));

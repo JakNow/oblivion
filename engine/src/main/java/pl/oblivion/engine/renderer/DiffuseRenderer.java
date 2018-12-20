@@ -6,10 +6,11 @@ import pl.oblivion.common.gameobject.transform.Transform;
 import pl.oblivion.engine.camera.Camera;
 import pl.oblivion.engine.mesh.MeshOGL;
 import pl.oblivion.engine.shader.DiffuseShader;
+import pl.oblivion.engine.shader.ShaderCache;
 
 public class DiffuseRenderer extends AbstractRenderer {
     
-    private static DiffuseShader diffuseShader = new DiffuseShader(ShaderType.DIFFUSE_SHADER);
+    private static DiffuseShader diffuseShader = (DiffuseShader) ShaderCache.getInstance().getShader(ShaderType.DIFFUSE_SHADER);
     
     public DiffuseRenderer(Camera camera) {
         super(diffuseShader, camera);
@@ -25,6 +26,7 @@ public class DiffuseRenderer extends AbstractRenderer {
         diffuseShader.start();
         diffuseShader.getProjectionMatrix().loadMatrix(this.getCamera().getProjectionMatrix());
         diffuseShader.getViewMatrix().loadMatrix(this.getCamera().getViewMatrix());
+    
     }
     
     @Override
