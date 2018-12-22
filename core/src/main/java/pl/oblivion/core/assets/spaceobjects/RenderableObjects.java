@@ -13,39 +13,36 @@ import pl.oblivion.model.mesh.MeshData;
 @Getter
 public abstract class RenderableObjects extends GameObject {
 
-  MeshData meshData;
-  AbstractRenderer abstractRenderer;
-  ShaderType shaderType;
-  MeshOGL meshOGL;
+	MeshData meshData;
+	AbstractRenderer abstractRenderer;
+	ShaderType shaderType;
+	MeshOGL meshOGL;
 
-  RenderableObjects(
-          String name,
-          GameObjectType gameObjectType,
-          ShaderType shaderType,
-          MeshData meshData) {
-    super(name, gameObjectType);
-      this.shaderType = shaderType;
-    this.meshData = meshData;
-  }
-    
-    public void initObject() {
-        this.abstractRenderer = RendererCache.getInstance().getRenderer(shaderType);
-        this.meshOGL = new MeshOGL(meshData.getIndices(), new Attribute(3, meshData.getVertices()));
-    }
+	RenderableObjects(
+			String name, GameObjectType gameObjectType, ShaderType shaderType, MeshData meshData) {
+		super(name, gameObjectType);
+		this.shaderType = shaderType;
+		this.meshData = meshData;
+	}
 
-  public void bind() {
-    this.abstractRenderer.bindModel(meshOGL);
-  }
+	public void initObject() {
+		this.abstractRenderer = RendererCache.getInstance().getRenderer(shaderType);
+		this.meshOGL = new MeshOGL(meshData.getIndices(), new Attribute(3, meshData.getVertices()));
+	}
 
-  public void render() {
-    this.abstractRenderer.render(transform, meshOGL);
-  }
-  
-  public void unbind(){
-      this.abstractRenderer.unbindModel(meshOGL);
-  }
+	public void bind() {
+		this.abstractRenderer.bindModel(meshOGL);
+	}
 
-  public void end() {
-    this.abstractRenderer.end();
-  }
+	public void render() {
+		this.abstractRenderer.render(transform, meshOGL);
+	}
+
+	public void unbind() {
+		this.abstractRenderer.unbindModel(meshOGL);
+	}
+
+	public void end() {
+		this.abstractRenderer.end();
+	}
 }

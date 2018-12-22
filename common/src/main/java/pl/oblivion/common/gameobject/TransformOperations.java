@@ -5,25 +5,25 @@ import org.joml.Vector3f;
 
 public interface TransformOperations {
 
-  void translate(float xTranslation, float yTranslation, float zTranslation);
+	void translate(float xTranslation, float yTranslation, float zTranslation);
 
-  void translate(Vector3f translationVector);
+	void translate(Vector3f translationVector);
 
-  void translateLocal(float xTranslation, float yTranslation, float zTranslation);
+	void translateLocal(float xTranslation, float yTranslation, float zTranslation);
 
-  void translateLocal(Vector3f translationVector);
+	void translateLocal(Vector3f translationVector);
 
-  Vector3f getPosition();
+	Vector3f getPosition();
 
-  void rotate(float xAngle, float yAngle, float zAngle);
+	void rotate(float xAngle, float yAngle, float zAngle);
 
-  void rotate(Quaternionf quaternionf);
+	void rotate(Quaternionf quaternionf);
 
-  void rotateLocal(float xAngle, float yAngle, float zAngle);
+	void rotateLocal(float xAngle, float yAngle, float zAngle);
 
-  void rotateLocal(Quaternionf quaternionf);
+	void rotateLocal(Quaternionf quaternionf);
 
-  Quaternionf getRotation();
+	Quaternionf getRotation();
 
-  Vector3f getScale();
+	Vector3f getScale();
 }
