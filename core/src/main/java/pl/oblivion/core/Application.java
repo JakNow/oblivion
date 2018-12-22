@@ -18,6 +18,7 @@ import pl.oblivion.engine.shader.DiffuseShader;
 import pl.oblivion.engine.shader.ShaderCache;
 
 import static org.lwjgl.opengl.GL11.glViewport;
+import static pl.oblivion.common.utils.GetSystemProperty.getBoolean;
 import static pl.oblivion.common.utils.GetSystemProperty.getInt;
 
 public class Application {
@@ -32,6 +33,8 @@ public class Application {
 	@Getter
 	private InputManager inputManager;
 	private Camera camera;
+	private boolean showPerformance;
+
 
 	public Application(Class mainClass, @org.jetbrains.annotations.NotNull Scene scene) {
 		logger.info("WELCOME TO OBLIVION ENGINE!");
@@ -42,7 +45,7 @@ public class Application {
 		this.scene = scene;
 		this.camera = scene.getCamera();
 		this.inputManager = window.getInputManager();
-
+		this.showPerformance = getBoolean("engine.show-performance", false);
 		this.fps = getInt("engine.fps", 60);
 
 		initShaders();
@@ -68,24 +71,34 @@ public class Application {
 	private void run() {
 		float elapsedTime;
 		float accumulator = 0f;
+		double start = Timer.getElapsedTime();
+		int fps = 0;
+		int ups = 0;
 		while (!window.windowShouldClose()) {
 			if (window.isResized()) {
 				glViewport(0, 0, window.getWidth(), window.getHeight());
 				camera.updateProjectionMatrix(window);
 			}
-			elapsedTime = timer.getElapsedTime();
+			elapsedTime = Timer.getElapsedTime();
 			accumulator += elapsedTime;
-
 			while (accumulator >= Timer.deltaTime) {
 				update();
 				accumulator -= Timer.deltaTime;
+				ups++;
 			}
 
 			scene.render();
+			fps++;
 
 			window.updateAfterRendering();
 			if (!window.isVSync()) {
 				sync();
+			}
+			if (showPerformance && (start += elapsedTime) >= 1.0f) {
+				logger.info("UPS: {} | FPS: {}", ups, fps);
+				ups = 0;
+				fps = 0;
+				start = 0;
 			}
 		}
 		scene.delete();
@@ -94,8 +107,8 @@ public class Application {
 
 	private void sync() {
 		float loopSlot = 1f / fps;
-		double endTime = timer.getLastLoopTime() + loopSlot;
-		while (timer.getTime() < endTime) {
+		double endTime = Timer.getLastLoopTime() + loopSlot;
+		while (Timer.getTime() < endTime) {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException ie) {
