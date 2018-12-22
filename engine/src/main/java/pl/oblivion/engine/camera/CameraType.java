@@ -4,12 +4,12 @@ import lombok.Getter;
 
 @Getter
 public enum CameraType {
-  ORTHOGRAPHIC("Orthographic"),
-  PERSPECTIVE("Perspective");
+	ORTHOGRAPHIC("Orthographic"),
+	PERSPECTIVE("Perspective");
 
-  private final String name;
+	private final String name;
 
-  CameraType(String name) {
-    this.name = name;
-  }
+	CameraType(String name) {
+		this.name = name;
+	}
 }

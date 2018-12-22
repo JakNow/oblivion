@@ -17,83 +17,84 @@ import java.util.*;
 
 public class Scene {
 
-  private static final Logger logger = LogManager.getLogger(Scene.class);
+	private static final Logger logger = LogManager.getLogger(Scene.class);
 
-  @Getter private Camera camera;
+	@Getter
+	private Camera camera;
 
-  private Map<ShaderType, Map<RenderableObjects, List<RenderableObjects>>> renderersObjectsMap;
-    
-    private List<RenderableObjects> noninitiatedObjects;
+	private Map<ShaderType, Map<RenderableObjects, List<RenderableObjects>>> renderersObjectsMap;
 
-  public Scene() {
-      noninitiatedObjects = new LinkedList<>();
-    renderersObjectsMap = new HashMap<>();
-  }
+	private List<RenderableObjects> noninitiatedObjects;
 
-  public void addToScene(GameObject gameObject) {
-    if (gameObject instanceof Camera) {
-      logger.info("Setting up camera: {}", gameObject);
-      this.camera = (Camera) gameObject;
-    } else if (gameObject instanceof RenderableObjects) {
-      logger.info("Adding to list: {}", gameObject);
-      addRenderableObjectToMap((RenderableObjects) gameObject);
-        noninitiatedObjects.add((RenderableObjects) gameObject);
-    }
-  }
-    
-    public void initObjects() {
-        noninitiatedObjects.forEach(RenderableObjects::initObject);
-    }
+	public Scene() {
+		noninitiatedObjects = new LinkedList<>();
+		renderersObjectsMap = new HashMap<>();
+	}
 
-  public void render() {
-    AbstractRenderer.prepareScene();
-    renderersObjectsMap.forEach(
-        (shaderType, renderableObjectsListMap) -> {
-          RendererCache.getInstance().getRenderer(shaderType).prepareShader();
+	public void addToScene(GameObject gameObject) {
+		if (gameObject instanceof Camera) {
+			logger.info("Setting up camera: {}", gameObject);
+			this.camera = (Camera) gameObject;
+		} else if (gameObject instanceof RenderableObjects) {
+			logger.info("Adding to list: {}", gameObject);
+			addRenderableObjectToMap((RenderableObjects) gameObject);
+			noninitiatedObjects.add((RenderableObjects) gameObject);
+		}
+	}
 
-          renderableObjectsListMap.forEach(
-              (renderableObjects, renderableObjectsList) -> {
-                renderableObjects.bind();
-                  renderableObjectsList.forEach(RenderableObjects::render);
-                renderableObjects.unbind();
-              });
+	public void initObjects() {
+		noninitiatedObjects.forEach(RenderableObjects::initObject);
+	}
 
-          RendererCache.getInstance().getRenderer(shaderType).end();
-        });
-  }
-    
-    public void update() {
-        // for testing purpose
-        float x = InputManager.getKey(KeyCode.HORIZONTAL) * 2 * Timer.deltaTime;
-        float y = InputManager.getKey(KeyCode.VERTICAL) * 2 * Timer.deltaTime;
-        
-        camera.transform.translate(x, y, 0);
-    }
+	public void render() {
+		AbstractRenderer.prepareScene();
+		renderersObjectsMap.forEach(
+				(shaderType, renderableObjectsListMap) -> {
+					RendererCache.getInstance().getRenderer(shaderType).prepareShader();
 
-  public void delete() {
-    renderersObjectsMap.forEach((k, v) -> RendererCache.getInstance().getRenderer(k).cleanUp());
-  }
+					renderableObjectsListMap.forEach(
+							(renderableObjects, renderableObjectsList) -> {
+								renderableObjects.bind();
+								renderableObjectsList.forEach(RenderableObjects::render);
+								renderableObjects.unbind();
+							});
 
-  private void addRenderableObjectToMap(RenderableObjects renderableObjects) {
-    Map<RenderableObjects, List<RenderableObjects>> mapOfShadersObjects =
-        renderersObjectsMap.get(renderableObjects.getShaderType());
+					RendererCache.getInstance().getRenderer(shaderType).end();
+				});
+	}
 
-    if (mapOfShadersObjects != null) {
-      // process
-      List<RenderableObjects> batch = mapOfShadersObjects.get(renderableObjects);
-      if (batch != null) {
-        batch.add(renderableObjects);
-      } else {
-        batch = new ArrayList<>();
-        batch.add(renderableObjects);
-        mapOfShadersObjects.put(renderableObjects, batch);
-      }
-    } else {
-      mapOfShadersObjects = new HashMap<>();
-      List<RenderableObjects> batch = new LinkedList<>();
-      batch.add(renderableObjects);
-      mapOfShadersObjects.put(renderableObjects, batch);
-      renderersObjectsMap.put(renderableObjects.getShaderType(), mapOfShadersObjects);
-    }
-  }
+	public void update() {
+		// for testing purpose
+		float x = InputManager.getKey(KeyCode.HORIZONTAL) * 2 * Timer.deltaTime;
+		float y = InputManager.getKey(KeyCode.VERTICAL) * 2 * Timer.deltaTime;
+
+		camera.transform.translate(x, y, 0);
+	}
+
+	public void delete() {
+		renderersObjectsMap.forEach((k, v) -> RendererCache.getInstance().getRenderer(k).cleanUp());
+	}
+
+	private void addRenderableObjectToMap(RenderableObjects renderableObjects) {
+		Map<RenderableObjects, List<RenderableObjects>> mapOfShadersObjects =
+				renderersObjectsMap.get(renderableObjects.getShaderType());
+
+		if (mapOfShadersObjects != null) {
+			// process
+			List<RenderableObjects> batch = mapOfShadersObjects.get(renderableObjects);
+			if (batch != null) {
+				batch.add(renderableObjects);
+			} else {
+				batch = new ArrayList<>();
+				batch.add(renderableObjects);
+				mapOfShadersObjects.put(renderableObjects, batch);
+			}
+		} else {
+			mapOfShadersObjects = new HashMap<>();
+			List<RenderableObjects> batch = new LinkedList<>();
+			batch.add(renderableObjects);
+			mapOfShadersObjects.put(renderableObjects, batch);
+			renderersObjectsMap.put(renderableObjects.getShaderType(), mapOfShadersObjects);
+		}
+	}
 }

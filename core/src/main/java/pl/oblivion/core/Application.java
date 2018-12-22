@@ -22,88 +22,89 @@ import static pl.oblivion.common.utils.GetSystemProperty.getInt;
 
 public class Application {
 
-  private static final Logger logger = LogManager.getLogger(Application.class);
+	private static final Logger logger = LogManager.getLogger(Application.class);
 
-  private final Window window;
-  private final Timer timer;
-  private int fps;
-    
-    private Scene scene;
-  @Getter private InputManager inputManager;
-    private Camera camera;
-    
-    public Application(Class mainClass, Scene scene) {
-    logger.info("WELCOME TO OBLIVION ENGINE!");
-    logger.info("Starting the Application");
-        loadConfig(mainClass);
-    this.window = new Window();
-    this.timer = new Timer();
-        this.scene = scene;
-        this.camera = scene.getCamera();
-    this.inputManager = window.getInputManager();
+	private final Window window;
+	private final Timer timer;
+	private int fps;
 
-    this.fps = getInt("engine.fps", 60);
-        
-        initShaders();
-    }
-    
-    private void loadConfig(Class mainClass) {
-    AppConfig appConfig = (AppConfig) mainClass.getAnnotation(AppConfig.class);
-    if (appConfig == null) throw new MissingAppConfigAnnotationException();
+	private Scene scene;
+	@Getter
+	private InputManager inputManager;
+	private Camera camera;
 
-    new AppConfigRunner(appConfig.value());
-    }
-    
-    public void start() {
-        scene.initObjects();
-        this.run();
-    }
-    
-    private void initShaders() {
-        ShaderCache.getInstance().addShader(new DiffuseShader(ShaderType.DIFFUSE_SHADER));
-    RendererCache.getInstance().addRenderer(new DiffuseRenderer(camera));
-  }
-    
-    private void run() {
-    float elapsedTime;
-    float accumulator = 0f;
-    while (!window.windowShouldClose()) {
-      if (window.isResized()) {
-        glViewport(0, 0, window.getWidth(), window.getHeight());
-        camera.updateProjectionMatrix(window);
-      }
-      elapsedTime = timer.getElapsedTime();
-      accumulator += elapsedTime;
-    
-        while (accumulator >= Timer.deltaTime) {
-            update();
-            accumulator -= Timer.deltaTime;
-      }
-    
-        scene.render();
+	public Application(Class mainClass, @org.jetbrains.annotations.NotNull Scene scene) {
+		logger.info("WELCOME TO OBLIVION ENGINE!");
+		logger.info("Starting the Application");
+		loadConfig(mainClass);
+		this.window = new Window();
+		this.timer = new Timer();
+		this.scene = scene;
+		this.camera = scene.getCamera();
+		this.inputManager = window.getInputManager();
 
-      window.updateAfterRendering();
-      if (!window.isVSync()) {
-        sync();
-      }
-    }
-        scene.delete();
-    window.destroy();
-  }
+		this.fps = getInt("engine.fps", 60);
 
-  private void sync() {
-    float loopSlot = 1f / fps;
-    double endTime = timer.getLastLoopTime() + loopSlot;
-    while (timer.getTime() < endTime) {
-      try {
-        Thread.sleep(1);
-      } catch (InterruptedException ie) {
-        logger.warn("Thread sleep was interrupted. ", ie);
-      }
-    }
-  }
-    
-    private void update() {
-        scene.update();
-    }
+		initShaders();
+	}
+
+	private void loadConfig(Class mainClass) {
+		AppConfig appConfig = (AppConfig) mainClass.getAnnotation(AppConfig.class);
+		if (appConfig == null) throw new MissingAppConfigAnnotationException();
+
+		new AppConfigRunner(appConfig.value());
+	}
+
+	public void start() {
+		scene.initObjects();
+		this.run();
+	}
+
+	private void initShaders() {
+		ShaderCache.getInstance().addShader(new DiffuseShader(ShaderType.DIFFUSE_SHADER));
+		RendererCache.getInstance().addRenderer(new DiffuseRenderer(camera));
+	}
+
+	private void run() {
+		float elapsedTime;
+		float accumulator = 0f;
+		while (!window.windowShouldClose()) {
+			if (window.isResized()) {
+				glViewport(0, 0, window.getWidth(), window.getHeight());
+				camera.updateProjectionMatrix(window);
+			}
+			elapsedTime = timer.getElapsedTime();
+			accumulator += elapsedTime;
+
+			while (accumulator >= Timer.deltaTime) {
+				update();
+				accumulator -= Timer.deltaTime;
+			}
+
+			scene.render();
+
+			window.updateAfterRendering();
+			if (!window.isVSync()) {
+				sync();
+			}
+		}
+		scene.delete();
+		window.destroy();
+	}
+
+	private void sync() {
+		float loopSlot = 1f / fps;
+		double endTime = timer.getLastLoopTime() + loopSlot;
+		while (timer.getTime() < endTime) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException ie) {
+				logger.warn("Thread sleep was interrupted. ", ie);
+			}
+		}
+	}
+
+	private void update() {
+		scene.update();
+	}
 }
