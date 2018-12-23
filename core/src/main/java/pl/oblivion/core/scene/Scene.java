@@ -4,11 +4,11 @@ import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.oblivion.common.gameobject.GameObject;
-import pl.oblivion.core.assets.spaceobjects.RenderableObjects;
 import pl.oblivion.engine.Timer;
 import pl.oblivion.engine.camera.Camera;
 import pl.oblivion.engine.input.InputManager;
 import pl.oblivion.engine.input.KeyCode;
+import pl.oblivion.engine.mesh.MeshOGL;
 import pl.oblivion.engine.renderer.AbstractRenderer;
 import pl.oblivion.engine.renderer.RendererCache;
 import pl.oblivion.engine.renderer.ShaderType;
@@ -21,46 +21,44 @@ public class Scene {
 
 	@Getter
 	private Camera camera;
+	private Map<ShaderType, Map<MeshOGL, List<Entity>>> entitiesRendererMap;
 
-	private Map<ShaderType, Map<RenderableObjects, List<RenderableObjects>>> renderersObjectsMap;
 
-	private List<RenderableObjects> noninitiatedObjects;
+	private List<Entity> rawEntities;
 
 	public Scene() {
-		noninitiatedObjects = new LinkedList<>();
-		renderersObjectsMap = new HashMap<>();
+		rawEntities = new LinkedList<>();
+		entitiesRendererMap = new HashMap<>();
 	}
 
 	public void addToScene(GameObject gameObject) {
 		if (gameObject instanceof Camera) {
 			logger.info("Setting up camera: {}", gameObject);
 			this.camera = (Camera) gameObject;
-		} else if (gameObject instanceof RenderableObjects) {
+		} else if (gameObject instanceof Entity) {
 			logger.info("Adding to list: {}", gameObject);
-			addRenderableObjectToMap((RenderableObjects) gameObject);
-			noninitiatedObjects.add((RenderableObjects) gameObject);
+			rawEntities.add((Entity) gameObject);
 		}
 	}
 
 	public void initObjects() {
-		noninitiatedObjects.forEach(RenderableObjects::initObject);
+		rawEntities.forEach(entity -> {
+			entity.init();
+			addEntityToObjectToMap(entity);
+		});
 	}
 
 	public void render() {
 		AbstractRenderer.prepareScene();
-		renderersObjectsMap.forEach(
-				(shaderType, renderableObjectsListMap) -> {
-					RendererCache.getInstance().getRenderer(shaderType).prepareShader();
-
-					renderableObjectsListMap.forEach(
-							(renderableObjects, renderableObjectsList) -> {
-								renderableObjects.bind();
-								renderableObjectsList.forEach(RenderableObjects::render);
-								renderableObjects.unbind();
-							});
-
-					RendererCache.getInstance().getRenderer(shaderType).end();
-				});
+		RendererCache.getInstance().getAvailableRenderers().forEach((shaderType, renderer) -> {
+			renderer.prepareShader();
+			entitiesRendererMap.get(shaderType).forEach(((meshOGL, entities) -> {
+				meshOGL.bind(meshOGL.getAttributesBinding());
+				entities.forEach(Entity::render);
+				meshOGL.unbind(meshOGL.getAttributesBinding());
+			}));
+			renderer.end();
+		});
 	}
 
 	public void update() {
@@ -72,29 +70,28 @@ public class Scene {
 	}
 
 	public void delete() {
-		renderersObjectsMap.forEach((k, v) -> RendererCache.getInstance().getRenderer(k).cleanUp());
+		RendererCache.getInstance().getAvailableRenderers().forEach((key, value) ->
+				value.cleanUp());
 	}
 
-	private void addRenderableObjectToMap(RenderableObjects renderableObjects) {
-		Map<RenderableObjects, List<RenderableObjects>> mapOfShadersObjects =
-				renderersObjectsMap.get(renderableObjects.getShaderType());
-
-		if (mapOfShadersObjects != null) {
-			// process
-			List<RenderableObjects> batch = mapOfShadersObjects.get(renderableObjects);
+	private void addEntityToObjectToMap(Entity entity) {
+		Map<MeshOGL, List<Entity>> entities = entitiesRendererMap.get(entity.getShaderType());
+		if (entities != null) {
+			List<Entity> batch = entities.get(entity.getMeshOGL());
 			if (batch != null) {
-				batch.add(renderableObjects);
+				batch.add(entity);
 			} else {
 				batch = new ArrayList<>();
-				batch.add(renderableObjects);
-				mapOfShadersObjects.put(renderableObjects, batch);
+				batch.add(entity);
+				entities.put(entity.getMeshOGL(), batch);
 			}
 		} else {
-			mapOfShadersObjects = new HashMap<>();
-			List<RenderableObjects> batch = new LinkedList<>();
-			batch.add(renderableObjects);
-			mapOfShadersObjects.put(renderableObjects, batch);
-			renderersObjectsMap.put(renderableObjects.getShaderType(), mapOfShadersObjects);
+			entities = new HashMap<>();
+			List<Entity> batch = new ArrayList<>();
+			batch.add(entity);
+			entities.put(entity.getMeshOGL(), batch);
+			entitiesRendererMap.put(entity.getShaderType(), entities);
 		}
+
 	}
 }
