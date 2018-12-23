@@ -33,4 +33,8 @@ public class RendererCache {
 	public AbstractRenderer getRenderer(ShaderType shaderType) {
 		return rendererMap.get(shaderType);
 	}
+
+	public Map<ShaderType, AbstractRenderer> getAvailableRenderers() {
+		return rendererMap;
+	}
 }
