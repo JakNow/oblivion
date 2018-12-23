@@ -1,36 +1,39 @@
 package pl.oblivion.engine.camera;
 
 import lombok.Getter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import pl.oblivion.common.gameobject.GameObject;
-import pl.oblivion.common.gameobject.transform.GameObjectType;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import pl.oblivion.common.gameobject.GameObjectType;
+import pl.oblivion.engine.Window;
 
 public abstract class Camera extends GameObject {
 
-  private Matrix4f viewMatrix;
-  @Getter private CameraType cameraType;
+	static final Logger logger = LogManager.getLogger(Camera.class);
+	final Matrix4f projectionMatrix;
+	private final Matrix4f viewMatrix;
+	private final Vector3f negatedPosition;
+	@Getter
+	private CameraType cameraType;
 
-  Camera(CameraType cameraType) {
-    super(cameraType.getName());
-    this.viewMatrix = new Matrix4f();
-    this.cameraType = cameraType;
-  }
+	Camera(CameraType cameraType) {
+		super(cameraType.getName(), GameObjectType.CAMERA);
+		this.viewMatrix = new Matrix4f();
+		this.projectionMatrix = new Matrix4f();
+		this.cameraType = cameraType;
+		this.negatedPosition = new Vector3f();
+	}
 
-  public Matrix4f getViewMatrix() {
-    return viewMatrix
-        .identity()
-        .rotate(this.transform.getRotation())
-        .translate(this.transform.getPosition().negate());
-  }
+	public Matrix4f getViewMatrix() {
+		this.transform.getTransformationPosition().negate(negatedPosition);
+		return viewMatrix.identity().translate(negatedPosition).rotate(this.transform.getRotation());
+	}
 
-  @Override
-  public void addToScene(Map<GameObjectType, List<GameObject>> sceneHierarchy) {
-    List<GameObject> gameObjects =
-        sceneHierarchy.computeIfAbsent(GameObjectType.CAMERA, k -> new LinkedList<>());
-    gameObjects.add(this);
-  }
+	public abstract void updateProjectionMatrix(Window window);
+
+	public Matrix4f getProjectionMatrix() {
+		return projectionMatrix;
+	}
 }

@@ -3,14 +3,11 @@ package pl.oblivion.engine;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
-import pl.oblivion.engine.camera.Camera;
-import pl.oblivion.engine.camera.OrthographicCamera;
-import pl.oblivion.engine.camera.PerspectiveCamera;
+import pl.oblivion.engine.input.InputManager;
 
 import java.nio.IntBuffer;
 
@@ -24,148 +21,128 @@ import static pl.oblivion.common.utils.GetSystemProperty.getString;
 
 public class Window {
 
-  private static final Logger logger = LogManager.getLogger(Window.class);
-  private final Matrix4f projectionMatrix;
-  @Getter private int width;
-  @Getter private int height;
-  private String title;
-  private long window;
-  private boolean vSync;
-  private boolean resized;
+	private static final Logger logger = LogManager.getLogger(Window.class);
+	@Getter
+	private int width;
+	@Getter
+	private int height;
+	private String title;
+	private long window;
+	private boolean vSync;
+	private boolean resized;
 
-  public Window() {
-    this.width = getInt("window.width", 600);
-    this.height = getInt("window.height", (600 * 9 / 16));
-    this.title = getString("window.title", "Default title");
-    this.vSync = true;
-    this.projectionMatrix = new Matrix4f();
-    this.resized = false;
-  }
+	@Getter
+	private InputManager inputManager;
 
-  public void init() {
-    GLFWErrorCallback.createPrint(System.err).set();
+	public Window() {
+		logger.info("Creating window...");
+		this.width = getInt("window.width", 600);
+		this.height = getInt("window.height", (600 * 9 / 16));
+		this.title = getString("window.title", "Default title");
+		this.vSync = true;
+		this.inputManager = new InputManager();
+		this.resized = false;
+		this.init();
+		logger.info("Window created {}", this);
+	}
 
-    if (!glfwInit()) {
-      logger.error("Unable to initialize GLFW");
-      throw new IllegalStateException();
-    }
+	private void init() {
+		GLFWErrorCallback.createPrint(System.err).set();
 
-    glfwDefaultWindowHints();
-    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+		if (!glfwInit()) {
+			logger.error("Unable to initialize GLFW");
+			throw new IllegalStateException();
+		}
 
-    this.window = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
+		glfwDefaultWindowHints();
+		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-    if (window == NULL) {
-      logger.error("Failed to create the GLFW window");
-      throw new RuntimeException();
-    }
+		this.window = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
 
-    glfwSetFramebufferSizeCallback(
-        window,
-        (window, width, height) -> {
-          this.width = width;
-          this.height = height;
-          this.setResized(true);
-        });
+		if (window == NULL) {
+			logger.error("Failed to create the GLFW window");
+			throw new RuntimeException();
+		}
 
-    glfwSetKeyCallback(
-        window,
-        (window, key, scancode, action, mods) -> {
-          if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-            glfwSetWindowShouldClose(window, true);
-        });
+		glfwSetFramebufferSizeCallback(
+				window,
+				(window, width, height) -> {
+					this.width = width;
+					this.height = height;
+					this.setResized(true);
+				});
 
-    try (MemoryStack stack = stackPush()) {
-      IntBuffer pWidth = stack.mallocInt(1);
-      IntBuffer pHeight = stack.mallocInt(1);
+		glfwSetKeyCallback(window, inputManager);
 
-      glfwGetWindowSize(window, pWidth, pHeight);
+		try (MemoryStack stack = stackPush()) {
+			IntBuffer pWidth = stack.mallocInt(1);
+			IntBuffer pHeight = stack.mallocInt(1);
 
-      GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+			glfwGetWindowSize(window, pWidth, pHeight);
 
-      glfwSetWindowPos(
-          window, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
-    }
+			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-    glfwMakeContextCurrent(window);
-    if (this.isVSync()) {
-      glfwSwapInterval(1);
-    }
+			glfwSetWindowPos(
+					window, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
+		}
 
-    glfwShowWindow(window);
-    GL.createCapabilities();
+		glfwMakeContextCurrent(window);
+		if (this.isVSync()) {
+			glfwSwapInterval(1);
+		}
 
-    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-  }
+		glfwShowWindow(window);
+		GL.createCapabilities();
 
-  public boolean windowShouldClose() {
-    return glfwWindowShouldClose(window);
-  }
+		glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+	}
 
-  public void updateAfterRendering() {
-    glfwSwapBuffers(window); // swap the color buffers
-    glfwPollEvents();
-  }
+	public boolean windowShouldClose() {
+		return glfwWindowShouldClose(window);
+	}
 
-  public void destroy() {
-    // Free the window callbacks and destroy the window
-    glfwFreeCallbacks(window);
-    glfwDestroyWindow(window);
+	public void updateAfterRendering() {
+		glfwSwapBuffers(window); // swap the color buffers
+		glfwPollEvents();
+	}
 
-    // Terminate GLFW and free the error callback
-    glfwTerminate();
-    glfwSetErrorCallback(null).free();
+	public void destroy() {
+		// Free the window callbacks and destroy the window
+		glfwFreeCallbacks(window);
+		glfwDestroyWindow(window);
 
-    logger.info("Terminating GLFW");
-  }
+		// Terminate GLFW and free the error callback
+		glfwTerminate();
+		glfwSetErrorCallback(null).free();
 
-  public void updateProjectionMatrix(Camera camera) {
-    logger.info("Updating projection matrix due to resize.");
-    switch (camera.getCameraType()) {
-      case PERSPECTIVE:
-        updatePerspectiveProjection((PerspectiveCamera) camera);
-        break;
-      case ORTHOGRAPHIC:
-        updateOrthographicProjection((OrthographicCamera) camera);
-        break;
-    }
-  }
+		logger.info("Terminating GLFW");
+	}
 
-  private void updatePerspectiveProjection(PerspectiveCamera camera) {
-    float aspectRatio = (float) width / (float) height;
-    this.projectionMatrix.setPerspective(
-        camera.getFieldOfView(), aspectRatio, camera.getNearPlane(), camera.getFarPlane());
-    this.setResized(false);
-    logger.info("Perspective camera updated");
-  }
+	public boolean isVSync() {
+		return this.vSync;
+	}
 
-  private void updateOrthographicProjection(OrthographicCamera camera) {
-    float aspectRatio = (float) width / (float) height;
-    this.projectionMatrix.setOrtho(
-        camera.getLeft(),
-        camera.getRight(),
-        camera.getBottom() * aspectRatio,
-        camera.getTop() * aspectRatio,
-        camera.getNearPlane(),
-        camera.getFarPlane());
-    this.setResized(false);
-    logger.info("Orthographic camera updated");
-  }
+	public boolean isResized() {
+		return this.resized;
+	}
 
-  public boolean isVSync() {
-    return this.vSync;
-  }
+	public void setResized(boolean resized) {
+		this.resized = resized;
+	}
 
-  public Matrix4f getProjectionMatrix() {
-    return this.projectionMatrix;
-  }
-
-  public boolean isResized() {
-    return this.resized;
-  }
-
-  public void setResized(boolean resized) {
-    this.resized = resized;
-  }
+	@Override
+	public String toString() {
+		return "Window{"
+				+ "width="
+				+ width
+				+ ", height="
+				+ height
+				+ ", title='"
+				+ title
+				+ '\''
+				+ ", window="
+				+ window
+				+ '}';
+	}
 }

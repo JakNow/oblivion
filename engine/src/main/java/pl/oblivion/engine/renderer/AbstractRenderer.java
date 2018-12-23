@@ -1,37 +1,30 @@
 package pl.oblivion.engine.renderer;
 
 import lombok.Getter;
-import org.joml.Matrix4f;
-import pl.oblivion.engine.Window;
+import org.lwjgl.opengl.GL11;
 import pl.oblivion.engine.camera.Camera;
-import pl.oblivion.engine.scene.Scene;
 import pl.oblivion.engine.shader.AbstractShader;
 
+import static org.lwjgl.opengl.GL11C.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11C.GL_DEPTH_BUFFER_BIT;
+
 @Getter
-public abstract class AbstractRenderer {
+public abstract class AbstractRenderer implements Rendering {
 
-  private AbstractShader shader;
-  private Matrix4f projectionMatrix;
-  private Window window;
-  private Camera camera;
+	private AbstractShader shader;
+	private Camera camera;
 
-  public AbstractRenderer(AbstractShader shader, Window window, Camera camera) {
-    this.shader = shader;
-    this.window = window;
-    this.projectionMatrix = window.getProjectionMatrix();
-    this.camera = camera;
-  }
+	AbstractRenderer(AbstractShader shader, Camera camera) {
+		this.shader = shader;
+		this.camera = camera;
+	}
 
-  public abstract void render(Scene scene);
+	public static void prepareScene() {
+		GL11.glClearColor(0f, 0f, 0f, 1f);
+		GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
 
-  public abstract void prepare();
-
-  public abstract void delete();
-
-  public abstract void end();
-
-  public void cleanUp(Scene scene) {
-    this.shader.cleanUp();
-    scene.clear();
-  }
+	public void cleanUp() {
+		shader.cleanUp();
+	}
 }
