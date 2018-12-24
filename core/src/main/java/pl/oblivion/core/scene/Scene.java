@@ -21,9 +21,9 @@ public class Scene {
 
 	@Getter
 	private Camera camera;
+	@Getter
 	private Map<ShaderType, Map<MeshOGL, List<Entity>>> entitiesRendererMap;
-
-
+	@Getter
 	private List<Entity> rawEntities;
 
 	public Scene() {
@@ -32,6 +32,7 @@ public class Scene {
 	}
 
 	public void addToScene(GameObject gameObject) {
+		gameObject.getChildren().forEach(this::addToScene);
 		if (gameObject instanceof Camera) {
 			logger.info("Setting up camera: {}", gameObject);
 			this.camera = (Camera) gameObject;
