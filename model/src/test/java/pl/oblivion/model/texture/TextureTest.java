@@ -35,7 +35,7 @@ public class TextureTest {
 	}
 
 	@Test
-	public void load_20x20_Texture() {
+	public void load_Texture() {
 		Texture texture =
 				new Texture(
 						new MyFile(
