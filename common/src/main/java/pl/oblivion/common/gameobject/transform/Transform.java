@@ -16,9 +16,6 @@ public class Transform {
 	private final Quaternionf rotation;
 	private final Vector3f scale;
 	private final Matrix4f transformationMatrix;
-	private final Vector3f transformationPosition;
-	private final Quaternionf transformationRotation;
-	private final Vector3f transformationScale;
 
 	private List<GameObject> children;
 
@@ -27,10 +24,6 @@ public class Transform {
 		this.rotation = new Quaternionf();
 		this.scale = new Vector3f(1, 1, 1);
 		this.children = children;
-
-		this.transformationPosition = new Vector3f(this.position);
-		this.transformationRotation = new Quaternionf(this.rotation);
-		this.transformationScale = new Vector3f(this.scale);
 
 		this.transformationMatrix = new Matrix4f();
 	}
@@ -41,9 +34,6 @@ public class Transform {
 		this.scale = new Vector3f(transform.getScale());
 		this.children = children;
 
-		this.transformationPosition = new Vector3f(this.position);
-		this.transformationRotation = new Quaternionf(this.rotation);
-		this.transformationScale = new Vector3f(this.scale);
 
 		this.transformationMatrix = new Matrix4f(transform.getTransformationMatrix());
 	}
@@ -55,19 +45,15 @@ public class Transform {
 		this.scale = scale;
 		this.children = children;
 
-		this.transformationPosition = new Vector3f(this.position);
-		this.transformationRotation = new Quaternionf(this.rotation);
-		this.transformationScale = new Vector3f(this.scale);
-
 		this.transformationMatrix = new Matrix4f();
 	}
 
 	public Matrix4f getTransformationMatrix() {
 		return transformationMatrix
 				.identity()
-				.translate(this.transformationPosition)
-				.rotate(this.transformationRotation)
-				.scale(this.transformationScale);
+				.translate(this.position)
+				.rotate(this.rotation)
+				.scale(this.scale);
 	}
 
 	public void setPosition(Vector3f position) {
@@ -108,48 +94,33 @@ public class Transform {
 
 	public void translate(float xTranslation, float yTranslation, float zTranslation) {
 		this.position.add(xTranslation, yTranslation, zTranslation);
-		this.transformationPosition.add(xTranslation, yTranslation, zTranslation);
 		this.children.forEach(
 				child -> child.transform.translate(xTranslation, yTranslation, zTranslation));
 	}
 
 	public void translate(Vector3f translationVector) {
 		this.position.add(translationVector);
-		this.transformationPosition.add(translationVector);
 		this.children.forEach(child -> child.transform.translate(translationVector));
-	}
-
-	public void inheritTransformationFromParent(GameObject parent) {
-		this.transformationPosition.add(parent.transform.position);
-		this.transformationRotation.mul(parent.transform.rotation);
-		this.transformationScale.mul(parent.transform.scale);
 	}
 
 	public void scale(float xScale, float yScale, float zScale) {
 		this.scale.mul(xScale, yScale, zScale);
-		this.transformationScale.mul(xScale, yScale, zScale);
 		this.children.forEach(child -> child.transform.scale(xScale, yScale, zScale));
 	}
 
 	public void scale(Vector3f scaleVector) {
 		this.scale.mul(scaleVector);
-		this.transformationScale.mul(scaleVector);
 		this.children.forEach(child -> child.transform.scale(scaleVector));
 	}
 
 	public void rotate(Vector3f axis, float angle) {
 		float angleInRadians = (float) Math.toRadians(angle);
 		this.rotation.rotateAxis(angleInRadians, axis);
-		this.transformationRotation.rotateAxis(angleInRadians, axis);
-		this.children.forEach(child -> child.transform.rotate(axis, angleInRadians));
+		this.children.forEach(child -> child.transform.rotate(axis, angle));
 	}
 
 	public void rotate(float xAngle, float yAngle, float zAngle) {
 		this.rotation.rotateXYZ(
-				(float) Math.toRadians(xAngle),
-				(float) Math.toRadians(yAngle),
-				(float) Math.toRadians(zAngle));
-		this.transformationRotation.rotateXYZ(
 				(float) Math.toRadians(xAngle),
 				(float) Math.toRadians(yAngle),
 				(float) Math.toRadians(zAngle));
@@ -158,7 +129,6 @@ public class Transform {
 
 	public void rotate(Quaternionf quaternionf) {
 		this.rotation.mul(quaternionf);
-		this.transformationRotation.mul(quaternionf);
 		this.children.forEach(child -> child.transform.rotate(quaternionf));
 	}
 

@@ -67,7 +67,6 @@ public abstract class GameObject {
 	}
 
 	public boolean addChild(GameObject child) {
-		this.children.add(child);
 		child.addParent(this);
 		return true;
 	}
@@ -76,7 +75,6 @@ public abstract class GameObject {
 		if (Objects.nonNull(parent)) {
 			this.parent = parent;
 			this.parent.getChildren().add(this);
-			this.transform.inheritTransformationFromParent(parent);
 			return true;
 		}
 		return false;
