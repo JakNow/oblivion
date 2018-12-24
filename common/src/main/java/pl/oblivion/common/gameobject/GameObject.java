@@ -67,7 +67,6 @@ public abstract class GameObject {
 	}
 
 	public boolean addChild(GameObject child) {
-		this.children.add(child);
 		child.addParent(this);
 		return true;
 	}
