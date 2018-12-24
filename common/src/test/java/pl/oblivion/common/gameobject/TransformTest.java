@@ -40,69 +40,60 @@ public class TransformTest {
 	}
 
 	@Test
-	public void positionIsInheritedByChild() {
-		GameObject parent = prepareDefaultGameObject();
-
-		GameObject child = new GameObject("child", parent, null) {
-		};
-		Vector3f positionFromTransformationMatrix = new Vector3f();
-		child.transform.getTransformationMatrix().getTranslation(positionFromTransformationMatrix);
-		assertThat(positionFromTransformationMatrix)
-				.isEqualToComparingFieldByField(new Vector3f(1, 2, 3));
-	}
-
-	@Test
 	public void whenParentMovesChildMoves() {
-		GameObject parent = prepareDefaultGameObject();
+		GameObject parent = prepareDefaultGameObject(); //	new Vector3f(1, 2, 3),
 
 		GameObject child = new GameObject("child", parent, null) {
 		};
 
 		parent.transform.translate(new Vector3f(51, 123.5f, -5));
-		Vector3f positionFromTransformationMatrix = new Vector3f();
-		child.transform.getTransformationMatrix().getTranslation(positionFromTransformationMatrix);
-		assertThat(positionFromTransformationMatrix)
-				.isEqualToComparingFieldByField(new Vector3f(52, 125.5f, -2));
-		assertThat(child.transform.getPosition()).isEqualTo(new Vector3f(51, 123.5f, -5f));
+
+		assertThat(child.transform.getPosition()).isEqualTo(new Vector3f(51, 123.5f, -5));
 
 		parent.transform.translate(-23.5f, 12, -15f);
-		child.transform.getTransformationMatrix().getTranslation(positionFromTransformationMatrix);
-		assertThat(positionFromTransformationMatrix)
-				.isEqualToComparingFieldByField(new Vector3f(28.5f, 137.5f, -17));
 		assertThat(child.transform.getPosition()).isEqualTo(new Vector3f(27.5f, 135.5f, -20));
 	}
 
 	@Test
-	public void scaleIsInheritedByChild() {
-		GameObject parent = prepareScaledGameObject();
-
-		GameObject child = new GameObject("child", parent, null) {
-		};
-		Vector3f scaleFromTransformationMatrix = new Vector3f();
-		child.transform.getTransformationMatrix().getScale(scaleFromTransformationMatrix);
-		assertThat(scaleFromTransformationMatrix)
-				.isEqualToComparingFieldByField(new Vector3f(2.5f, 0.3f, 10));
-		assertThat(child.transform.getScale()).isEqualTo(new Vector3f(1, 1, 1));
-	}
-
-	@Test
 	public void whenParentScalesChildScales() {
-		GameObject parent = prepareScaledGameObject();
+		GameObject parent = prepareScaledGameObject(); //new Vector3f(2.5f, 0.3f, 10),
 
 		GameObject child = new GameObject("child", parent, null) {
 		};
 
 		parent.transform.scale(new Vector3f(2, 10, 0.5f));
-		Vector3f scaleFromTransformationMatrix = new Vector3f();
-		child.transform.getTransformationMatrix().getScale(scaleFromTransformationMatrix);
-		assertThat(scaleFromTransformationMatrix).isEqualToComparingFieldByField(new Vector3f(5, 3, 5));
+
 		assertThat(child.transform.getScale()).isEqualTo(new Vector3f(2, 10, 0.5f));
 
 		parent.transform.scale(0.2f, 2, 0.4f);
-		child.transform.getTransformationMatrix().getScale(scaleFromTransformationMatrix);
-		assertThat(scaleFromTransformationMatrix)
-				.isEqualToComparingFieldByField(new Vector3f(1, 6, 2f));
-		assertThat(child.transform.getScale()).isEqualTo(new Vector3f(0.4f, 20f, 0.2f));
+		assertThat(child.transform.getScale()).isEqualTo(new Vector3f(0.4f, 20, 0.2f));
+	}
+
+	@Test
+	public void whenParentRotatesChildRotates() {
+		GameObject parent = prepareDefaultGameObject(); //new Quaternionf(),
+
+		GameObject child = new GameObject("child", parent, null) {
+		};
+
+		parent.transform.rotate(Rotation.RIGHT, 30);
+		assertSoftly(
+				softAssertions -> {
+					softAssertions.assertThat(child.transform.getRotation().x).isEqualTo(0.2588f, within(0.001f));
+					softAssertions.assertThat(child.transform.getRotation().y).isEqualTo(0f);
+					softAssertions.assertThat(child.transform.getRotation().z).isEqualTo(0f);
+					softAssertions.assertThat(child.transform.getRotation().w).isEqualTo(0.9659f, within(0.001f));
+				});
+
+		parent.transform.rotate(Rotation.LEFT, 30);
+		assertSoftly(
+				softAssertions -> {
+					softAssertions.assertThat(child.transform.getRotation().x).isEqualTo(0f, within(0.001f));
+					softAssertions.assertThat(child.transform.getRotation().y).isEqualTo(0f);
+					softAssertions.assertThat(child.transform.getRotation().z).isEqualTo(0f);
+					softAssertions.assertThat(child.transform.getRotation().w).isEqualTo(1f, within(0.001f));
+				});
+
 	}
 
 	@Test
@@ -221,18 +212,6 @@ public class TransformTest {
 						new Vector3f(1, 2, 3),
 						new Quaternionf(),
 						new Vector3f(2.5f, 0.3f, 10),
-						Collections.emptyList()),
-				null) {
-		};
-	}
-
-	private GameObject prepareRotatedGameObject() {
-		return new GameObject(
-				"Rotated GameObject",
-				new Transform(
-						new Vector3f(),
-						new Quaternionf(0.3f, 0.5f, 0.7f, 0.9f),
-						new Vector3f(1, 1, 1),
 						Collections.emptyList()),
 				null) {
 		};

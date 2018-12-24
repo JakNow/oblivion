@@ -27,7 +27,7 @@ public abstract class Camera extends GameObject {
 	}
 
 	public Matrix4f getViewMatrix() {
-		this.transform.getTransformationPosition().negate(negatedPosition);
+		this.transform.getPosition().negate(negatedPosition);
 		return viewMatrix.identity().translate(negatedPosition).rotate(this.transform.getRotation());
 	}
 
