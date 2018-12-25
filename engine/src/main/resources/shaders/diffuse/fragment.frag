@@ -1,11 +1,13 @@
 #version 400
 
-in vec3 pass_color;
+in vec2 passTexture;
 
 out vec4 out_color;
 
+uniform sampler2D diffuseTexture;
+
 void main(void){
 
-    out_color = vec4(pass_color,1.0);
+    out_color = vec4(texture(diffuseTexture,passTexture));
 
 }

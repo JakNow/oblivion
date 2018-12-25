@@ -7,6 +7,7 @@ import pl.oblivion.engine.camera.Camera;
 import pl.oblivion.engine.mesh.MeshOGL;
 import pl.oblivion.engine.shader.DiffuseShader;
 import pl.oblivion.engine.shader.ShaderCache;
+import pl.oblivion.engine.texture.TextureOGL;
 
 public class DiffuseRenderer extends AbstractRenderer {
 
@@ -35,7 +36,7 @@ public class DiffuseRenderer extends AbstractRenderer {
 	}
 
 	@Override
-	public void render(Transform transform, MeshOGL meshOGL) {
+	public void render(Transform transform, MeshOGL meshOGL, TextureOGL textureOGL) {
 		diffuseShader.getTransformationMatrix().loadMatrix(transform.getTransformationMatrix());
 		GL11.glDrawElements(GL11.GL_TRIANGLES, meshOGL.getIndexCount(), GL11.GL_UNSIGNED_INT, 0);
 

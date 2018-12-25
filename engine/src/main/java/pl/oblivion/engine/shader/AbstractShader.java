@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL20;
 import pl.oblivion.common.utils.MyFile;
 import pl.oblivion.engine.renderer.ShaderType;
 import pl.oblivion.engine.shader.uniforms.Uniform;
+import pl.oblivion.engine.shader.uniforms.UniformSampler;
 
 import java.io.BufferedReader;
 import java.util.stream.Collectors;
@@ -77,6 +78,14 @@ public abstract class AbstractShader {
 		for (Uniform[] uniform : uniforms) {
 			storeAllUniformLocations(uniform);
 		}
+	}
+
+	void connectTextureUnits(UniformSampler... uniformSampler) {
+		start();
+		for (int i = 0; i < uniformSampler.length; i++) {
+			uniformSampler[i].loadTextureUnit(i);
+		}
+		stop();
 	}
 
 	public void start() {
