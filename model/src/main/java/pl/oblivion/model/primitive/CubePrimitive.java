@@ -4,6 +4,7 @@ import pl.oblivion.model.mesh.MeshData;
 
 public class CubePrimitive implements MeshData {
 
+
 	private final float[] vertices = {
 			// front
 			-0.5f,
@@ -33,7 +34,32 @@ public class CubePrimitive implements MeshData {
 			-0.5f,
 	};
 
-	private final float[] textures = {};
+	private final float[] textures = {
+			0, 0,
+			0, 1,
+			1, 1,
+			1, 0,
+			0, 0,
+			0, 1,
+			1, 1,
+			1, 0,
+			0, 0,
+			0, 1,
+			1, 1,
+			1, 0,
+			0, 0,
+			0, 1,
+			1, 1,
+			1, 0,
+			0, 0,
+			0, 1,
+			1, 1,
+			1, 0,
+			0, 0,
+			0, 1,
+			1, 1,
+			1, 0
+	};
 	private final float[] normals = {};
 
 	private final int[] indices = {
@@ -76,11 +102,11 @@ public class CubePrimitive implements MeshData {
 
 	@Override
 	public float[] getTextures() {
-		return new float[0];
+		return textures;
 	}
 
 	@Override
 	public float[] getNormals() {
-		return new float[0];
+		return normals;
 	}
 }

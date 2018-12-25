@@ -18,13 +18,13 @@ import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
 @Getter
-public class OGLTexture {
+public class TextureOGL {
 
 	private final int id;
 	private final int width;
 	private final int height;
 
-	public OGLTexture(ByteBuffer textureBuffer, int width, int height) {
+	public TextureOGL(ByteBuffer textureBuffer, int width, int height) {
 		this.width = width;
 		this.height = height;
 		this.id = loadTexture(textureBuffer, width, height);

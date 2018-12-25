@@ -11,10 +11,6 @@ public class Timer {
 		this.init();
 	}
 
-	private void init() {
-		lastLoopTime = getTime();
-	}
-
 	public static double getTime() {
 		return System.nanoTime() / 1000_000_000.0;
 	}
@@ -28,5 +24,9 @@ public class Timer {
 
 	public static double getLastLoopTime() {
 		return lastLoopTime;
+	}
+
+	private void init() {
+		lastLoopTime = getTime();
 	}
 }
