@@ -6,8 +6,6 @@ public interface MeshData {
 
 	int[] getIndices();
 
-	int getIndexCount();
-
 	float[] getTextures();
 
 	float[] getNormals();

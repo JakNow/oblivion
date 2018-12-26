@@ -58,11 +58,6 @@ public class MeshLoader {
 			}
 
 			@Override
-			public int getIndexCount() {
-				return indices.length;
-			}
-
-			@Override
 			public float[] getTextures() {
 				return textures;
 			}
