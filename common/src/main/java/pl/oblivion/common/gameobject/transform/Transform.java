@@ -1,49 +1,42 @@
 package pl.oblivion.common.gameobject.transform;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import pl.oblivion.common.gameobject.GameObject;
-
-import java.util.List;
 
 @Getter
-public class Transform {
+@Setter
+public class Transform implements Transformation {
 
 	private final Vector3f position;
 	private final Quaternionf rotation;
 	private final Vector3f scale;
 	private final Matrix4f transformationMatrix;
 
-	private List<GameObject> children;
 
-	public Transform(List<GameObject> children) {
+	public Transform() {
 		this.position = new Vector3f();
 		this.rotation = new Quaternionf();
 		this.scale = new Vector3f(1, 1, 1);
-		this.children = children;
-
 		this.transformationMatrix = new Matrix4f();
 	}
 
-	public Transform(Transform transform, List<GameObject> children) {
+	public Transform(Transform transform) {
 		this.position = new Vector3f(transform.getPosition());
 		this.rotation = new Quaternionf(transform.getRotation());
 		this.scale = new Vector3f(transform.getScale());
-		this.children = children;
-
 
 		this.transformationMatrix = new Matrix4f(transform.getTransformationMatrix());
 	}
 
 	public Transform(
-			Vector3f position, Quaternionf rotation, Vector3f scale, List<GameObject> children) {
+			Vector3f position, Quaternionf rotation, Vector3f scale) {
 		this.position = position;
 		this.rotation = rotation;
 		this.scale = scale;
-		this.children = children;
 
 		this.transformationMatrix = new Matrix4f();
 	}
@@ -92,44 +85,43 @@ public class Transform {
 		return new Quaternionf(x, y, z, w).normalize();
 	}
 
+	@Override
 	public void translate(float xTranslation, float yTranslation, float zTranslation) {
 		this.position.add(xTranslation, yTranslation, zTranslation);
-		this.children.forEach(
-				child -> child.transform.translate(xTranslation, yTranslation, zTranslation));
 	}
 
+	@Override
 	public void translate(Vector3f translationVector) {
 		this.position.add(translationVector);
-		this.children.forEach(child -> child.transform.translate(translationVector));
 	}
 
+	@Override
 	public void scale(float xScale, float yScale, float zScale) {
 		this.scale.mul(xScale, yScale, zScale);
-		this.children.forEach(child -> child.transform.scale(xScale, yScale, zScale));
 	}
 
+	@Override
 	public void scale(Vector3f scaleVector) {
 		this.scale.mul(scaleVector);
-		this.children.forEach(child -> child.transform.scale(scaleVector));
 	}
 
+	@Override
 	public void rotate(Vector3f axis, float angle) {
 		float angleInRadians = (float) Math.toRadians(angle);
 		this.rotation.rotateAxis(angleInRadians, axis);
-		this.children.forEach(child -> child.transform.rotate(axis, angle));
 	}
 
+	@Override
 	public void rotate(float xAngle, float yAngle, float zAngle) {
 		this.rotation.rotateXYZ(
 				(float) Math.toRadians(xAngle),
 				(float) Math.toRadians(yAngle),
 				(float) Math.toRadians(zAngle));
-		this.children.forEach(child -> child.transform.rotate(xAngle, yAngle, zAngle));
 	}
 
+	@Override
 	public void rotate(Quaternionf quaternionf) {
 		this.rotation.mul(quaternionf);
-		this.children.forEach(child -> child.transform.rotate(quaternionf));
 	}
 
 	@Getter

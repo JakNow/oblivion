@@ -27,7 +27,6 @@ public class GameObjectTest {
 		GameObject parent = defaultParent();
 		GameObject child = defaultChild(parent);
 
-		assertThat(parent.addChild(child)).isTrue();
 		assertThat(child.getParent()).isEqualTo(parent);
 		assertThat(parent.getChildren().get(0)).isEqualTo(child);
 	}
@@ -37,7 +36,6 @@ public class GameObjectTest {
 		GameObject parent = defaultParent();
 		GameObject child = defaultChild(parent);
 
-		assertThat(child.addParent(parent)).isTrue();
 		assertThat(child.getParent()).isEqualTo(parent);
 		assertThat(parent.getChildren().get(0)).isEqualTo(child);
 	}
@@ -63,12 +61,11 @@ public class GameObjectTest {
 	}
 
 	private GameObject defaultParent() {
-		return new GameObject("parent", null) {
-		};
+		return new GameObject.GameObjectBuilder().setName("parent").build();
 	}
 
 	private GameObject defaultChild(GameObject parent) {
-		return new GameObject("child", parent, null) {
-		};
+		return new GameObject.GameObjectBuilder().setName("child").setParent(parent).build();
+
 	}
 }

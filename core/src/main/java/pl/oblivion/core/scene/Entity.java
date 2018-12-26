@@ -30,7 +30,8 @@ public class Entity extends GameObject {
 	private Texture texture;
 
 	public Entity(String name, GameObjectType gameObjectType, ShaderType shaderType, MeshData mesh) {
-		super(name, gameObjectType);
+		this.setName(name);
+		this.setGameObjectType(gameObjectType);
 		this.shaderType = shaderType;
 		this.mesh = mesh;
 	}
@@ -47,7 +48,7 @@ public class Entity extends GameObject {
 		if (this.textureOGL != null) {
 			textureOGL.bind(0);
 		}
-		abstractRenderer.render(this.transform, this.meshOGL, this.textureOGL);
+		abstractRenderer.render(this.getTransform(), this.meshOGL, this.textureOGL);
 	}
 
 }

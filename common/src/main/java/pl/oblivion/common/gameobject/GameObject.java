@@ -2,82 +2,61 @@ package pl.oblivion.common.gameobject;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import pl.oblivion.common.gameobject.transform.Transform;
+import pl.oblivion.common.gameobject.transform.Transformation;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
 @AllArgsConstructor
-public abstract class GameObject {
+@Getter
+@Setter
+public abstract class GameObject implements Transformation {
 
-	public final Transform transform;
-	@Getter
-	private final GameObjectType gameObjectType;
-	@Getter
-	@Setter
+	private Transform transform;
+
+	private GameObjectType gameObjectType;
+
 	private GameObject parent;
-	@Getter
-	@Setter
+
 	private List<GameObject> children;
-	@Getter
-	@Setter
+
 	private String name;
 
-	public GameObject(
-			String name, Transform transform, GameObject parent, GameObjectType gameObjectType) {
-		this.name = name;
-		this.addParent(parent);
-		this.children = new LinkedList<>();
-		this.transform = new Transform(transform, children);
-		this.gameObjectType = gameObjectType;
-	}
-
-	public GameObject(String name, GameObjectType gameObjectType) {
-		this.name = name;
+	public GameObject() {
+		this.transform = new Transform();
+		this.gameObjectType = GameObjectType.EMPTY;
 		this.parent = null;
 		this.children = new LinkedList<>();
-		this.transform = new Transform(children);
-		this.gameObjectType = gameObjectType;
+		this.name = "No name";
 	}
 
-	public GameObject(GameObjectType gameObjectType) {
-		this.name = "Game Object";
-		this.parent = null;
-		this.children = new LinkedList<>();
-		this.transform = new Transform(children);
-		this.gameObjectType = gameObjectType;
+	private GameObject(GameObjectBuilder gameObjectBuilder) {
+		this.transform = gameObjectBuilder.transform != null ? gameObjectBuilder.transform : new Transform();
+		this.gameObjectType = gameObjectBuilder.gameObjectType != null ? gameObjectBuilder.gameObjectType : GameObjectType.EMPTY;
+		this.children = gameObjectBuilder.children != null ? gameObjectBuilder.children : new LinkedList<>();
+		this.parent = gameObjectBuilder.parent != null ? addParent(gameObjectBuilder.parent) : null;
+		this.name = gameObjectBuilder.name != null ? gameObjectBuilder.name : "No name";
 	}
 
-	public GameObject(String name, Transform transform, GameObjectType gameObjectType) {
-		this.name = name;
-		this.parent = null;
-		this.children = new LinkedList<>();
-		this.transform = new Transform(transform, children);
-		this.gameObjectType = gameObjectType;
-	}
 
-	public GameObject(String name, GameObject parent, GameObjectType gameObjectType) {
-		this.name = name;
-		this.children = new LinkedList<>();
-		this.transform = new Transform(this.children);
-		this.addParent(parent);
-		this.gameObjectType = gameObjectType;
-	}
-
-	public boolean addChild(GameObject child) {
+	public GameObject addChild(GameObject child) {
 		child.addParent(this);
-		return true;
+		return child;
 	}
 
-	public boolean addParent(GameObject parent) {
+	public GameObject addParent(GameObject parent) {
 		if (Objects.nonNull(parent)) {
 			this.parent = parent;
 			this.parent.getChildren().add(this);
-			return true;
+			return parent;
 		}
-		return false;
+		return null;
 	}
 
 	public boolean removeChild(GameObject child) {
@@ -90,5 +69,108 @@ public abstract class GameObject {
 		this.parent.getChildren().remove(this);
 		this.parent = null;
 		return true;
+	}
+
+	@Override
+	public Vector3f getPosition() {
+		return this.transform.getPosition();
+	}
+
+	@Override
+	public Vector3f getScale() {
+		return this.transform.getScale();
+	}
+
+	@Override
+	public Quaternionf getRotation() {
+		return this.transform.getRotation();
+	}
+
+	@Override
+	public void translate(float x, float y, float z) {
+		this.transform.translate(x, y, z);
+		this.children.forEach(child -> child.translate(x, y, z));
+	}
+
+	@Override
+	public void translate(Vector3f direction) {
+		this.transform.translate(direction);
+		this.children.forEach(child -> child.translate(direction));
+	}
+
+	@Override
+	public void scale(float x, float y, float z) {
+		this.transform.scale(x, y, z);
+		this.children.forEach(child -> child.scale(x, y, z));
+	}
+
+	@Override
+	public void scale(Vector3f scale) {
+		this.transform.scale(scale);
+		this.children.forEach(child -> child.scale(scale));
+
+	}
+
+	@Override
+	public void rotate(Vector3f axis, float angle) {
+		this.transform.rotate(axis, angle);
+		this.children.forEach(child -> child.rotate(axis, angle));
+	}
+
+	@Override
+	public void rotate(float x, float y, float z) {
+		this.transform.rotate(x, y, z);
+		this.children.forEach(child -> child.rotate(x, y, z));
+
+	}
+
+	@Override
+	public void rotate(Quaternionf quaternionf) {
+		this.transform.rotate(quaternionf);
+		this.children.forEach(child -> child.rotate(quaternionf));
+
+	}
+
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class GameObjectBuilder {
+
+		private Transform transform;
+		private GameObjectType gameObjectType;
+		private GameObject parent;
+		private List<GameObject> children;
+		private String name;
+
+
+		public GameObjectBuilder setTransform(Transform transform) {
+			this.transform = transform;
+			return this;
+		}
+
+		public GameObjectBuilder setGameObjectType(GameObjectType gameObjectType) {
+			this.gameObjectType = gameObjectType;
+			return this;
+		}
+
+		public GameObjectBuilder setParent(GameObject parent) {
+			this.parent = parent;
+			return this;
+		}
+
+		public GameObjectBuilder setChildren(List<GameObject> children) {
+			this.children = children;
+			return this;
+		}
+
+		public GameObjectBuilder setName(String name) {
+			this.name = name;
+			return this;
+		}
+
+		GameObject build() {
+			return new GameObject(this) {
+			};
+		}
+
 	}
 }
