@@ -3,11 +3,9 @@ package pl.oblivion.core.scene;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pl.oblivion.common.gameobject.Behavior;
 import pl.oblivion.common.gameobject.GameObject;
-import pl.oblivion.engine.Timer;
 import pl.oblivion.engine.camera.Camera;
-import pl.oblivion.engine.input.InputManager;
-import pl.oblivion.engine.input.KeyCode;
 import pl.oblivion.engine.mesh.MeshOGL;
 import pl.oblivion.engine.renderer.AbstractRenderer;
 import pl.oblivion.engine.renderer.RendererCache;
@@ -45,6 +43,7 @@ public class Scene {
 	public void initObjects() {
 		rawEntities.forEach(entity -> {
 			entity.init();
+			entity.initialize();
 			addEntityToObjectToMap(entity);
 		});
 	}
@@ -63,11 +62,8 @@ public class Scene {
 	}
 
 	public void update() {
-		// for testing purpose
-		float x = InputManager.getKey(KeyCode.HORIZONTAL) * 2 * Timer.deltaTime;
-		float y = InputManager.getKey(KeyCode.VERTICAL) * 2 * Timer.deltaTime;
-
-		camera.translate(x, y, 0);
+		camera.update();
+		entitiesRendererMap.forEach(((shaderType, meshOGLListMap) -> meshOGLListMap.forEach((meshOGL, entities) -> entities.forEach(Behavior::update))));
 	}
 
 	public void delete() {

@@ -16,7 +16,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Getter
 @Setter
-public abstract class GameObject implements Transformation {
+public abstract class GameObject implements Transformation, Behavior {
 
 	private Transform transform;
 
@@ -34,6 +34,8 @@ public abstract class GameObject implements Transformation {
 		this.parent = null;
 		this.children = new LinkedList<>();
 		this.name = "No name";
+
+		this.initialize();
 	}
 
 	private GameObject(GameObjectBuilder gameObjectBuilder) {
@@ -42,6 +44,8 @@ public abstract class GameObject implements Transformation {
 		this.children = gameObjectBuilder.children != null ? gameObjectBuilder.children : new LinkedList<>();
 		this.parent = gameObjectBuilder.parent != null ? addParent(gameObjectBuilder.parent) : null;
 		this.name = gameObjectBuilder.name != null ? gameObjectBuilder.name : "No name";
+
+		this.initialize();
 	}
 
 
