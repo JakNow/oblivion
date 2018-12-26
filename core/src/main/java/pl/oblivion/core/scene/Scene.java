@@ -67,7 +67,7 @@ public class Scene {
 		float x = InputManager.getKey(KeyCode.HORIZONTAL) * 2 * Timer.deltaTime;
 		float y = InputManager.getKey(KeyCode.VERTICAL) * 2 * Timer.deltaTime;
 
-		camera.transform.translate(x, y, 0);
+		camera.translate(x, y, 0);
 	}
 
 	public void delete() {

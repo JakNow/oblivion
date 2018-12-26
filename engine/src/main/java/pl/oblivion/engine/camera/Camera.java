@@ -19,7 +19,9 @@ public abstract class Camera extends GameObject {
 	private CameraType cameraType;
 
 	Camera(CameraType cameraType) {
-		super(cameraType.getName(), GameObjectType.CAMERA);
+		super();
+		this.setName(cameraType.getName());
+		this.setGameObjectType(GameObjectType.CAMERA);
 		this.viewMatrix = new Matrix4f();
 		this.projectionMatrix = new Matrix4f();
 		this.cameraType = cameraType;
@@ -27,8 +29,8 @@ public abstract class Camera extends GameObject {
 	}
 
 	public Matrix4f getViewMatrix() {
-		this.transform.getPosition().negate(negatedPosition);
-		return viewMatrix.identity().translate(negatedPosition).rotate(this.transform.getRotation());
+		this.getPosition().negate(negatedPosition);
+		return viewMatrix.identity().translate(negatedPosition).rotate(this.getRotation());
 	}
 
 	public abstract void updateProjectionMatrix(Window window);
