@@ -27,6 +27,11 @@
             <artifactId>pngdecoder</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-assimp</artifactId>
+            <version>${lwjgl.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

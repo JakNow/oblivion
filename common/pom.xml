@@ -9,6 +9,15 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+    </dependencies>
+
+
     <artifactId>common</artifactId>
     <build>
         <plugins>
@@ -27,5 +36,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>
