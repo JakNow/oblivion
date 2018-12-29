@@ -1,6 +1,7 @@
 package pl.oblivion.core.scene;
 
 import org.junit.Test;
+import pl.oblivion.common.gameobject.GameObject;
 import pl.oblivion.core.assets.spaceobjects.Cube;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -36,5 +37,17 @@ public class SceneTest {
 
 		scene.addToScene(parent);
 		assertThat(scene.getRawEntities().size()).isEqualTo(3);
+	}
+
+	@Test
+	public void addComplexObjectToScene() {
+		Scene scene = new Scene();
+		GameObject go = new GameObject.GameObjectBuilder().build();
+		go.addChild(new Cube());
+		go.addChild(new Cube());
+
+		scene.addToScene(go);
+
+		assertThat(scene.getRawEntities().size()).isEqualTo(2);
 	}
 }

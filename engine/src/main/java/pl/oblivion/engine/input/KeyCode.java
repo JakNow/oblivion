@@ -15,7 +15,8 @@ public enum KeyCode {
 	E("E", GLFW_KEY_E),
 	Q("Q", GLFW_KEY_Q),
 	HORIZONTAL("Horizontal", GLFW_KEY_A, GLFW_KEY_D),
-	VERTICAL("Vertical", GLFW_KEY_W, GLFW_KEY_S);
+	VERTICAL("Vertical", GLFW_KEY_W, GLFW_KEY_S),
+	SPACE("Space", GLFW_KEY_Q, GLFW_KEY_E);
 
 	private String keyAlias;
 	private int GLFW_KeyCode_Positive;

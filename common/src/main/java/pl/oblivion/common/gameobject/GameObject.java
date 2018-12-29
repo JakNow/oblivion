@@ -81,13 +81,28 @@ public abstract class GameObject implements Transformation, Behavior {
 	}
 
 	@Override
+	public void setPosition(Vector3f position) {
+		this.transform.setPosition(position);
+	}
+
+	@Override
 	public Vector3f getScale() {
 		return this.transform.getScale();
 	}
 
 	@Override
+	public void setScale(Vector3f scale) {
+		this.transform.setScale(scale);
+	}
+
+	@Override
 	public Quaternionf getRotation() {
 		return this.transform.getRotation();
+	}
+
+	@Override
+	public void setRotation(Quaternionf rotation) {
+		this.transform.setRotation(rotation);
 	}
 
 	@Override
@@ -171,7 +186,7 @@ public abstract class GameObject implements Transformation, Behavior {
 			return this;
 		}
 
-		GameObject build() {
+		public GameObject build() {
 			return new GameObject(this) {
 			};
 		}

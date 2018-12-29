@@ -13,6 +13,7 @@ import pl.oblivion.engine.renderer.ShaderType;
 
 import java.util.*;
 
+//todo SCENE has to be refactored to be more flexible and with clear logic
 public class Scene {
 
 	private static final Logger logger = LogManager.getLogger(Scene.class);
@@ -20,58 +21,24 @@ public class Scene {
 	@Getter
 	private Camera camera;
 	@Getter
-	private Map<ShaderType, Map<MeshOGL, List<Entity>>> entitiesRendererMap;
+	private static Map<ShaderType, Map<MeshOGL, List<Entity>>> entitiesRendererMap;
 	@Getter
 	private List<Entity> rawEntities;
+	private List<GameObject> gameObjects;
 
 	public Scene() {
 		rawEntities = new LinkedList<>();
+		gameObjects = new LinkedList<>();
 		entitiesRendererMap = new HashMap<>();
 	}
 
-	public void addToScene(GameObject gameObject) {
-		gameObject.getChildren().forEach(this::addToScene);
-		if (gameObject instanceof Camera) {
-			logger.info("Setting up camera: {}", gameObject);
-			this.camera = (Camera) gameObject;
-		} else if (gameObject instanceof Entity) {
-			logger.info("Adding to list: {}", gameObject);
-			rawEntities.add((Entity) gameObject);
-		}
+	public static void spawn(Entity entity) {
+		entity.init();
+		entity.initialize();
+		addEntityToObjectToMap(entity);
 	}
 
-	public void initObjects() {
-		rawEntities.forEach(entity -> {
-			entity.init();
-			entity.initialize();
-			addEntityToObjectToMap(entity);
-		});
-	}
-
-	public void render() {
-		AbstractRenderer.prepareScene();
-		RendererCache.getInstance().getAvailableRenderers().forEach((shaderType, renderer) -> {
-			renderer.prepareShader();
-			entitiesRendererMap.get(shaderType).forEach(((meshOGL, entities) -> {
-				meshOGL.bind(meshOGL.getAttributesBinding());
-				entities.forEach(Entity::render);
-				meshOGL.unbind(meshOGL.getAttributesBinding());
-			}));
-			renderer.end();
-		});
-	}
-
-	public void update() {
-		camera.update();
-		entitiesRendererMap.forEach(((shaderType, meshOGLListMap) -> meshOGLListMap.forEach((meshOGL, entities) -> entities.forEach(Behavior::update))));
-	}
-
-	public void delete() {
-		RendererCache.getInstance().getAvailableRenderers().forEach((key, value) ->
-				value.cleanUp());
-	}
-
-	private void addEntityToObjectToMap(Entity entity) {
+	private static void addEntityToObjectToMap(Entity entity) {
 		Map<MeshOGL, List<Entity>> entities = entitiesRendererMap.get(entity.getShaderType());
 		if (entities != null) {
 			List<Entity> batch = entities.get(entity.getMeshOGL());
@@ -89,6 +56,59 @@ public class Scene {
 			entities.put(entity.getMeshOGL(), batch);
 			entitiesRendererMap.put(entity.getShaderType(), entities);
 		}
+	}
 
+	public void initObjects() {
+		rawEntities.forEach(entity -> {
+			entity.init();
+			entity.initialize();
+			addEntityToObjectToMap(entity);
+		});
+	}
+
+	public static void remove(Entity entity) { //todo Refactor scene removal
+		Map<MeshOGL, List<Entity>> entities = entitiesRendererMap.get(entity.getShaderType());
+		entities.get(entity.getMeshOGL()).remove(entity);
+	}
+
+	public void addToScene(GameObject gameObject) {
+		if (gameObject instanceof Camera) {
+			logger.info("Setting up camera: {}", gameObject.getName());
+			this.camera = (Camera) gameObject;
+		} else if (gameObject instanceof Entity) {
+			logger.info("Adding to list: {}", gameObject.getName());
+			rawEntities.add((Entity) gameObject);
+		} else {
+			gameObjects.add(gameObject);
+		}
+		gameObject.getChildren().forEach(this::addToScene);
+	}
+
+	public void delete() {
+		RendererCache.getInstance().getAvailableRenderers().forEach((key, value) ->
+				value.cleanUp());
+	}
+
+	public void render() {
+		AbstractRenderer.prepareScene();
+		RendererCache.getInstance().getAvailableRenderers().forEach((shaderType, renderer) -> {
+			renderer.prepareShader();
+			Map<MeshOGL, List<Entity>> meshOGLListMap = entitiesRendererMap.get(shaderType);
+			if (meshOGLListMap != null) {
+				meshOGLListMap.forEach((meshOGL,
+				                        entities) -> {
+					meshOGL.bind(meshOGL.getAttributesBinding());
+					entities.forEach(Entity::render);
+					meshOGL.unbind(meshOGL.getAttributesBinding());
+				});
+			}
+			renderer.end();
+		});
+	}
+
+	public void update() {
+		camera.update();
+		entitiesRendererMap.forEach(((shaderType, meshOGLListMap) -> meshOGLListMap.forEach((meshOGL, entities) -> entities.forEach(Behavior::update))));
+		gameObjects.forEach(Behavior::update);
 	}
 }
