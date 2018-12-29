@@ -37,7 +37,7 @@ public class Window {
 	public Window() {
 		logger.info("Creating window...");
 		this.width = getInt("window.width", 600);
-		this.height = getInt("window.height", (600 * 9 / 16));
+		this.height = getInt("window.height", this.width * 9 / 16);
 		this.title = getString("window.title", "Default title");
 		this.vSync = true;
 		this.inputManager = new InputManager();

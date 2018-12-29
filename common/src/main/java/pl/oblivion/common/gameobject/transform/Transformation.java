@@ -7,9 +7,15 @@ public interface Transformation {
 
 	Vector3f getPosition();
 
+	void setPosition(Vector3f position);
+
 	Vector3f getScale();
 
+	void setScale(Vector3f scale);
+
 	Quaternionf getRotation();
+
+	void setRotation(Quaternionf rotation);
 
 	void translate(float x, float y, float z);
 

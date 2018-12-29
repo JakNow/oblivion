@@ -10,6 +10,7 @@ import pl.oblivion.core.scene.Scene;
 import pl.oblivion.engine.Timer;
 import pl.oblivion.engine.Window;
 import pl.oblivion.engine.camera.Camera;
+import pl.oblivion.engine.camera.PerspectiveCamera;
 import pl.oblivion.engine.input.InputManager;
 import pl.oblivion.engine.renderer.DiffuseRenderer;
 import pl.oblivion.engine.renderer.RendererCache;
@@ -26,9 +27,7 @@ public class Application {
 	private static final Logger logger = LogManager.getLogger(Application.class);
 
 	private final Window window;
-	private final Timer timer;
 	private int fps;
-
 	private Scene scene;
 	@Getter
 	private InputManager inputManager;
@@ -36,19 +35,25 @@ public class Application {
 	private boolean showPerformance;
 
 
-	public Application(Class mainClass, @org.jetbrains.annotations.NotNull Scene scene) {
+	public Application(Class mainClass, Scene scene) {
 		logger.info("WELCOME TO OBLIVION ENGINE!");
 		logger.info("Starting the Application");
 		loadConfig(mainClass);
 		this.window = new Window();
-		this.timer = new Timer();
+		new Timer();
 		this.scene = scene;
-		this.camera = scene.getCamera();
 		this.inputManager = window.getInputManager();
 		this.showPerformance = getBoolean("engine.show-performance", false);
 		this.fps = getInt("engine.fps", 60);
 
 		initShaders();
+	}
+
+	private Camera setCamera(Scene scene) {
+		if (scene.getCamera() == null) {
+			scene.addToScene(new PerspectiveCamera());
+		}
+		return scene.getCamera();
 	}
 
 	private void loadConfig(Class mainClass) {
@@ -64,6 +69,7 @@ public class Application {
 	}
 
 	private void initShaders() {
+		this.camera = setCamera(scene);
 		ShaderCache.getInstance().addShader(new DiffuseShader(ShaderType.DIFFUSE_SHADER));
 		RendererCache.getInstance().addRenderer(new DiffuseRenderer(camera));
 	}
