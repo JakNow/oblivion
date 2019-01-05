@@ -50,7 +50,7 @@ GLSL Version	4.00.9+
 
 
 ## Plans
-**Currently:** working on refactoring the core module and OblivionApplication itself to be more userfriendly with easier application start.
+**Currently:** working on refactoring the core module and OblivionApplication itself to be more userfriendly with easier application start.  
 **Future:** SceneManager and Starting application/game/scene in right steps.
 
 ## Authors
