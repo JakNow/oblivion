@@ -13,10 +13,10 @@ public class ShaderCache {
 
 	private static ShaderCache instance;
 
-	private Map<ShaderType, AbstractShader> rendererMap;
+	private Map<ShaderType, AbstractShader> shaders;
 
 	private ShaderCache() {
-		rendererMap = new HashMap<>();
+		shaders = new HashMap<>();
 	}
 
 	public static synchronized ShaderCache getInstance() {
@@ -28,10 +28,20 @@ public class ShaderCache {
 
 	public void addShader(AbstractShader abstractShader) {
 		logger.info("Adding Shader {}", abstractShader.getShaderType());
-		rendererMap.put(abstractShader.getShaderType(), abstractShader);
+		shaders.put(abstractShader.getShaderType(), abstractShader);
 	}
 
 	public AbstractShader getShader(ShaderType shaderType) {
-		return rendererMap.get(shaderType);
+		return shaders.get(shaderType);
 	}
+
+
+	public void cleanShaders() {
+		shaders.forEach(this::cleanShader);
+	}
+
+	private void cleanShader(ShaderType shaderType, AbstractShader abstractShader) {
+		abstractShader.cleanUp();
+	}
+
 }

@@ -20,6 +20,7 @@ public abstract class Camera extends GameObject {
 
 	Camera(CameraType cameraType) {
 		super();
+
 		this.setName(cameraType.getName());
 		this.setGameObjectType(GameObjectType.CAMERA);
 		this.viewMatrix = new Matrix4f();

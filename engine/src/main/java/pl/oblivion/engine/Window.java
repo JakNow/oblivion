@@ -14,6 +14,7 @@ import java.nio.IntBuffer;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static pl.oblivion.common.utils.GetSystemProperty.getInt;
@@ -27,7 +28,8 @@ public class Window {
 	@Getter
 	private int height;
 	private String title;
-	private long window;
+	@Getter
+	private long id;
 	private boolean vSync;
 	private boolean resized;
 
@@ -35,10 +37,10 @@ public class Window {
 	private InputManager inputManager;
 
 	public Window() {
-		logger.info("Creating window...");
+		logger.info("Creating id...");
 		this.width = getInt("window.width", 600);
-		this.height = getInt("window.height", this.width * 9 / 16);
-		this.title = getString("window.title", "Default title");
+		this.height = getInt("id.height", this.width * 9 / 16);
+		this.title = getString("id.title", "Default title");
 		this.vSync = true;
 		this.inputManager = new InputManager();
 		this.resized = false;
@@ -58,59 +60,59 @@ public class Window {
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-		this.window = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
+		this.id = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
 
-		if (window == NULL) {
-			logger.error("Failed to create the GLFW window");
+		if (id == NULL) {
+			logger.error("Failed to create the GLFW id");
 			throw new RuntimeException();
 		}
 
 		glfwSetFramebufferSizeCallback(
-				window,
+				id,
 				(window, width, height) -> {
 					this.width = width;
 					this.height = height;
 					this.setResized(true);
 				});
 
-		glfwSetKeyCallback(window, inputManager);
+		glfwSetKeyCallback(id, inputManager);
 
 		try (MemoryStack stack = stackPush()) {
 			IntBuffer pWidth = stack.mallocInt(1);
 			IntBuffer pHeight = stack.mallocInt(1);
 
-			glfwGetWindowSize(window, pWidth, pHeight);
+			glfwGetWindowSize(id, pWidth, pHeight);
 
 			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
 			glfwSetWindowPos(
-					window, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
+					id, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
 		}
 
-		glfwMakeContextCurrent(window);
+		glfwMakeContextCurrent(id);
 		if (this.isVSync()) {
 			glfwSwapInterval(1);
 		}
 
-		glfwShowWindow(window);
+		glfwShowWindow(id);
 		GL.createCapabilities();
 
 		glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 	}
 
 	public boolean windowShouldClose() {
-		return glfwWindowShouldClose(window);
+		return glfwWindowShouldClose(id);
 	}
 
 	public void updateAfterRendering() {
-		glfwSwapBuffers(window); // swap the color buffers
+		glfwSwapBuffers(id); // swap the color buffers
 		glfwPollEvents();
 	}
 
 	public void destroy() {
-		// Free the window callbacks and destroy the window
-		glfwFreeCallbacks(window);
-		glfwDestroyWindow(window);
+		// Free the id callbacks and destroy the id
+		glfwFreeCallbacks(id);
+		glfwDestroyWindow(id);
 
 		// Terminate GLFW and free the error callback
 		glfwTerminate();
@@ -141,8 +143,15 @@ public class Window {
 				+ ", title='"
 				+ title
 				+ '\''
-				+ ", window="
-				+ window
+				+ ", id="
+				+ id
 				+ '}';
+	}
+
+	public void updateScreenSize() {
+		if (isResized()) {
+			glViewport(0, 0, this.getWidth(), this.getHeight());
+			//camera.updateProjectionMatrix(this);
+		}
 	}
 }

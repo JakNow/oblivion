@@ -94,10 +94,14 @@ public abstract class AbstractShader {
 
 	public void cleanUp() {
 		stop();
+		logger.info("Deleting shader...");
 		GL20.glDeleteProgram(programID);
+		logger.info("Shader deleted.");
 	}
 
 	public void stop() {
+		logger.info("Stopping shader...");
 		GL20.glUseProgram(0);
+		logger.info("Shader stopped.");
 	}
 }

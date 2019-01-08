@@ -3,14 +3,10 @@ package pl.oblivion.core;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pl.oblivion.common.annotations.AppConfig;
-import pl.oblivion.common.annotations.AppConfigRunner;
-import pl.oblivion.common.annotations.MissingAppConfigAnnotationException;
 import pl.oblivion.core.scene.Scene;
 import pl.oblivion.engine.Timer;
 import pl.oblivion.engine.Window;
 import pl.oblivion.engine.camera.Camera;
-import pl.oblivion.engine.camera.PerspectiveCamera;
 import pl.oblivion.engine.input.InputManager;
 import pl.oblivion.engine.renderer.DiffuseRenderer;
 import pl.oblivion.engine.renderer.RendererCache;
@@ -22,9 +18,9 @@ import static org.lwjgl.opengl.GL11.glViewport;
 import static pl.oblivion.common.utils.GetSystemProperty.getBoolean;
 import static pl.oblivion.common.utils.GetSystemProperty.getInt;
 
-public class Application {
+public class ApplicationOld {
 
-	private static final Logger logger = LogManager.getLogger(Application.class);
+	private static final Logger logger = LogManager.getLogger(ApplicationOld.class);
 
 	private final Window window;
 	private int fps;
@@ -35,10 +31,9 @@ public class Application {
 	private boolean showPerformance;
 
 
-	public Application(Class mainClass, Scene scene) {
+	public ApplicationOld(Class mainClass, Scene scene) {
 		logger.info("WELCOME TO OBLIVION ENGINE!");
-		logger.info("Starting the Application");
-		loadConfig(mainClass);
+		logger.info("Starting the ApplicationOld");
 		this.window = new Window();
 		new Timer();
 		this.scene = scene;
@@ -49,27 +44,20 @@ public class Application {
 		initShaders();
 	}
 
-	private Camera setCamera(Scene scene) {
-		if (scene.getCamera() == null) {
-			scene.addToScene(new PerspectiveCamera());
-		}
-		return scene.getCamera();
-	}
 
+/*
 	private void loadConfig(Class mainClass) {
 		AppConfig appConfig = (AppConfig) mainClass.getAnnotation(AppConfig.class);
-		if (appConfig == null) throw new MissingAppConfigAnnotationException();
+		if (appConfig == null) throw new MissingOblivionConfigurationAnnotationException();
 
 		new AppConfigRunner(appConfig.value());
-	}
+	}*/
 
 	public void start() {
-		scene.initObjects();
 		this.run();
 	}
 
 	private void initShaders() {
-		this.camera = setCamera(scene);
 		ShaderCache.getInstance().addShader(new DiffuseShader(ShaderType.DIFFUSE_SHADER));
 		RendererCache.getInstance().addRenderer(new DiffuseRenderer(camera));
 	}
@@ -93,7 +81,7 @@ public class Application {
 				ups++;
 			}
 
-			scene.render();
+			//scene.render();
 			fps++;
 
 			window.updateAfterRendering();
@@ -107,7 +95,7 @@ public class Application {
 				start = 0;
 			}
 		}
-		scene.delete();
+		//scene.delete();
 		window.destroy();
 	}
 
@@ -124,6 +112,6 @@ public class Application {
 	}
 
 	private void update() {
-		scene.update();
+		//scene.update();
 	}
 }

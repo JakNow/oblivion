@@ -30,18 +30,20 @@ public class Entity extends GameObject {
 	private Texture texture;
 
 	public Entity(String name, GameObjectType gameObjectType, ShaderType shaderType, MeshData mesh) {
+		super();
 		this.setName(name);
 		this.setGameObjectType(gameObjectType);
 		this.shaderType = shaderType;
 		this.mesh = mesh;
 	}
 
-	void init() {
+	Entity init() {
 		this.meshOGL = new MeshOGL(mesh.getIndices(), new Attribute(3, mesh.getVertices()), new Attribute(2, mesh.getTextures()));
 		if (texture != null) {
 			this.textureOGL = new TextureOGL(texture.getTextureBuffer(), texture.getWidth(), texture.getHeight());
 		}
 		this.abstractRenderer = RendererCache.getInstance().getRenderer(shaderType);
+		return this;
 	}
 
 	void render() {
@@ -49,6 +51,10 @@ public class Entity extends GameObject {
 			textureOGL.bind(0);
 		}
 		abstractRenderer.render(this.getTransform(), this.meshOGL, this.textureOGL);
+	}
+
+	void delete() {
+		this.meshOGL.delete();
 	}
 
 }
