@@ -46,7 +46,7 @@ public class SceneManager {
 	}
 
 	public void cleanUp() {
-
+		unloadScene();
 	}
 
 	public void onStart() {

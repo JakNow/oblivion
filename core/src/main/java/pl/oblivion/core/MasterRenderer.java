@@ -3,7 +3,7 @@ package pl.oblivion.core;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
-import pl.oblivion.core.assets.spaceobjects.Entity;
+import pl.oblivion.core.assets.Entity;
 import pl.oblivion.core.cache.RendererCache;
 import pl.oblivion.core.scene.Scene;
 import pl.oblivion.engine.Window;

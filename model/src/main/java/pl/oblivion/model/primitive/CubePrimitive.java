@@ -1,9 +1,20 @@
 package pl.oblivion.model.primitive;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import pl.oblivion.model.mesh.MeshData;
 
-public class CubePrimitive implements MeshData {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class CubePrimitive implements MeshData {
 
+	private static CubePrimitive instance;
+
+	public static synchronized CubePrimitive getInstance() {
+		if (instance == null) {
+			instance = new CubePrimitive();
+		}
+		return instance;
+	}
 
 	private final float[] vertices = {
 			-0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f

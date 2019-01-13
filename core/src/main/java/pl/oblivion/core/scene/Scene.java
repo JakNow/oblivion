@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import pl.oblivion.common.gameobject.GameObject;
-import pl.oblivion.core.assets.spaceobjects.Entity;
+import pl.oblivion.core.assets.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
