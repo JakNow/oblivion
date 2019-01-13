@@ -100,8 +100,8 @@ public abstract class AbstractShader {
 	}
 
 	public void stop() {
-		logger.info("Stopping shader...");
+		logger.debug("Stopping shader...");
 		GL20.glUseProgram(0);
-		logger.info("Shader stopped.");
+		logger.debug("Shader stopped.");
 	}
 }

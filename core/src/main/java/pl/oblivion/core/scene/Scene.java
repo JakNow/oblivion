@@ -1,63 +1,53 @@
 package pl.oblivion.core.scene;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.Setter;
 import pl.oblivion.common.gameobject.GameObject;
+import pl.oblivion.core.assets.spaceobjects.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
+@AllArgsConstructor
 public class Scene {
 
-	private static final Logger logger = LogManager.getLogger(Scene.class);
-
+	private String name;
 	private List<GameObject> rawObjects;
-	private List<Entity> entities;
+	private List<Entity> processedObjects;
 
 	public Scene() {
+		this.name = "New Scene";
 		this.rawObjects = new ArrayList<>();
-		this.entities = new ArrayList<>();
+		this.processedObjects = new ArrayList<>();
+		SceneManager.getInstance().addScene(this);
 	}
 
-	void render() {
-		entities.forEach(Entity::render);
+	public Scene(String name) {
+		this.name = name;
+		this.rawObjects = new ArrayList<>();
+		this.processedObjects = new ArrayList<>();
+		SceneManager.getInstance().addScene(this);
 	}
 
-	void update() {
-		entities.forEach(Entity::update);
+	public void update() {
+		this.rawObjects.forEach(GameObject::update);
 	}
 
-	void delete() {
-		entities.forEach(Entity::delete);
-	}
-
-	Scene load() {
-		logger.info("Loading Scene objects. RawObjects={}.", rawObjects.size());
-		for (GameObject gameObject : rawObjects) {
-			logger.info("Adding GameObject = {}.", gameObject);
-			if (gameObject instanceof Entity) {
-				logger.info("Added new Entity.");
-				this.entities.add(((Entity) gameObject).init());
+	public Scene load() {
+		rawObjects.forEach(rawGameObject -> {
+			if (rawGameObject instanceof Entity) {
+				Entity entity = (Entity) rawGameObject;
+				this.processedObjects.add(entity.load());
 			}
-		}
-		logger.info("Scene was loaded.");
+		});
 		return this;
 	}
 
-	void unload() {
-		for (Entity entity : entities) {
-			entity.delete();
-		}
-	}
-
-	void transitionIn() {
-
-	}
-
-	void transitionOut() {
-
+	public void unload() {
+		this.processedObjects.forEach(Entity::unload);
 	}
 
 	public void addToScene(GameObject gameObject) {

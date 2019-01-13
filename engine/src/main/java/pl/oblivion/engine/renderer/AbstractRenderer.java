@@ -1,30 +1,45 @@
 package pl.oblivion.engine.renderer;
 
 import lombok.Getter;
-import org.lwjgl.opengl.GL11;
+import pl.oblivion.common.gameobject.GameObject;
 import pl.oblivion.engine.camera.Camera;
+import pl.oblivion.engine.entity.EntityOGL;
 import pl.oblivion.engine.shader.AbstractShader;
 
-import static org.lwjgl.opengl.GL11C.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11C.GL_DEPTH_BUFFER_BIT;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 public abstract class AbstractRenderer implements Rendering {
 
+	protected int[] bindingAttributes;
 	private AbstractShader shader;
 	private Camera camera;
+	private Map<EntityOGL, List<GameObject>> meshOGLListMap;
 
 	AbstractRenderer(AbstractShader shader, Camera camera) {
 		this.shader = shader;
 		this.camera = camera;
+		this.meshOGLListMap = new HashMap<>();
 	}
 
-	public static void prepareScene() {
-		GL11.glClearColor(0f, 0f, 0f, 1f);
-		GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}
 
+	@Override
 	public void cleanUp() {
 		shader.cleanUp();
+	}
+
+	public void add(EntityOGL entityOGL) {
+		List<GameObject> batch = meshOGLListMap.get(entityOGL);
+		if (batch == null) {
+			batch = new LinkedList<>();
+			batch.add(entityOGL);
+			meshOGLListMap.put(entityOGL, batch);
+		} else {
+			batch.add(entityOGL);
+		}
+
 	}
 }

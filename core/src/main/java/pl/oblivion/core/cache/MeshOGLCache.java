@@ -1,7 +1,8 @@
-package pl.oblivion.engine.mesh;
+package pl.oblivion.core.cache;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pl.oblivion.engine.mesh.MeshOGL;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -3,6 +3,8 @@ package pl.oblivion.model.texture;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pl.oblivion.common.utils.MyFile;
 
 import java.io.IOException;
@@ -12,12 +14,16 @@ import java.nio.ByteBuffer;
 @Setter
 public class Texture {
 
+	private static final Logger logger = LogManager.getLogger(Texture.class);
+
 	private int width;
 	private int height;
 	private ByteBuffer textureBuffer;
 
 	public Texture(MyFile fileName) {
 		this(loadTexture(fileName));
+		logger.info("Loaded texture {}.", fileName.getPath());
+
 	}
 
 	private Texture(int width, int height, ByteBuffer textureBuffer) {

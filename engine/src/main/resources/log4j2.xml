@@ -16,7 +16,7 @@
     <Appenders>
         <Console name="STDOUT">
             <PatternLayout
-                    pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss} [${module}]}{${moduleColor}} %highlight{%-5p%c{1}:%L}{${levelColor}} - %m%n"
+                    pattern="%highlight{%d{yyyy-MM-dd HH:mm:ss} [${module}]}{${moduleColor}} %highlight{%-6p%c{1}:%L}{${levelColor}} - %m%n"
                     disableAnsi="false"/>
         </Console>
         <Console name="FLOW">

@@ -14,8 +14,8 @@ abstract class GameLoop {
 	private final Window window;
 	private final int fps;
 
-	GameLoop() {
-		this.window = new Window();
+	GameLoop(Window window) {
+		this.window = window;
 		this.fps = getInt("engine.fps", 60);
 	}
 
@@ -24,6 +24,8 @@ abstract class GameLoop {
 		new Timer();
 		float elapsedTime;
 		float accumulator = 0f;
+		onStart();
+
 		while (!window.windowShouldClose()) {
 			elapsedTime = Timer.getElapsedTime();
 			accumulator += elapsedTime;
@@ -39,7 +41,7 @@ abstract class GameLoop {
 				sync();
 			}
 		}
-		destroy();
+		end();
 		window.destroy();
 	}
 
@@ -55,9 +57,11 @@ abstract class GameLoop {
 		}
 	}
 
+	abstract void onStart();
+
 	abstract void update();
 
 	abstract void render();
 
-	abstract void destroy();
+	abstract void end();
 }

@@ -4,9 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pl.oblivion.common.configuration.ConfigurationLoader;
 import pl.oblivion.core.scene.SceneManager;
-import pl.oblivion.engine.renderer.ShaderType;
-import pl.oblivion.engine.shader.DiffuseShader;
-import pl.oblivion.engine.shader.ShaderCache;
+import pl.oblivion.engine.Window;
 
 public class OblivionApplication {
 
@@ -14,6 +12,8 @@ public class OblivionApplication {
 	private GameLoop gameLoop;
 
 	private SceneManager sceneManager;
+	private MasterRenderer masterRenderer;
+	private Window window;
 
 	private OblivionApplication(Class<?> primarySource, String... args) {
 		logger.info("WELCOME TO OBLIVION ENGINE!");
@@ -21,9 +21,17 @@ public class OblivionApplication {
 
 		ConfigurationLoader.loadConfiguration(primarySource);
 
+		this.window = new Window();
+
+		this.masterRenderer = MasterRenderer.getInstance();
 		this.sceneManager = SceneManager.getInstance();
 
-		this.gameLoop = new GameLoop() {
+		this.gameLoop = new GameLoop(window) {
+
+			@Override
+			void onStart() {
+				sceneManager.onStart();
+			}
 
 			@Override
 			void update() {
@@ -32,20 +40,20 @@ public class OblivionApplication {
 
 			@Override
 			void render() {
-				sceneManager.render();
+				masterRenderer.prepareScene();
+				masterRenderer.render();
 			}
 
 			@Override
-			void destroy() {
-				ShaderCache.getInstance().cleanShaders();
+			void end() {
+				sceneManager.cleanUp();
+				masterRenderer.cleanUp();
 			}
 		};
 	}
 
 	public static void start(Class<?> primarySource, String... args) {
 		OblivionApplication oblivionApplication = new OblivionApplication(primarySource, args);
-
-		ShaderCache.getInstance().addShader(new DiffuseShader(ShaderType.DIFFUSE_SHADER));
 
 		oblivionApplication.run();
 	}

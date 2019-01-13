@@ -14,7 +14,6 @@ import java.nio.IntBuffer;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static pl.oblivion.common.utils.GetSystemProperty.getInt;
@@ -36,16 +35,19 @@ public class Window {
 	@Getter
 	private InputManager inputManager;
 
+	private static Window instance;
+
 	public Window() {
-		logger.info("Creating id...");
+		logger.info("Creating Window...");
 		this.width = getInt("window.width", 600);
-		this.height = getInt("id.height", this.width * 9 / 16);
-		this.title = getString("id.title", "Default title");
+		this.height = getInt("window.height", this.width * 9 / 16);
+		this.title = getString("window.title", "Default title");
 		this.vSync = true;
 		this.inputManager = new InputManager();
 		this.resized = false;
 		this.init();
 		logger.info("Window created {}", this);
+		instance = this;
 	}
 
 	private void init() {
@@ -148,10 +150,10 @@ public class Window {
 				+ '}';
 	}
 
-	public void updateScreenSize() {
-		if (isResized()) {
-			glViewport(0, 0, this.getWidth(), this.getHeight());
-			//camera.updateProjectionMatrix(this);
+	public static synchronized Window getInstance() {
+		if (instance == null) {
+			instance = new Window();
 		}
+		return instance;
 	}
 }

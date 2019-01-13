@@ -34,18 +34,4 @@ public class SceneTest {
 		scene.addToScene(gameObject);
 		assertThat(scene.getRawObjects().size()).isEqualTo(5);
 	}
-
-	/*@Test
-	public void loadScene(){
-		Scene scene = new Scene();
-		scene.addToScene(new Cube());
-
-		scene.load();
-		assertThat(scene.getEntities().size()).isEqualTo(1);
-	}*/
-
-	@Test
-	public void unloadScene() {
-
-	}
 }
