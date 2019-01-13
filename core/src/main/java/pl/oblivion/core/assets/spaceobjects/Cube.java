@@ -7,6 +7,6 @@ import pl.oblivion.model.primitive.CubePrimitive;
 public class Cube extends Entity {
 
 	public Cube() {
-		super(CubePrimitive.getInstance(), ShaderType.DIFFUSE_SHADER);
+		super(CubePrimitive.getInstance(), null, ShaderType.DIFFUSE_SHADER);
 	}
 }

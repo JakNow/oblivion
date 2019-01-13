@@ -18,6 +18,7 @@ public class Texture {
 
 	private int width;
 	private int height;
+	private String name;
 	private ByteBuffer textureBuffer;
 
 	public Texture(MyFile fileName) {
@@ -26,7 +27,8 @@ public class Texture {
 
 	}
 
-	private Texture(int width, int height, ByteBuffer textureBuffer) {
+	private Texture(String name, int width, int height, ByteBuffer textureBuffer) {
+		this.name = name;
 		this.width = width;
 		this.height = height;
 		this.textureBuffer = textureBuffer;
@@ -45,7 +47,7 @@ public class Texture {
 					ByteBuffer.allocateDirect(4 * decoder.getWidth() * decoder.getHeight());
 			decoder.decode(textureBuffer, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
 			textureBuffer.flip();
-			return new Texture(decoder.getWidth(), decoder.getHeight(), textureBuffer);
+			return new Texture(myfile.getName(), decoder.getWidth(), decoder.getHeight(), textureBuffer);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException();
