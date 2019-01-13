@@ -1,7 +1,10 @@
-package pl.oblivion.engine.renderer;
+package pl.oblivion.core.cache;
 
+import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pl.oblivion.engine.renderer.AbstractRenderer;
+import pl.oblivion.engine.renderer.ShaderType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,10 +15,11 @@ public class RendererCache {
 
 	private static RendererCache instance;
 
-	private Map<ShaderType, AbstractRenderer> rendererMap;
+	@Getter
+	private Map<ShaderType, AbstractRenderer> renderers;
 
 	private RendererCache() {
-		rendererMap = new HashMap<>();
+		renderers = new HashMap<>();
 	}
 
 	public static synchronized RendererCache getInstance() {
@@ -27,14 +31,10 @@ public class RendererCache {
 
 	public void addRenderer(AbstractRenderer abstractRenderer) {
 		logger.info("Adding Renderer {}", abstractRenderer.getShader().getShaderType());
-		rendererMap.put(abstractRenderer.getShader().getShaderType(), abstractRenderer);
+		renderers.put(abstractRenderer.getShader().getShaderType(), abstractRenderer);
 	}
 
-	public AbstractRenderer getRenderer(ShaderType shaderType) {
-		return rendererMap.get(shaderType);
-	}
-
-	public Map<ShaderType, AbstractRenderer> getAvailableRenderers() {
-		return rendererMap;
+	public AbstractRenderer get(ShaderType shaderType) {
+		return renderers.get(shaderType);
 	}
 }

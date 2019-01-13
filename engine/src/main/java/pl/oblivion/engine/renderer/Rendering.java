@@ -1,18 +1,16 @@
 package pl.oblivion.engine.renderer;
 
-import pl.oblivion.common.gameobject.transform.Transform;
-import pl.oblivion.engine.mesh.MeshOGL;
-import pl.oblivion.engine.texture.TextureOGL;
+import pl.oblivion.engine.entity.EntityOGL;
 
 public interface Rendering {
 
-	void render(Transform transform, MeshOGL meshOGL, TextureOGL textureOGL);
+	void render();
 
 	void prepareShader();
 
-	void bindModel(MeshOGL meshOGL);
+	void bindModel(EntityOGL entity);
 
-	void unbindModel(MeshOGL meshOGL);
+	void unbindModel(EntityOGL entity);
 
-	void end();
+	void cleanUp();
 }

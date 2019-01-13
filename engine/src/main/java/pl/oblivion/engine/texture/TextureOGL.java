@@ -1,6 +1,8 @@
 package pl.oblivion.engine.texture;
 
 import lombok.Getter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.nio.ByteBuffer;
 
@@ -20,6 +22,7 @@ import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 @Getter
 public class TextureOGL {
 
+	private static final Logger logger = LogManager.getLogger(TextureOGL.class);
 	private final int id;
 	private final int width;
 	private final int height;
@@ -38,6 +41,7 @@ public class TextureOGL {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0,
 				GL_RGBA, GL_UNSIGNED_BYTE, textureBuffer);
 		glGenerateMipmap(GL_TEXTURE_2D);
+		logger.info("Loaded TextureOGL with id={}.", textureId);
 		return textureId;
 	}
 
