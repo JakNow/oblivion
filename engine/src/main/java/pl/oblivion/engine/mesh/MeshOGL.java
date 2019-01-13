@@ -1,6 +1,8 @@
 package pl.oblivion.engine.mesh;
 
 import lombok.Getter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
@@ -12,6 +14,7 @@ import java.util.List;
 @Getter
 public class MeshOGL implements Mesh {
 
+	private static final Logger logger = LogManager.getLogger(MeshOGL.class);
 	private static final int BYTES_PER_FLOAT = 4;
 	private static final int BYTES_PER_INT = 4;
 	private final List<VBO> vbos;
@@ -34,6 +37,8 @@ public class MeshOGL implements Mesh {
 			attributesBinding[i] = i;
 		}
 		this.unbind();
+		logger.info("Loaded MeshOGL with id={}.", id);
+
 	}
 
 	@Override

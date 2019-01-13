@@ -1,4 +1,4 @@
-package pl.oblivion.common.annotations;
+package pl.oblivion.common.configuration;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +7,8 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AppConfig {
+public @interface OblivionConfiguration {
 
-	String value() default "";
+	String value();
+
 }

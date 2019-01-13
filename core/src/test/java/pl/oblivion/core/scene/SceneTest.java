@@ -2,7 +2,6 @@ package pl.oblivion.core.scene;
 
 import org.junit.Test;
 import pl.oblivion.common.gameobject.GameObject;
-import pl.oblivion.core.assets.spaceobjects.Cube;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -11,43 +10,28 @@ public class SceneTest {
 	@Test
 	public void addObjectToScene() {
 		Scene scene = new Scene();
-		scene.addToScene(new Cube());
+		GameObject gameObject = new GameObject.GameObjectBuilder().build();
+		scene.addToScene(gameObject);
 
-		assertThat(scene.getRawEntities().size()).isEqualTo(1);
+		assertThat(scene.getRawObjects().size()).isEqualTo(1);
 	}
 
 	@Test
 	public void addObjectWithChildrenToScene() {
 		Scene scene = new Scene();
-		Cube cube = new Cube();
-		cube.addChild(new Cube());
+		GameObject gameObject = new GameObject.GameObjectBuilder().build();
+		GameObject childOne = new GameObject.GameObjectBuilder().build();
+		GameObject childTwo = new GameObject.GameObjectBuilder().build();
+		GameObject childThree = new GameObject.GameObjectBuilder().build();
+		GameObject childOfThird = new GameObject.GameObjectBuilder().build();
 
-		scene.addToScene(cube);
-		assertThat(scene.getRawEntities().size()).isEqualTo(2);
-	}
+		childThree.addChild(childOfThird);
 
-	@Test
-	public void addObjectHierarchyToScene() {
-		Scene scene = new Scene();
-		Cube parent = new Cube();
-		Cube child = new Cube();
-		Cube grandChild = new Cube();
-		child.addChild(grandChild);
-		parent.addChild(child);
+		gameObject.addChild(childOne);
+		gameObject.addChild(childTwo);
+		gameObject.addChild(childThree);
 
-		scene.addToScene(parent);
-		assertThat(scene.getRawEntities().size()).isEqualTo(3);
-	}
-
-	@Test
-	public void addComplexObjectToScene() {
-		Scene scene = new Scene();
-		GameObject go = new GameObject.GameObjectBuilder().build();
-		go.addChild(new Cube());
-		go.addChild(new Cube());
-
-		scene.addToScene(go);
-
-		assertThat(scene.getRawEntities().size()).isEqualTo(2);
+		scene.addToScene(gameObject);
+		assertThat(scene.getRawObjects().size()).isEqualTo(5);
 	}
 }

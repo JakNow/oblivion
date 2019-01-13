@@ -17,8 +17,8 @@ public class DiffuseShader extends AbstractShader {
 	@Getter
 	private UniformSampler diffuseTexture = new UniformSampler("diffuseTexture");
 
-	public DiffuseShader(ShaderType shaderType) {
-		super(shaderType, "in_position", "in_texture");
+	public DiffuseShader() {
+		super(ShaderType.DIFFUSE_SHADER, "in_position", "in_texture");
 		storeAllUniformLocations(projectionMatrix, viewMatrix, transformationMatrix, diffuseTexture);
 		connectTextureUnits(diffuseTexture);
 	}
