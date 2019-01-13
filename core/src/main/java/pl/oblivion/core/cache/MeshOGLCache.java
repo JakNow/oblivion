@@ -33,13 +33,12 @@ public class MeshOGLCache {
 		if (meshOGL == null) {
 			meshOGL = addMeshOGL(meshData);
 		}
-
 		logger.info("Getting MeshOGL={}.", meshOGL.getId());
 		return meshOGL;
 	}
 
 	private MeshOGL addMeshOGL(MeshData meshData) {
-		logger.info("Creating MeshOgl from MeshData={}.", meshData);
+		logger.info("Creating MeshOGL from MeshData={}.", meshData);
 		MeshOGL meshOGL = new MeshOGL(meshData.getIndices(),
 				new Attribute(3, meshData.getVertices()),
 				new Attribute(2, meshData.getTextures()));
