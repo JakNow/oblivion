@@ -1,4 +1,4 @@
-package pl.oblivion.engine.texture;
+package pl.oblivion.engine.material;
 
 import org.junit.BeforeClass;
 import org.junit.Test;

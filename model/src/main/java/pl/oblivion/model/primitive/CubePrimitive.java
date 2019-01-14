@@ -33,6 +33,11 @@ public final class CubePrimitive implements MeshData {
 	};
 
 	@Override
+	public String getName() {
+		return "Cube";
+	}
+
+	@Override
 	public float[] getVertices() {
 		return vertices;
 	}

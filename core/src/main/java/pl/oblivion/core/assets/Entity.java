@@ -4,8 +4,8 @@ import pl.oblivion.core.cache.MeshOGLCache;
 import pl.oblivion.core.cache.TextureOGLCache;
 import pl.oblivion.engine.entity.EntityOGL;
 import pl.oblivion.engine.renderer.ShaderType;
+import pl.oblivion.model.material.Texture;
 import pl.oblivion.model.mesh.MeshData;
-import pl.oblivion.model.texture.Texture;
 
 import java.util.Objects;
 

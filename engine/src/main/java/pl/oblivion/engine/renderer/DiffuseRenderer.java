@@ -43,12 +43,12 @@ public class DiffuseRenderer extends AbstractRenderer {
 	@Override
 	public void bindModel(EntityOGL entity) {
 		entity.getMeshOGL().bind(bindingAttributes);
-		//todo bind material/texture
+		//todo bind material/material
 	}
 
 	@Override
 	public void unbindModel(EntityOGL entity) {
 		entity.getMeshOGL().unbind(bindingAttributes);
-		//todo unbind material/texture
+		//todo unbind material/material
 	}
 }

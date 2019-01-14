@@ -2,8 +2,8 @@ package pl.oblivion.core.cache;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pl.oblivion.engine.texture.TextureOGL;
-import pl.oblivion.model.texture.Texture;
+import pl.oblivion.engine.material.TextureOGL;
+import pl.oblivion.model.material.Texture;
 
 import java.util.HashMap;
 import java.util.Map;

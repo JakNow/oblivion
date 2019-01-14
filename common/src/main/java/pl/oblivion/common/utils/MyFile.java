@@ -104,12 +104,22 @@ public class MyFile {
 	}
 
 	public String getClassPath() {
-		URL resources = MyFile.class.getResource(path);
 		try {
-			return Paths.get(resources.toURI()).toFile().getPath();
+			return Paths.get(getURL().toURI())
+					.toFile()
+					.getPath();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 		return "";
+	}
+
+	private URL getURL() {
+		URL url = MyFile.class.getResource(path);
+		if (url != null) {
+			return url;
+		} else {
+			throw new MissingFileException(path);
+		}
 	}
 }

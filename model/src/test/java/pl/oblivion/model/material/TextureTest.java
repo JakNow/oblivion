@@ -1,4 +1,4 @@
-package pl.oblivion.model.texture;
+package pl.oblivion.model.material;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

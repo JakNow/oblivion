@@ -1,4 +1,4 @@
-package pl.oblivion.model.texture;
+package pl.oblivion.model.material;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import lombok.Getter;
@@ -23,7 +23,7 @@ public class Texture {
 
 	public Texture(MyFile fileName) {
 		this(loadTexture(fileName));
-		logger.info("Loaded texture {}.", fileName.getPath());
+		logger.info("Loaded material {}.", fileName.getPath());
 
 	}
 
@@ -49,7 +49,7 @@ public class Texture {
 			textureBuffer.flip();
 			return new Texture(myfile.getName(), decoder.getWidth(), decoder.getHeight(), textureBuffer);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Couldn't load file at {}.", myfile.getPath(), e);
 			throw new RuntimeException();
 		}
 	}

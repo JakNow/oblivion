@@ -1,4 +1,4 @@
-package pl.oblivion.engine.texture;
+package pl.oblivion.engine.material;
 
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;

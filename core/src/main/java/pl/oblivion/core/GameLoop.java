@@ -24,17 +24,31 @@ abstract class GameLoop {
 		new Timer();
 		float elapsedTime;
 		float accumulator = 0f;
+		int ups = 0, fps = 0;
 		onStart();
+		float startTime = Timer.getElapsedTime();
 
 		while (!window.windowShouldClose()) {
 			elapsedTime = Timer.getElapsedTime();
 			accumulator += elapsedTime;
+			startTime += elapsedTime;
 			while (accumulator >= Timer.deltaTime) {
 				update();
 				accumulator -= Timer.deltaTime;
+				ups++;
 			}
 
+			fps++;
 			render();
+
+			if (startTime > 1.0f) {
+				System.out.println("FPS: " + fps);
+				System.out.println("UPS: " + ups);
+				fps = 0;
+				ups = 0;
+				startTime = 0;
+
+			}
 
 			window.updateAfterRendering();
 			if (!window.isVSync()) {
